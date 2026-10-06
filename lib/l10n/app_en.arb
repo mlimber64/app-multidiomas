@@ -1,0 +1,315 @@
+{
+  "@@locale": "en",
+  "tryAgain": "Try again",
+  "save": "Save",
+  "back": "Back",
+  "notSet": "Not set",
+  "couldNotSave": "I couldn't save. Please try again.",
+  "letsTalk": "Let's talk",
+  "continueAction": "Continue",
+  "navHome": "Home",
+  "navTalk": "Talk",
+  "navLearn": "Learn",
+  "navWords": "Words",
+  "navPath": "Progress",
+  "navProfile": "Profile",
+  "homeGreeting": "Hi! 👋",
+  "homeReady": "Ready to practice today?",
+  "heroSubtitle": "Practice with your AI teacher.",
+  "quickConversation": "Conversation",
+  "quickReview": "Review",
+  "journeyTitle": "Your journey",
+  "rowLanguage": "Language",
+  "rowLevel": "Level",
+  "rowGoals": "Goals",
+  "rowFocus": "Focus",
+  "noteStartTitle": "Your journey starts here.",
+  "noteStartBody": "Have your first conversation to start building your journey.",
+  "noteFocusTitle": "Your focus",
+  "noteImprovingTitle": "You're improving",
+  "noteKeepPracticing": "Keep practicing in your conversations.",
+  "noteImprovingIn": "You're improving in: {topics}",
+  "@noteImprovingIn": {
+    "placeholders": {
+      "topics": {
+        "type": "String"
+      }
+    }
+  },
+  "levelA1": "A1 — Beginner",
+  "levelA2": "A2 — Elementary",
+  "levelB1": "B1 — Intermediate",
+  "levelB2": "B2 — Upper intermediate",
+  "levelNotSure": "I'm not sure",
+  "goalSpeakConfidently": "Speak with more confidence",
+  "goalUnderstandListening": "Understand better when listening",
+  "goalWriteBetter": "Write better",
+  "goalLiveAbroad": "Live better abroad",
+  "goalWork": "Work",
+  "goalStudy": "Study",
+  "goalEverything": "A bit of everything",
+  "focusConversation": "Conversation",
+  "focusGrammar": "Grammar",
+  "focusVocabulary": "Vocabulary",
+  "focusPronunciation": "Pronunciation",
+  "focusComprehension": "Comprehension",
+  "topicPassatoProssimo": "Passato prossimo",
+  "topicEssereVsAvere": "Essere vs avere",
+  "topicPrepositions": "Prepositions",
+  "topicArticles": "Articles",
+  "topicGender": "Noun gender",
+  "topicPlural": "Plurals",
+  "topicAgreement": "Agreement",
+  "topicPronouns": "Pronouns",
+  "topicVerbConjugation": "Verb conjugation",
+  "topicWordOrder": "Word order",
+  "topicToBe": "The verb \"to be\"",
+  "topicPresentContinuous": "Present continuous",
+  "topicPastSimple": "Past simple",
+  "topicPresentPerfect": "Present perfect",
+  "topicThirdPersonSingular": "Third-person singular",
+  "chatTitle": "Talk",
+  "newConversation": "New conversation",
+  "suggestionDay": "My day",
+  "suggestionWork": "Let's talk about work",
+  "suggestionRestaurant": "Let's have a conversation at a restaurant",
+  "suggestionPractice": "I want to practice a little",
+  "chatWelcomeTitle": "Hi! I'm your language teacher.",
+  "chatWelcomeSubtitle": "What do you want to talk about today?",
+  "chatErrorGeneric": "I can't answer right now. Shall we try again?",
+  "correctMe": "Correct me",
+  "correctMeHint": "The teacher will correct more carefully",
+  "composerHint": "Write in the language you are learning…",
+  "send": "Send",
+  "roleYou": "You",
+  "roleTeacher": "Teacher",
+  "youWrote": "You wrote: ",
+  "better": "Better: ",
+  "moreNatural": "More natural: {alternative}",
+  "@moreNatural": {
+    "placeholders": {
+      "alternative": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryGrammar": "Grammar",
+  "categoryVocabulary": "Vocabulary",
+  "categoryPronunciation": "Pronunciation",
+  "categoryNaturalExpression": "Natural expression",
+  "categorySpelling": "Spelling",
+  "categoryOther": "Correction",
+  "teacherTyping": "The teacher is typing",
+  "aiNotConfigured": "The teacher is not configured yet. Add the Gemini API key (see the README).",
+  "aiNetwork": "I can't connect. Check your connection and we'll try again.",
+  "aiRateLimited": "Too many requests in a short time. Wait a moment and we will try again.",
+  "learnImprove": "What you can improve",
+  "learnPriorities": "Your priorities",
+  "learnHowTitle": "How to work on it",
+  "learnHowBody": "These areas are trained by speaking: keep using them in your conversations and I will help you naturally.",
+  "learnDoingWellTitle": "You are doing well",
+  "learnDoingWellBody": "For now there are no urgent areas to reinforce. Keep talking with me.",
+  "learnEmptyTitle": "Here you will see what to improve",
+  "learnEmptyBody": "When you talk to me, you will find here the areas worth focusing on.",
+  "topicProgressMade": "You have already made progress. Let us keep working on it.",
+  "topicWorthFocus": "It is worth focusing here.",
+  "relatedTo": "Related to: {topics}",
+  "@relatedTo": {
+    "placeholders": {
+      "topics": {
+        "type": "String"
+      }
+    }
+  },
+  "topicImprovingDetail": "You are improving: you use it better and better.",
+  "topicProgressWorth": "You have already made progress, but it is still worth working on.",
+  "workingOn": "You are working on",
+  "recurringErrors": "Recurring mistakes",
+  "mistakes": "Mistakes",
+  "keepUsingIt": "Keep using it in your conversations.",
+  "topicToConsolidate": "Still to consolidate",
+  "topicImprovingStatus": "You use it better and better",
+  "correctOutOf": "Correct {correct, plural, =1{1 time} other{{correct} times}} out of {total}",
+  "@correctOutOf": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorPairSemantics": "You wrote {incorrect}, better {correct}",
+  "@errorPairSemantics": {
+    "placeholders": {
+      "incorrect": {
+        "type": "String"
+      },
+      "correct": {
+        "type": "String"
+      }
+    }
+  },
+  "vocabInUse": "You are using it",
+  "vocabUsedCorrectly": "You have already used it correctly",
+  "vocabToConsolidate": "To consolidate",
+  "overviewError": "I can't show your journey right now. Shall we try again?",
+  "progressIntro": "Here you see how your learning evolves, based on how you speak.",
+  "progressEmptyTitle": "We're starting to get to know you.",
+  "progressEmptyBody": "Talk to me and here you will see how your journey evolves.",
+  "progressToReinforce": "To reinforce",
+  "progressRecurringSub": "You have written them more than once.",
+  "seeAllWords": "See all words",
+  "wordsHeadline": "Your words",
+  "wordsIntro": "The words you meet while talking with me.",
+  "wordsEmptyTitle": "Your words will appear here",
+  "wordsEmptyBody": "When you meet new words while talking with me, you will find them on this page.",
+  "wordsToConsolidateTitle": "Words to consolidate",
+  "wordsToConsolidateSub": "You have met them: keep using them.",
+  "wordsInUseTitle": "Words you are using",
+  "wordsInUseSub": "You have already used them correctly several times.",
+  "welcomeTagline": "Your personal language teacher.",
+  "welcomeBody": "Practice a language in a personal way: we will ask you a few questions to get to know you, so you can start learning from where you are.",
+  "onbStart": "Let's start",
+  "onbFinish": "Start",
+  "onbStepSemantics": "Step {step} of {total}",
+  "@onbStepSemantics": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onbLanguagesTitle": "Your languages",
+  "supportLanguageLabel": "Support language",
+  "learnLanguageQuestion": "Language you want to learn",
+  "levelQuestion": "How well do you already know this language?",
+  "goalsQuestion": "Why do you want to learn this language?",
+  "focusQuestion": "What do you want to focus on?",
+  "selectionHint": "Choose {min} to {max} · {count} selected",
+  "@selectionHint": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileHeading": "Your learning",
+  "uiLanguageLabel": "App language",
+  "learningLanguageRow": "Language you are learning",
+  "supportSheetTitle": "Which language do you prefer for explanations?",
+  "learnSheetTitle": "Which language do you want to learn?",
+  "uiSheetTitle": "Which language do you want the app in?",
+  "rowAreas": "Areas",
+  "profileLocalNote": "Your preferences stay on this device.",
+  "reviewPreparing": "Preparing your review",
+  "reviewError": "I couldn't prepare your review. Please try again.",
+  "exerciseProgress": "{position} of {total}",
+  "@exerciseProgress": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "exerciseSemantics": "Exercise {position} of {total}",
+  "@exerciseSemantics": {
+    "placeholders": {
+      "position": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "instructionCorrect": "Correct the sentence",
+  "instructionChoose": "Choose the correct answer",
+  "instructionComplete": "Complete the sentence",
+  "yourAnswer": "Your answer",
+  "check": "Check",
+  "correctAnswerTag": "Correct answer",
+  "feedbackCorrect": "Exactly!",
+  "feedbackIncorrect": "Almost.",
+  "yourAnswerWas": "Your answer: {answer}",
+  "@yourAnswerWas": {
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "correctAnswerIs": "The correct answer is:",
+  "backToPath": "Back to your journey",
+  "reviewEmptyTitle": "No review available",
+  "reviewEmptyBody": "There are no exercises ready for now. Keep talking and we will come back here when there is something to review.",
+  "reviewDoneTitle": "Review complete",
+  "exercisesDone": "{count, plural, =1{1 exercise completed} other{{count} exercises completed}}",
+  "@exercisesDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "correctCount": "{count, plural, =1{1 correct} other{{count} correct}}",
+  "@correctCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "toRetry": "{count} to retry",
+  "@toRetry": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "topicEtreVsAvoir": "Être vs avoir",
+  "topicPasseCompose": "Passé composé",
+  "topicSerVsEstar": "Ser vs estar",
+  "topicHabenVsSein": "Haben vs sein",
+  "topicPerfekt": "Perfekt",
+  "topicCases": "Cases (Kasus)",
+  "topicPorVsPara": "Por vs para",
+  "topicMeasureWords": "Measure words (量词)",
+  "topicStructuralParticles": "Particles 的 / 得 / 地",
+  "topicAspectParticles": "Aspect particles (了, 过, 着)",
+  "topicNegation": "Negation (不 / 没)",
+  "listen": "Listen",
+  "listenSlowly": "Slowly",
+  "spellIt": "Spell it",
+  "stopListening": "Stop",
+  "hearItRight": "Hear how it is said and written correctly:",
+  "listenToMessage": "Listen to the message",
+  "noVoiceInstalled": "Your phone has no voice installed for this language. You can install one in Settings, Language, Text-to-speech output.",
+  "speechFailed": "I couldn't play the audio.",
+  "speakRepliesLabel": "Read replies aloud",
+  "speakRepliesHint": "Replies to your voice messages are always read.",
+  "recordVoice": "Record a voice message",
+  "recordingNow": "Recording",
+  "recordingCancel": "Cancel the recording",
+  "recordingSend": "Send the voice message",
+  "micDenied": "I need permission to use the microphone. You can turn it on in the phone settings.",
+  "micFailed": "I couldn't start recording.",
+  "recordingTooShort": "The recording was too short. Speak a little longer.",
+  "voiceMessage": "Voice message",
+  "voiceListening": "Listening…",
+  "voiceNotUnderstood": "The audio was not understood"
+}
