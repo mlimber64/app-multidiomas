@@ -1051,4 +1051,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statReinforce => 'Areas to reinforce';
+
+  @override
+  String get voiceTest => 'Test voice';
 }

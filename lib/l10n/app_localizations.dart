@@ -1809,6 +1809,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Areas to reinforce'**
   String get statReinforce;
+
+  /// No description provided for @voiceTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Test voice'**
+  String get voiceTest;
 }
 
 class _AppLocalizationsDelegate

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 import 'package:parla_con_me/features/conversation/presentation/widgets/message_bubble.dart';
-import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:parla_con_me/app/providers.dart';
 import 'package:parla_con_me/core/result/result.dart';
@@ -447,22 +447,12 @@ void main() {
       await _openTab(tester, 'Profilo');
 
       expect(find.text("Voce dell'insegnante"), findsOneWidget);
-      final segments = tester.widget<SegmentedButton<VoiceGender>>(
-        find.byType(SegmentedButton<VoiceGender>),
-      );
-      expect(segments.selected, {VoiceGender.female});
+      expect(_selectedVoice(tester), VoiceGender.female);
 
       await tester.ensureVisible(find.text('Maschile'));
       await tester.tap(find.text('Maschile'));
       await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<SegmentedButton<VoiceGender>>(
-              find.byType(SegmentedButton<VoiceGender>),
-            )
-            .selected,
-        {VoiceGender.male},
-      );
+      expect(_selectedVoice(tester), VoiceGender.male);
       expect(
         jsonDecode(storage.data['user_learning_profile']!)['teacherVoice'],
         'male',
@@ -472,14 +462,7 @@ void main() {
       await tester.pumpWidget(const SizedBox());
       await pumpApp(tester, storage);
       await _openTab(tester, 'Profilo');
-      expect(
-        tester
-            .widget<SegmentedButton<VoiceGender>>(
-              find.byType(SegmentedButton<VoiceGender>),
-            )
-            .selected,
-        {VoiceGender.male},
-      );
+      expect(_selectedVoice(tester), VoiceGender.male);
     });
   });
 
@@ -706,3 +689,9 @@ Future<void> _openTab(WidgetTester tester, String label) async {
   );
   await tester.pumpAndSettle();
 }
+
+VoiceGender _selectedVoice(WidgetTester tester) => tester
+    .widget<SegmentedPills<VoiceGender>>(
+      find.byType(SegmentedPills<VoiceGender>),
+    )
+    .selected;

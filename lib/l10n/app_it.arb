@@ -333,5 +333,6 @@
   "weekSemantics": "{count, plural, =0{Nessun giorno di pratica questa settimana} =1{1 giorno di pratica questa settimana} other{{count} giorni di pratica questa settimana}}",
   "statWords": "Parole incontrate",
   "statImproving": "Aree in miglioramento",
-  "statReinforce": "Aree da rinforzare"
+  "statReinforce": "Aree da rinforzare",
+  "voiceTest": "Prova la voce"
 }

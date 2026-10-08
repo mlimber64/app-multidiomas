@@ -1050,4 +1050,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get statReinforce => 'Áreas a reforzar';
+
+  @override
+  String get voiceTest => 'Probar voz';
 }

@@ -552,5 +552,6 @@
   },
   "statWords": "Words met",
   "statImproving": "Areas improving",
-  "statReinforce": "Areas to reinforce"
+  "statReinforce": "Areas to reinforce",
+  "voiceTest": "Test voice"
 }
