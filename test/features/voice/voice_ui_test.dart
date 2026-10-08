@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:parla_con_me/app/providers.dart';
 import 'package:parla_con_me/core/result/result.dart';
 import 'package:parla_con_me/features/learning/presentation/learning_providers.dart';
@@ -58,7 +59,7 @@ class _Chat {
     await tester.pumpAndSettle();
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Parla'),
       ),
     );
@@ -370,7 +371,7 @@ void main() {
     await pumpApp(tester, storage, profile: onboardedProfile);
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Profilo'),
       ),
     );

@@ -1,5 +1,6 @@
 // NUEVO: componentes reutilizables del rediseño (sección 4 del diseño).
 export 'app_action_chip.dart';
+export 'app_bottom_nav.dart';
 export 'app_card.dart';
 export 'icon_tile.dart';
 export 'primary_button.dart';

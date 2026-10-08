@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 
 import '../../support/in_memory_local_storage.dart';
 import '../../support/pump_app.dart';
@@ -25,7 +26,7 @@ void main() {
     Future<void> goHomeAndTap(String text, String expectedTitle) async {
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byType(AppBottomNav),
           matching: find.text('Home'),
         ),
       );

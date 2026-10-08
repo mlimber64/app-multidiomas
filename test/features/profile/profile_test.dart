@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:parla_con_me/core/result/result.dart';
 import 'package:parla_con_me/features/learning/domain/language_learning_rules.dart';
 import 'package:parla_con_me/features/profile/data/local_user_learning_profile_repository.dart';
@@ -234,7 +235,7 @@ void main() {
 
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Profilo'),
       ),
     );
@@ -262,7 +263,7 @@ void main() {
     await pumpApp(tester, storage);
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Profilo'),
       ),
     );
@@ -487,7 +488,7 @@ void main() {
     await pumpApp(tester, storage);
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Profilo'),
       ),
     );
@@ -535,7 +536,7 @@ void main() {
     await pumpApp(tester, storage);
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Profilo'),
       ),
     );
@@ -559,7 +560,7 @@ void main() {
     expect(find.text('App language'), findsOneWidget);
     expect(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Profile'),
       ),
       findsOneWidget,

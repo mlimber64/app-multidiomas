@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:parla_con_me/app/providers.dart';
 import 'package:parla_con_me/core/result/result.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
@@ -38,7 +39,7 @@ Future<void> _open(
 
 Future<void> _goTo(WidgetTester tester, String tab) async {
   await tester.tap(
-    find.descendant(of: find.byType(NavigationBar), matching: find.text(tab)),
+    find.descendant(of: find.byType(AppBottomNav), matching: find.text(tab)),
   );
   await tester.pumpAndSettle();
 }
@@ -336,7 +337,7 @@ void main() {
       await _open(tester, repo);
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byType(AppBottomNav),
           matching: find.text('Percorso'),
         ),
       );

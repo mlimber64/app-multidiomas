@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 
 import '../../support/in_memory_local_storage.dart';
 import '../../support/pump_app.dart';
@@ -47,7 +48,7 @@ void main() {
 
     // Welcome, in the device language.
     expect(find.text('Tu profesor de idiomas personal.'), findsOne);
-    expect(find.byType(NavigationBar), findsNothing);
+    expect(find.byType(AppBottomNav), findsNothing);
     await _continue(tester, 'Empezar');
 
     // Languages: single choice, starting on the device language and Italian.
@@ -75,7 +76,7 @@ void main() {
     await _continue(tester, 'Comenzar');
 
     // Home, reading the freshly saved profile, still in Spanish.
-    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(AppBottomNav), findsOneWidget);
     expect(find.text('Inicio'), findsOneWidget);
     expect(find.text('A2 — Elemental'), findsOneWidget);
     expect(find.text('Hablar con más seguridad, Trabajo'), findsOneWidget);
@@ -94,7 +95,7 @@ void main() {
     // Relaunch with the same storage: straight to Home.
     await tester.pumpWidget(const SizedBox());
     await pumpApp(tester, storage);
-    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(AppBottomNav), findsOneWidget);
     expect(find.text('Tu profesor de idiomas personal.'), findsNothing);
   });
 

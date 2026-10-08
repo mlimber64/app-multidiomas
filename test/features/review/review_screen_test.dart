@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:parla_con_me/core/errors/failure.dart';
 import 'package:parla_con_me/features/learning/data/local_learning_repository.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
@@ -137,7 +138,7 @@ void main() {
       );
       expect(fake.starts, 1);
       await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(NavigationBar), findsNothing);
+      expect(find.byType(AppBottomNav), findsNothing);
       expect(fake.starts, 1, reason: 'rebuilds never start another session');
     });
 
@@ -151,7 +152,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsOneWidget);
       expect(find.text('Il tuo percorso'), findsOneWidget);
       expect(fake.submitted, isEmpty);
     });
@@ -170,7 +171,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(_button('Torna al percorso'));
       await tester.pumpAndSettle();
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsOneWidget);
       expect(
         find.descendant(
           of: find.byType(AppBar),
@@ -553,7 +554,7 @@ void main() {
 
       await tester.tap(_button('Torna al percorso'));
       await tester.pumpAndSettle();
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsOneWidget);
     });
   });
 }
