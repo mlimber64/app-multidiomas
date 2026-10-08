@@ -17,7 +17,8 @@ class ParlaConMeApp extends ConsumerWidget {
       title: AppConstants.appName,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      // NUEVO: el rediseño es solo claro; el tema oscuro queda como estaba.
+      themeMode: ThemeMode.light,
       locale: ref.watch(appLocaleProvider),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
