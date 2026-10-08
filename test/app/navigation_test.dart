@@ -13,7 +13,7 @@ void main() {
 
     expect(find.byType(AppBottomNav), findsOneWidget);
     expect(find.text('Iniziamo'), findsNothing);
-    expect(find.text('Ciao! 👋'), findsOneWidget);
+    expect(find.text('Ciao!'), findsOneWidget);
 
     for (final area in ['Parla', 'Impara', 'Parole', 'Percorso', 'Profilo']) {
       await tester.tap(

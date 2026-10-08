@@ -13,7 +13,7 @@
   "navWords": "Words",
   "navPath": "Progress",
   "navProfile": "Profile",
-  "homeGreeting": "Hi! 👋",
+  "homeGreeting": "Hi!",
   "homeReady": "Ready to practice today?",
   "heroSubtitle": "Practice with your AI teacher.",
   "quickConversation": "Conversation",
@@ -456,5 +456,53 @@
         "type": "String"
       }
     }
-  }
+  },
+  "homeStreakDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@homeStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "streakLabel": "{count, plural, =1{1-day streak} other{{count}-day streak}}",
+  "@streakLabel": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineStartPractice": "Start practice",
+  "routineHeroReview": "Review what you saw",
+  "routineHeroTalk": "Talk with your teacher",
+  "routineHeroWords": "Consolidate your words",
+  "homeTileConversationSub": "Free talk",
+  "homeTileLearnSub": "{count, plural, =1{1 area to reinforce} other{{count} areas to reinforce}}",
+  "@homeTileLearnSub": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeTileLearnNone": "What to reinforce",
+  "homeTileReviewSub": "{count, plural, =1{1 pending} other{{count} pending}}",
+  "@homeTileReviewSub": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeTileReviewNone": "All caught up",
+  "homeTileWordsSub": "{count, plural, =1{1 to consolidate} other{{count} to consolidate}}",
+  "@homeTileWordsSub": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeTileWordsNone": "Your vocabulary"
 }

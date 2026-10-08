@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 import 'package:parla_con_me/core/errors/failure.dart';
 import 'package:parla_con_me/features/learning/data/local_learning_repository.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
@@ -112,7 +112,9 @@ Future<_FakeSession> _open(
     ],
   );
   await tester.tap(
-    find.descendant(of: find.byType(Card), matching: find.text('Ripassa')).last,
+    find
+        .descendant(of: find.byType(AppCard), matching: find.text('Ripassa'))
+        .last,
   );
   await tester.pump();
   await tester.pump();
@@ -153,7 +155,7 @@ void main() {
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
       expect(find.byType(AppBottomNav), findsOneWidget);
-      expect(find.text('Il tuo percorso'), findsOneWidget);
+      expect(find.text('IL TUO PERCORSO'), findsOneWidget);
       expect(fake.submitted, isEmpty);
     });
 
@@ -525,7 +527,10 @@ void main() {
       await pumpApp(tester, storage, profile: onboardedProfile);
       await tester.tap(
         find
-            .descendant(of: find.byType(Card), matching: find.text('Ripassa'))
+            .descendant(
+              of: find.byType(AppCard),
+              matching: find.text('Ripassa'),
+            )
             .last,
       );
       await tester.pumpAndSettle();

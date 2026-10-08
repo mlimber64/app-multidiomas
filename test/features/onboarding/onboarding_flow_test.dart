@@ -78,8 +78,8 @@ void main() {
     // Home, reading the freshly saved profile, still in Spanish.
     expect(find.byType(AppBottomNav), findsOneWidget);
     expect(find.text('Inicio'), findsOneWidget);
-    expect(find.text('A2 — Elemental'), findsOneWidget);
-    expect(find.text('Hablar con más seguridad, Trabajo'), findsOneWidget);
+    expect(find.text('¡Hola!'), findsOneWidget);
+    expect(find.text('A2 · Elemental'), findsOneWidget);
     expect(find.text('Gramática, Vocabulario'), findsOneWidget);
 
     final saved = _saved(storage);

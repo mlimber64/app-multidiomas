@@ -13,7 +13,7 @@
   "navWords": "Parole",
   "navPath": "Percorso",
   "navProfile": "Profilo",
-  "homeGreeting": "Ciao! 👋",
+  "homeGreeting": "Ciao!",
   "homeReady": "Pronto a fare pratica oggi?",
   "heroSubtitle": "Fai pratica con il tuo insegnante AI.",
   "quickConversation": "Conversazione",
@@ -303,5 +303,18 @@
         "type": "String"
       }
     }
-  }
+  },
+  "homeStreakDays": "{count, plural, =1{1 giorno} other{{count} giorni}}",
+  "streakLabel": "Serie di {count, plural, =1{1 giorno} other{{count} giorni}}",
+  "routineStartPractice": "Inizia la pratica",
+  "routineHeroReview": "Ripassa quello che hai visto",
+  "routineHeroTalk": "Parla con il tuo insegnante",
+  "routineHeroWords": "Consolida le tue parole",
+  "homeTileConversationSub": "Parla liberamente",
+  "homeTileLearnSub": "{count, plural, =1{1 area da rinforzare} other{{count} aree da rinforzare}}",
+  "homeTileLearnNone": "Cosa rinforzare",
+  "homeTileReviewSub": "{count, plural, =1{1 in sospeso} other{{count} in sospeso}}",
+  "homeTileReviewNone": "Tutto in ordine",
+  "homeTileWordsSub": "{count, plural, =1{1 da consolidare} other{{count} da consolidare}}",
+  "homeTileWordsNone": "Il tuo vocabolario"
 }

@@ -48,7 +48,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get navProfile => 'Profilo';
 
   @override
-  String get homeGreeting => 'Ciao! 👋';
+  String get homeGreeting => 'Ciao!';
 
   @override
   String get homeReady => 'Pronto a fare pratica oggi?';
@@ -898,4 +898,83 @@ class AppLocalizationsIt extends AppLocalizations {
   String guidanceStepNone(String step) {
     return '$step: niente per oggi';
   }
+
+  @override
+  String homeStreakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni',
+      one: '1 giorno',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String streakLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni',
+      one: '1 giorno',
+    );
+    return 'Serie di $_temp0';
+  }
+
+  @override
+  String get routineStartPractice => 'Inizia la pratica';
+
+  @override
+  String get routineHeroReview => 'Ripassa quello che hai visto';
+
+  @override
+  String get routineHeroTalk => 'Parla con il tuo insegnante';
+
+  @override
+  String get routineHeroWords => 'Consolida le tue parole';
+
+  @override
+  String get homeTileConversationSub => 'Parla liberamente';
+
+  @override
+  String homeTileLearnSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aree da rinforzare',
+      one: '1 area da rinforzare',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileLearnNone => 'Cosa rinforzare';
+
+  @override
+  String homeTileReviewSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count in sospeso',
+      one: '1 in sospeso',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileReviewNone => 'Tutto in ordine';
+
+  @override
+  String homeTileWordsSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count da consolidare',
+      one: '1 da consolidare',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileWordsNone => 'Il tuo vocabolario';
 }

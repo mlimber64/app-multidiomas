@@ -13,7 +13,7 @@
   "navWords": "Palabras",
   "navPath": "Progreso",
   "navProfile": "Perfil",
-  "homeGreeting": "¡Hola! 👋",
+  "homeGreeting": "¡Hola!",
   "homeReady": "¿Listo para practicar hoy?",
   "heroSubtitle": "Practica con tu profesor de IA.",
   "quickConversation": "Conversación",
@@ -303,5 +303,18 @@
         "type": "String"
       }
     }
-  }
+  },
+  "homeStreakDays": "{count, plural, =1{1 día} other{{count} días}}",
+  "streakLabel": "Racha de {count, plural, =1{1 día} other{{count} días}}",
+  "routineStartPractice": "Empezar práctica",
+  "routineHeroReview": "Repasa lo que viste",
+  "routineHeroTalk": "Habla con tu profesor",
+  "routineHeroWords": "Consolida tus palabras",
+  "homeTileConversationSub": "Habla libre",
+  "homeTileLearnSub": "{count, plural, =1{1 área a reforzar} other{{count} áreas a reforzar}}",
+  "homeTileLearnNone": "Qué reforzar",
+  "homeTileReviewSub": "{count, plural, =1{1 pendiente} other{{count} pendientes}}",
+  "homeTileReviewNone": "Todo al día",
+  "homeTileWordsSub": "{count, plural, =1{1 por consolidar} other{{count} por consolidar}}",
+  "homeTileWordsNone": "Tu vocabulario"
 }

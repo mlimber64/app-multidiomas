@@ -48,7 +48,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navProfile => 'Perfil';
 
   @override
-  String get homeGreeting => '¡Hola! 👋';
+  String get homeGreeting => '¡Hola!';
 
   @override
   String get homeReady => '¿Listo para practicar hoy?';
@@ -898,4 +898,83 @@ class AppLocalizationsEs extends AppLocalizations {
   String guidanceStepNone(String step) {
     return '$step: nada por hoy';
   }
+
+  @override
+  String homeStreakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String streakLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return 'Racha de $_temp0';
+  }
+
+  @override
+  String get routineStartPractice => 'Empezar práctica';
+
+  @override
+  String get routineHeroReview => 'Repasa lo que viste';
+
+  @override
+  String get routineHeroTalk => 'Habla con tu profesor';
+
+  @override
+  String get routineHeroWords => 'Consolida tus palabras';
+
+  @override
+  String get homeTileConversationSub => 'Habla libre';
+
+  @override
+  String homeTileLearnSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count áreas a reforzar',
+      one: '1 área a reforzar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileLearnNone => 'Qué reforzar';
+
+  @override
+  String homeTileReviewSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pendientes',
+      one: '1 pendiente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileReviewNone => 'Todo al día';
+
+  @override
+  String homeTileWordsSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count por consolidar',
+      one: '1 por consolidar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileWordsNone => 'Tu vocabulario';
 }

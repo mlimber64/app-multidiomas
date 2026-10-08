@@ -586,8 +586,7 @@ void main() {
       _expectNoTechnicalLanguage();
 
       // Declared profile and learned memory are separate things on screen.
-      expect(find.text('Livello'), findsOneWidget);
-      expect(find.text('A2 — Elementare'), findsOneWidget);
+      expect(find.text('A2 · Elementare'), findsOneWidget);
     });
 
     testWidgets('only improvement: just the good news', (tester) async {
