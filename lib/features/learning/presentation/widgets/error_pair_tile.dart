@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_text_styles.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../shared/ui/app_card.dart';
 import '../../../../l10n/l10n.dart';
 import '../../domain/learning_overview.dart';
 import '../learning_labels.dart';
@@ -14,51 +16,46 @@ class ErrorPairTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final topic = error.topic;
     return Semantics(
       container: true,
       label: context.l10n.errorPairSemantics(error.incorrect, error.correct),
       child: ExcludeSemantics(
-        child: Card(
-          margin: EdgeInsets.zero,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: error.incorrect,
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          color: scheme.onSurfaceVariant,
-                        ),
-                      ),
-                      const TextSpan(text: '  →  '),
-                      TextSpan(
-                        text: error.correct,
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ],
-                  ),
-                  style: theme.textTheme.titleMedium,
-                ),
-                if (showTopic && topic != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.xs),
-                    child: Text(
-                      topic.label(context.l10n),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: scheme.onSurfaceVariant,
+        child: AppCard(
+          radius: AppRadius.panel,
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: error.incorrect,
+                      style: const TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: AppColors.errorStrike,
+                        color: AppColors.errorText,
                       ),
                     ),
+                    const TextSpan(text: '  →  '),
+                    TextSpan(
+                      text: error.correct,
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                style: AppTextStyles.bodyStrong,
+              ),
+              if (showTopic && topic != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
+                  child: Text(
+                    topic.label(context.l10n),
+                    style: AppTextStyles.small,
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ),
