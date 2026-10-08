@@ -6,7 +6,9 @@ import 'package:parla_con_me/core/result/result.dart';
 import 'package:parla_con_me/features/learning/data/local_learning_repository.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
 import 'package:parla_con_me/features/learning/domain/learning_error.dart';
+import 'package:parla_con_me/features/learning/domain/learning_state.dart';
 import 'package:parla_con_me/features/learning/domain/learning_summary.dart';
+import 'package:parla_con_me/features/learning/domain/practice_evidence.dart';
 import 'package:parla_con_me/features/learning/domain/user_vocabulary.dart';
 import 'package:parla_con_me/features/profile/domain/user_learning_profile.dart';
 import 'package:parla_con_me/features/review/data/local_review_repository.dart';
@@ -54,11 +56,32 @@ LearnerLearningSummary _summary({
 ReviewItem _item(ReviewItemType type, String sourceId) =>
     ReviewItem.discovered(type, sourceId, _now);
 
-GrammarTopicProgress _topic(GrammarTopic t) => GrammarTopicProgress(
+GrammarTopicProgress _topic(
+  GrammarTopic t, {
+  PracticeProof proof = PracticeProof.empty,
+}) => GrammarTopicProgress(
   topic: t,
   exposureCount: 2,
   errorCount: 2,
   lastSeenAt: _now,
+  proof: proof,
+);
+
+/// A topic the learner is improving at (so practiced at its usual
+/// difficulty): it was a problem, and they produced it correctly twice.
+GrammarTopicProgress _improvingTopic(GrammarTopic t) => _topic(
+  t,
+  proof: PracticeProof.empty
+      .record(
+        type: PracticeEvidenceType.production,
+        success: true,
+        context: 'a',
+      )
+      .record(
+        type: PracticeEvidenceType.production,
+        success: true,
+        context: 'b',
+      ),
 );
 
 Exercise _ok(Result<Exercise> r) =>
@@ -119,7 +142,7 @@ void main() {
 
   group('grammar -> choice', () {
     final summary = _summary(
-      topics: [_topic(GrammarTopic.essereVsAvere)],
+      topics: [_improvingTopic(GrammarTopic.essereVsAvere)],
       errors: [
         ho,
         _error(
@@ -153,7 +176,7 @@ void main() {
 
     test('at most four distinct options', () {
       final many = _summary(
-        topics: [_topic(GrammarTopic.articles)],
+        topics: [_improvingTopic(GrammarTopic.articles)],
         errors: [
           for (var i = 0; i < 5; i++)
             _error(

@@ -50,6 +50,7 @@ class LocalUserLearningProfileRepository
             if (profile.focusAreas.contains(f)) f.name,
         ],
         'speakReplies': profile.speakReplies,
+        'teacherVoice': profile.teacherVoice.name,
         'onboardingCompleted': profile.onboardingCompleted,
       }),
     );
@@ -95,6 +96,10 @@ class LocalUserLearningProfileRepository
           maxFocusAreas,
         ),
         speakReplies: json['speakReplies'] == true,
+        // Absent in older documents: the voice the app always had.
+        teacherVoice:
+            _byName(VoiceGender.values, json['teacherVoice']) ??
+            VoiceGender.female,
         onboardingCompleted: json['onboardingCompleted'] == true,
       );
     } on FormatException {

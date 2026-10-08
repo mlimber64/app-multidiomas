@@ -1,3 +1,4 @@
+import 'package:parla_con_me/features/learning/domain/practice_evidence.dart';
 import 'package:parla_con_me/features/learning/domain/language_scope.dart';
 import 'package:parla_con_me/core/errors/failure.dart';
 import 'package:parla_con_me/core/result/result.dart';
@@ -58,6 +59,8 @@ class FailingLearningRepository implements LearningRepository {
     String language = legacyLanguageCode,
   }) => _fail();
   @override
+  Future<Result<bool>> applyPracticeEvidence(PracticeEvidence e) => _fail();
+  @override
   Future<Result<void>> clearLearningData() => _fail();
 }
 
@@ -84,6 +87,7 @@ class FailingLearningEngine implements LearningEngine {
   Future<Result<void>> analyze({
     required String userMessage,
     required AIResponse response,
+    String? contextId,
   }) async {
     calls++;
     return const Failure(StorageFailure('boom'));
@@ -113,6 +117,7 @@ class ThrowingLearningEngine implements LearningEngine {
   Future<Result<void>> analyze({
     required String userMessage,
     required AIResponse response,
+    String? contextId,
   }) async {
     calls++;
     throw StateError('bug in the learning engine');
@@ -127,6 +132,9 @@ class RecordingLearningEngine implements LearningEngine {
   LearningContext context;
   int contextCalls = 0;
   final analyzed = <({String userMessage, AIResponse response})>[];
+
+  /// The `contextId` of each analysis, in the same order as [analyzed].
+  final contexts = <String?>[];
 
   @override
   Future<Result<LearnerLearningSummary>> summary() async =>
@@ -146,8 +154,10 @@ class RecordingLearningEngine implements LearningEngine {
   Future<Result<void>> analyze({
     required String userMessage,
     required AIResponse response,
+    String? contextId,
   }) async {
     analyzed.add((userMessage: userMessage, response: response));
+    contexts.add(contextId);
     return const Success(null);
   }
 }

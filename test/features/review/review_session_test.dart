@@ -60,6 +60,7 @@ class _FakeReviewEngine implements ReviewEngine {
     required String itemId,
     required ReviewResult result,
     required DateTime now,
+    ExerciseType? exercise,
   }) async {
     await recordGate?.future;
     final failure = recordFailure;
@@ -112,6 +113,7 @@ class _FakeLearning implements LearningEngine {
   Future<Result<void>> analyze({
     required String userMessage,
     required AIResponse response,
+    String? contextId,
   }) => throw UnimplementedError();
 }
 
@@ -664,6 +666,41 @@ void main() {
         items.every((i) => i.lastReviewedAt == null && i.failedReviews == 0),
         isTrue,
       );
+    });
+  });
+
+  group('routine mode (size and onlyItems)', () {
+    test('a smaller size limits the session', () async {
+      final s = _Setup(6);
+      await s.controller.start(size: 3);
+      expect(s.state.total, 3);
+    });
+
+    test('only the chosen items are practiced, in the queue order', () async {
+      final s = _Setup(6);
+      await s.controller.start(onlyItems: {'error:e4', 'error:e1'});
+      expect(s.state.total, 2);
+      expect(s.state.exercises.map((e) => e.reviewItemId), [
+        'error:e1',
+        'error:e4',
+      ]);
+      expect(s.generator.generated, isNot(contains('error:e0')));
+    });
+
+    test(
+      'chosen items that are no longer due leave an empty session',
+      () async {
+        final s = _Setup(2);
+        await s.controller.start(onlyItems: {'error:gone'});
+        expect(s.state.status, ReviewSessionStatus.completed);
+        expect(s.state.total, 0);
+      },
+    );
+
+    test('the plain session is unchanged: default size, all items', () async {
+      final s = _Setup(8);
+      await s.start();
+      expect(s.state.total, reviewSessionSize);
     });
   });
 }

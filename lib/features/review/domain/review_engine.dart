@@ -6,6 +6,8 @@ import '../../learning/domain/learning_context_builder.dart';
 import '../../learning/domain/learning_repository.dart';
 import '../../learning/domain/learning_summary.dart';
 import '../../profile/domain/user_learning_profile.dart';
+import '../../learning/domain/practice_evidence.dart';
+import 'exercise.dart';
 import 'review_item.dart';
 import 'review_repository.dart';
 
@@ -33,11 +35,14 @@ abstract interface class ReviewEngine {
   });
 
   /// Records the outcome of reviewing [itemId] and reschedules it (see
-  /// [ReviewPolicy]). Nothing is ever deleted.
+  /// [ReviewPolicy]). Nothing is ever deleted. [exercise] is the kind of
+  /// exercise that was answered; it decides how strong a proof the answer is
+  /// for the learning memory (see [PracticeEvidenceRecorder]).
   Future<Result<ReviewItem>> recordReviewResult({
     required String itemId,
     required ReviewResult result,
     required DateTime now,
+    ExerciseType? exercise,
   });
 }
 
@@ -61,6 +66,7 @@ class DefaultReviewEngine implements ReviewEngine {
     this._learning,
     this._reviews, {
     required this.learningLanguage,
+    this.evidence,
   });
 
   final LearningRepository _learning;
@@ -68,6 +74,11 @@ class DefaultReviewEngine implements ReviewEngine {
 
   /// Only vocabulary of this language is reviewed (see `UserLearningProfile`).
   final AppLanguage learningLanguage;
+
+  /// Where what the learner proves while reviewing is sent, so the learning
+  /// memory learns from it too (the review keeps only its own schedule). Never
+  /// a repository: the learning engine is the only writer of that memory.
+  final PracticeEvidenceRecorder? evidence;
 
   @override
   Future<Result<List<ReviewItem>>> synchronize({required DateTime now}) async =>
@@ -98,6 +109,7 @@ class DefaultReviewEngine implements ReviewEngine {
     required String itemId,
     required ReviewResult result,
     required DateTime now,
+    ExerciseType? exercise,
   }) async {
     final found = await _reviews.getItem(itemId);
     switch (found) {
@@ -106,12 +118,79 @@ class DefaultReviewEngine implements ReviewEngine {
       case Success(value: null):
         return Failure(StorageFailure('Unknown review item: $itemId'));
       case Success(value: final item?):
+        // The learning memory hears about it first, under an id taken from the
+        // item as it is now: if saving the schedule fails and the answer is
+        // sent again, the same event arrives and counts once. A failure here
+        // never blocks the review itself.
+        final proof = await _evidenceFor(item, result, now, exercise);
+        if (proof != null) await evidence?.recordPracticeEvidence(proof);
         final updated = item.recordResult(result, now);
         return switch (await _reviews.saveItem(updated)) {
           Failure(:final failure) => Failure(failure),
           Success() => Success(updated),
         };
     }
+  }
+
+  /// What answering [item] proves about the learner, or `null` when it proves
+  /// nothing the learning memory can hold (no recorder, or an item with no
+  /// topic or word behind it).
+  Future<PracticeEvidence?> _evidenceFor(
+    ReviewItem item,
+    ReviewResult result,
+    DateTime now,
+    ExerciseType? exercise,
+  ) async {
+    if (evidence == null) return null;
+    final code = learningLanguage.code;
+    final prefix = '$code:';
+    String unscoped(String id) =>
+        id.startsWith(prefix) ? id.substring(prefix.length) : id;
+
+    String? topic;
+    String? word;
+    switch (item.type) {
+      case ReviewItemType.grammar:
+        topic = unscoped(item.sourceId);
+      case ReviewItemType.vocabulary:
+        word = unscoped(item.sourceId);
+      case ReviewItemType.error:
+        // An error belongs to the grammar topic it was classified under.
+        final summary = await _learning.getLearningSummary();
+        if (summary is! Success<LearnerLearningSummary>) return null;
+        for (final e in summary.value.forLanguage(code).errors) {
+          if (e.id == item.sourceId) topic = e.grammarTopic?.name;
+        }
+    }
+    if (topic == null && word == null) return null;
+
+    final kind = exercise ?? ExercisePracticeType.forItem(item.type);
+    return PracticeEvidence(
+      eventId:
+          'review:${item.id}:attempt:'
+          '${item.successfulReviews + item.failedReviews + 1}',
+      source: PracticeEvidenceSource.review,
+      type: kind.practiceType,
+      outcome: result == ReviewResult.success
+          ? PracticeEvidenceOutcome.success
+          : PracticeEvidenceOutcome.failure,
+      learningLanguage: code,
+      occurredAt: now.toUtc(),
+      referenceId: item.sourceId,
+      grammarTopic: topic,
+      vocabularyWord: word,
+      contextId: _reviewContext(now),
+    );
+  }
+
+  /// The interaction of a review answer: the day it was given. A review has no
+  /// session of its own that the engine knows of, so all the answers of one
+  /// day are one context. That is the conservative side: it can only make a
+  /// concept look less consolidated, never more.
+  static String _reviewContext(DateTime now) {
+    final d = now.toUtc();
+    String two(int n) => n.toString().padLeft(2, '0');
+    return 'review:${d.year}-${two(d.month)}-${two(d.day)}';
   }
 
   static int _queueOrder(ReviewItem a, ReviewItem b) {

@@ -13,6 +13,7 @@ class ConversationMessage {
     required this.createdAt,
     this.corrections = const <Correction>[],
     this.isVoice = false,
+    this.translation,
   });
 
   final String id;
@@ -30,6 +31,12 @@ class ConversationMessage {
   /// The learner spoke this message instead of typing it.
   final bool isVoice;
 
+  /// [content] in the learner's support language (assistant messages only),
+  /// when the AI gave one. Shown under the message; never spoken, never sent
+  /// back to the AI and never read by learning. `null` for every message
+  /// stored before translations existed.
+  final String? translation;
+
   ConversationMessage withContent(String text) => ConversationMessage(
     id: id,
     role: role,
@@ -37,6 +44,7 @@ class ConversationMessage {
     createdAt: createdAt,
     corrections: corrections,
     isVoice: isVoice,
+    translation: translation,
   );
 }
 

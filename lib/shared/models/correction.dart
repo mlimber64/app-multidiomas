@@ -26,6 +26,7 @@ class Correction {
     required this.explanation,
     this.naturalAlternative,
     this.category = CorrectionCategory.other,
+    this.correctedTranslation,
   });
 
   final String original;
@@ -36,12 +37,19 @@ class Correction {
   final String? naturalAlternative;
   final CorrectionCategory category;
 
+  /// [corrected] in the learner's support language, to help them understand
+  /// it. A comprehension aid only: it never takes part in learning, and it is
+  /// `null` when the AI gave none (older corrections never have one).
+  final String? correctedTranslation;
+
   Map<String, Object?> toJson() => {
     'original': original,
     'corrected': corrected,
     'explanation': explanation,
     'naturalAlternative': naturalAlternative,
     'category': category.name,
+    if (correctedTranslation != null)
+      'correctedTranslation': correctedTranslation,
   };
 
   /// Lenient decoding of untrusted input (provider output or stored data).
@@ -57,6 +65,7 @@ class Correction {
       explanation: _text(json['explanation']) ?? '',
       naturalAlternative: _text(json['naturalAlternative']),
       category: CorrectionCategory.parse(json['category']),
+      correctedTranslation: _text(json['correctedTranslation']),
     );
   }
 
@@ -73,7 +82,8 @@ class Correction {
       other.corrected == corrected &&
       other.explanation == explanation &&
       other.naturalAlternative == naturalAlternative &&
-      other.category == category;
+      other.category == category &&
+      other.correctedTranslation == correctedTranslation;
 
   @override
   int get hashCode => Object.hash(
@@ -82,5 +92,6 @@ class Correction {
     explanation,
     naturalAlternative,
     category,
+    correctedTranslation,
   );
 }

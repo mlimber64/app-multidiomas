@@ -1,3 +1,4 @@
+import 'package:parla_con_me/features/learning/domain/practice_evidence.dart';
 import 'package:parla_con_me/features/learning/domain/language_scope.dart';
 import 'dart:async';
 
@@ -109,6 +110,9 @@ class FakeMemoryRepository implements LearningRepository {
     required DateTime at,
     String language = legacyLanguageCode,
   }) async => const Success(null);
+  @override
+  Future<Result<bool>> applyPracticeEvidence(PracticeEvidence e) async =>
+      const Success(false);
   @override
   Future<Result<void>> clearLearningData() async => const Success(null);
 }

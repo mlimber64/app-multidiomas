@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_tokens.dart';
 import '../../../l10n/l10n.dart';
 import '../../../shared/widgets/content_width.dart';
+import '../../daily_routine/presentation/widgets/scenario_banner.dart';
 import '../../profile/presentation/profile_controller.dart';
 import '../domain/conversation.dart';
 import 'ai_failure_messages.dart';
@@ -66,6 +67,7 @@ class ConversationScreen extends ConsumerWidget {
       body: ContentWidth(
         child: Column(
           children: [
+            const ScenarioBanner(),
             Expanded(
               child: switch (state.status) {
                 ConversationStatus.loading => const Center(

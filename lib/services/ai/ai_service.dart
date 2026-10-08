@@ -33,6 +33,7 @@ class AIResponse {
     required this.message,
     this.corrections = const <Correction>[],
     this.transcript,
+    this.translation,
   });
   final String message;
   final List<Correction> corrections;
@@ -40,6 +41,10 @@ class AIResponse {
   /// What the learner said, when their message was a recording (`null` for a
   /// typed message; empty when nothing intelligible was heard).
   final String? transcript;
+
+  /// [message] in the learner's support language, when the AI provided it. A
+  /// comprehension aid only: `null` is a normal, fully usable reply.
+  final String? translation;
 }
 
 /// Provider-agnostic AI boundary. Features and the Learning Engine depend on

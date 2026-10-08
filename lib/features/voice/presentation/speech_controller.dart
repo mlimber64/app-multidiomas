@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/providers.dart';
 import '../../../services/speech/speech_service.dart';
 import '../../profile/domain/user_learning_profile.dart';
+import '../../profile/presentation/profile_controller.dart';
 import '../domain/speech_text.dart';
 
 /// What is being read aloud right now. [playingKey] names the thing (a
@@ -43,9 +44,12 @@ class SpeechController extends Notifier<SpeechState> {
     }
     state = SpeechState(playingKey: key);
     final outcome = await service.speak(
-      text,
+      // What is said, not what is shown (no emoji, no markdown).
+      spokenText(text),
       localeTag: speechLocaleTag(language),
       pace: pace,
+      // Read when speaking, so a change of voice applies to the next reading.
+      gender: ref.read(userLearningProfileProvider).teacherVoice,
     );
     // Only clear what is still ours: something else may have taken over.
     if (ref.mounted && state.playingKey == key) state = const SpeechState();

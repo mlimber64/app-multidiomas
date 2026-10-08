@@ -9,20 +9,35 @@ import '../domain/language_learning_rules.dart';
 import '../domain/learning_engine.dart';
 import '../domain/learning_overview.dart';
 import '../domain/learning_repository.dart';
+import '../domain/practice_evidence.dart';
 
 final learningRepositoryProvider = Provider<LearningRepository>(
   (ref) => LocalLearningRepository(ref.watch(localStorageProvider)),
 );
 
-/// The conversation feature talks to the engine only through this binding.
-///
 /// The engine is stateless, so it is rebuilt when the learner's learning
 /// language changes.
-final learningEngineProvider = Provider<LearningEngine>(
+final _defaultLearningEngineProvider = Provider<DefaultLearningEngine>(
   (ref) => DefaultLearningEngine(
     ref.watch(learningRepositoryProvider),
     rules: ref.watch(learningRulesProvider),
+    // The one place the revision moves: whenever the engine really changed
+    // the memory, whoever the practice came from (conversation or review).
+    onMemoryChanged: () {
+      if (ref.mounted) ref.read(learningRevisionProvider.notifier).bump();
+    },
   ),
+);
+
+/// The conversation feature talks to the engine only through this binding.
+final learningEngineProvider = Provider<LearningEngine>(
+  (ref) => ref.watch(_defaultLearningEngineProvider),
+);
+
+/// How practice (the review, today) reaches the learning memory: through the
+/// learning engine, never a repository.
+final practiceEvidenceRecorderProvider = Provider<PracticeEvidenceRecorder>(
+  (ref) => ref.watch(_defaultLearningEngineProvider),
 );
 
 /// The rules of the learner's `learningLanguage`. Profiles only ever carry a
@@ -36,9 +51,11 @@ final learningRulesProvider = Provider<LanguageLearningRules>((ref) {
       (throw StateError('No learning rules for ${language.name}'));
 });
 
-/// A counter that changes whenever the learning memory may have changed. The
-/// repository has no change stream, so whoever updates the memory (the
-/// conversation, after the learning analysis) calls [bump]; everything that
+/// A counter that changes whenever the learning memory has changed. The
+/// repository has no change stream, so the learning engine, the only writer,
+/// bumps it each time it really changed the memory (a conversation analysis
+/// that wrote something, a piece of practice evidence that was applied); never
+/// for a button press or for evidence that changed nothing. Everything that
 /// shows the memory watches this through [learningOverviewProvider] and
 /// refreshes by itself. It carries no data: the repository stays the single
 /// source of truth.

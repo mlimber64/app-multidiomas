@@ -1,6 +1,7 @@
 import '../../learning/domain/grammar_topic.dart';
 import '../../learning/domain/language_learning_rules.dart';
 import '../../learning/domain/learning_context.dart';
+import '../../learning/domain/learning_state.dart';
 import '../../profile/domain/user_learning_profile.dart';
 
 /// The teacher's behavior, defined once and parameterized by the learner's
@@ -39,7 +40,21 @@ Corrections:
 - When the learner made a mistake worth fixing, put it in "corrections" and prioritize the most relevant error(s); at most 2 per reply.
 - Do not repeat the full explanation inside "message". "message" may open with a short, light reaction (for example "Quasi! 😊") and then continue the conversation, naturally using the correct form.
 - "explanation" is brief and fits the learner's level. "naturalAlternative" is a more idiomatic phrasing, only when it differs from "corrected".
-- If there is nothing worth correcting, return no corrections.''';
+- If there is nothing worth correcting, return no corrections.${_translationRules(l, s, learning != support)}''';
+}
+
+/// The learner reads the teacher in $l with its meaning in their support
+/// language under it. The translation is only an aid to understand what the
+/// teacher wrote; the teacher still teaches and corrects in the learning
+/// language. Asked only when there are two different languages.
+String _translationRules(String learning, String support, bool different) {
+  if (!different) return '';
+  return '''
+
+Translation (a comprehension aid for the learner):
+- Always set "translation" to your "message" translated faithfully into $support: same meaning, nothing added, no comments. Do not translate anything else.
+- For every correction set "correctedTranslation" to the $support translation of the CORRECTED sentence ("corrected"). Never translate the learner's mistaken sentence, and never let the translation correct or explain anything.
+- If you cannot translate something faithfully, use null for that translation. Your $learning reply and corrections must be exactly the same with or without translations.''';
 }
 
 String _levelGuidance(LanguageLevel? level) => switch (level) {
@@ -145,7 +160,47 @@ String _learningContextSection(
       ..add('Improving (no need to simplify or over-correct here):')
       ..addAll(context.positiveSignals.map((t) => '- ${describeTopic(t)}'));
   }
+  final adaptation = _adaptationLines(context, describeTopic);
+  if (adaptation.isNotEmpty) {
+    lines
+      ..add('')
+      ..add(
+        "Difficulty by area. The learner's overall level above does not "
+        'change: adjust only these areas, and leave everything else as it is.',
+      )
+      ..addAll(adaptation);
+  }
   return lines.join('\n');
+}
+
+/// What each [AdaptationStrategy] asks of the teacher, for the topics (and
+/// words) it applies to. One line per strategy, only when there is something
+/// for it.
+List<String> _adaptationLines(
+  LearningContext context,
+  String Function(GrammarTopic) describeTopic,
+) {
+  List<String> topicsFor(AdaptationStrategy strategy) => [
+    for (final entry in context.topicStrategies.entries)
+      if (entry.value == strategy) describeTopic(entry.key),
+  ];
+  final simplify = topicsFor(AdaptationStrategy.simplify);
+  final keep = topicsFor(AdaptationStrategy.keep);
+  final stretch = topicsFor(AdaptationStrategy.stretch);
+  return [
+    if (simplify.isNotEmpty)
+      '- Keep these simple and guided (short sentences, supportive wording, '
+          'one idea at a time): ${simplify.join('; ')}',
+    if (keep.isNotEmpty)
+      '- Keep the current difficulty and vary the examples: '
+          '${keep.join('; ')}',
+    if (stretch.isNotEmpty)
+      '- Ask for more here (a new context, less guided, more spontaneous, '
+          'combined with other structures): ${stretch.join('; ')}',
+    if (context.stretchWords.isNotEmpty)
+      '- The learner already uses these words well; use them in new, richer '
+          'contexts: ${context.stretchWords.join(', ')}',
+  ];
 }
 
 /// Builds the full instruction for one request. Only information that exists
@@ -158,6 +213,7 @@ String buildTeacherInstruction({
   LearningContext learningContext = LearningContext.empty,
   LanguageLearningRules? rules,
   bool voiceMessage = false,
+  String? scenario,
 }) {
   // The grammar topics are named by the rules of the learning language.
   final languageRules = rules ?? learningRulesFor(profile.learningLanguage);
@@ -195,6 +251,7 @@ String buildTeacherInstruction({
       '',
       _learningContextSection(learningContext, describeTopic),
     ],
+    if (scenario != null) ...['', scenario],
     if (voiceMessage) ...['', _voiceInstruction],
     if (correctionMode) ...['', _correctionModeInstruction],
   ].join('\n');

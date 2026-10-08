@@ -84,6 +84,28 @@ class MessageBubble extends StatelessWidget {
 }
 
 extension on MessageBubble {
+  /// A typed message: its words and, for the teacher, their translation under
+  /// them inside the same bubble (the words always come first).
+  Widget _withTranslation(
+    BuildContext context,
+    bool isUser,
+    ColorScheme scheme,
+    TextStyle? style,
+  ) {
+    final target = SelectableText(message.content, style: style);
+    final translation = isUser ? null : message.translation;
+    if (translation == null) return target;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        target,
+        const SizedBox(height: AppSpacing.sm),
+        TranslationLine(text: translation, color: scheme.onSurfaceVariant),
+      ],
+    );
+  }
+
   /// The words of the message; for a voice message, with a microphone and, while
   /// the transcript has not arrived (or was never understood), what is going
   /// on instead of an empty bubble.
@@ -91,7 +113,9 @@ extension on MessageBubble {
     final style = Theme.of(context).textTheme.bodyLarge?.copyWith(
       color: isUser ? scheme.onPrimary : scheme.onSurface,
     );
-    if (!message.isVoice) return SelectableText(message.content, style: style);
+    if (!message.isVoice) {
+      return _withTranslation(context, isUser, scheme, style);
+    }
     final l = context.l10n;
     final waiting = message.content.isEmpty;
     return Row(
@@ -113,6 +137,38 @@ extension on MessageBubble {
               : SelectableText(message.content, style: style),
         ),
       ],
+    );
+  }
+}
+
+/// The same sentence in the learner's support language, as a quiet second line
+/// of the one message (or card): clearly secondary, never a message of its own.
+class TranslationLine extends StatelessWidget {
+  const TranslationLine({required this.text, required this.color, super.key});
+
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(
+      context,
+    ).textTheme.bodyMedium?.copyWith(color: color, fontStyle: FontStyle.italic);
+    return Semantics(
+      label: context.l10n.translationLabel,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: ExcludeSemantics(
+              child: Icon(Icons.translate, size: 16, color: color),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.xs + 2),
+          Flexible(child: SelectableText(text, style: style)),
+        ],
+      ),
     );
   }
 }
@@ -196,6 +252,13 @@ class CorrectionCard extends StatelessWidget {
                 color: scheme.onTertiaryContainer,
               ),
             ),
+            if (correction.correctedTranslation case final translation?) ...[
+              const SizedBox(height: AppSpacing.xs),
+              TranslationLine(
+                text: translation,
+                color: scheme.onTertiaryContainer.withValues(alpha: 0.8),
+              ),
+            ],
             if (correction.explanation.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.sm),
               Text(

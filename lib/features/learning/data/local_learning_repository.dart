@@ -7,7 +7,9 @@ import '../domain/grammar_topic.dart';
 import '../domain/language_scope.dart';
 import '../domain/learning_error.dart';
 import '../domain/learning_repository.dart';
+import '../domain/learning_state.dart';
 import '../domain/learning_summary.dart';
+import '../domain/practice_evidence.dart';
 import '../domain/user_vocabulary.dart';
 
 /// Stores the learning memory as one versioned JSON document under
@@ -87,6 +89,26 @@ class LocalLearningRepository implements LearningRepository {
   );
 
   @override
+  Future<Result<bool>> applyPracticeEvidence(PracticeEvidence evidence) =>
+      _enqueue(() async {
+        final loaded = await _load();
+        switch (loaded) {
+          case Failure(:final failure):
+            return Failure<bool>(failure);
+          case Success(value: final memory):
+            if (!memory.apply(evidence)) return const Success(false);
+            final written = await _storage.writeString(
+              storageKey,
+              jsonEncode(memory.toJson()),
+            );
+            return switch (written) {
+              Failure(:final failure) => Failure<bool>(failure),
+              Success() => const Success(true),
+            };
+        }
+      });
+
+  @override
   Future<Result<void>> clearLearningData() =>
       _enqueue(() => _storage.remove(storageKey));
 
@@ -144,6 +166,9 @@ class LocalLearningRepository implements LearningRepository {
       final v = _decodeVocabulary(item);
       if (v != null) memory.vocabulary[v.id] = v;
     }
+    for (final id in _list(json['appliedEvents'])) {
+      if (id is String) memory.applied.add(id);
+    }
     return Success(memory);
   }
 
@@ -190,7 +215,11 @@ class LocalLearningRepository implements LearningRepository {
       exposureCount: _nonNegativeInt(json['exposureCount']) ?? 0,
       errorCount: _nonNegativeInt(json['errorCount']) ?? 0,
       successfulUseCount: _nonNegativeInt(json['successfulUseCount']) ?? 0,
+      weightedExposure: _nonNegativeDouble(json['weightedExposure']),
+      weightedErrors: _nonNegativeDouble(json['weightedErrors']),
+      weightedSuccesses: _nonNegativeDouble(json['weightedSuccesses']),
       lastSeenAt: _date(json['lastSeenAt']),
+      proof: PracticeProof.fromJson(json['proof']),
     );
   }
 
@@ -209,7 +238,10 @@ class LocalLearningRepository implements LearningRepository {
       meaning: json['meaning'] is String ? json['meaning'] as String : null,
       exposureCount: _nonNegativeInt(json['exposureCount']) ?? 0,
       successfulUseCount: _nonNegativeInt(json['successfulUseCount']) ?? 0,
+      weightedExposure: _nonNegativeDouble(json['weightedExposure']),
+      weightedSuccesses: _nonNegativeDouble(json['weightedSuccesses']),
       lastSeenAt: lastSeen,
+      proof: PracticeProof.fromJson(json['proof']),
     );
   }
 
@@ -232,6 +264,8 @@ class LocalLearningRepository implements LearningRepository {
 
   static int? _nonNegativeInt(Object? v) => v is int && v >= 0 ? v : null;
   static int? _positiveInt(Object? v) => v is int && v >= 1 ? v : null;
+  static double? _nonNegativeDouble(Object? v) =>
+      v is num && v >= 0 ? v.toDouble() : null;
   static double? _unit(Object? v) =>
       v is num && v >= 0 && v <= 1 ? v.toDouble() : null;
 }
@@ -241,6 +275,87 @@ class _Memory {
   final errors = <String, LearningError>{};
   final topics = <String, GrammarTopicProgress>{};
   final vocabulary = <String, UserVocabulary>{};
+
+  /// Ids of the latest review events applied, oldest first; bounded.
+  final applied = <String>[];
+  static const maxAppliedEvents = 200;
+
+  /// Takes [e] into the memory. Returns whether anything changed (a repeated
+  /// event, or one about something unknown, changes nothing).
+  bool apply(PracticeEvidence e) {
+    final fromConversation = e.source == PracticeEvidenceSource.conversation;
+    // Conversation events have no identity outside the analysis that made them
+    // (one pass per AI reply), so only review events are remembered.
+    if (!fromConversation && applied.contains(e.eventId)) return false;
+    final exposureOnly = e.type == PracticeEvidenceType.exposure;
+    var changed = false;
+
+    final topic = LocalLearningRepository._byName(
+      GrammarTopic.values,
+      e.grammarTopic,
+    );
+    if (topic != null) {
+      final key = LocalLearningRepository._topicKey(e.learningLanguage, topic);
+      final known = topics[key];
+      if (known != null || fromConversation) {
+        topics[key] =
+            (known ??
+                    GrammarTopicProgress(
+                      topic: topic,
+                      language: e.learningLanguage,
+                    ))
+                .practice(
+                  at: e.occurredAt,
+                  success: e.isSuccess,
+                  weight: e.weight,
+                  occurrence: fromConversation,
+                  exposureOnly: exposureOnly,
+                  evidenceType: e.type,
+                  context: e.contextId,
+                );
+        changed = true;
+      }
+    }
+
+    final word = e.vocabularyWord;
+    final id =
+        e.referenceId != null &&
+            e.referenceId!.startsWith('${e.learningLanguage}:')
+        ? e.referenceId
+        : (word == null
+              ? null
+              : UserVocabulary.idFor(word, e.learningLanguage));
+    if (id != null && topic == null) {
+      final known = vocabulary[id];
+      if (known != null || (fromConversation && word != null)) {
+        vocabulary[id] =
+            (known ??
+                    UserVocabulary(
+                      id: id,
+                      word: word!.trim(),
+                      language: e.learningLanguage,
+                      lastSeenAt: e.occurredAt,
+                      exposureCount: 0,
+                    ))
+                .practice(
+                  at: e.occurredAt,
+                  success: e.isSuccess,
+                  weight: e.weight,
+                  occurrence: fromConversation,
+                  evidenceType: e.type,
+                  context: e.contextId,
+                );
+        changed = true;
+      }
+    }
+
+    if (!changed) return false;
+    if (!fromConversation) applied.add(e.eventId);
+    while (applied.length > maxAppliedEvents) {
+      applied.removeAt(0);
+    }
+    return true;
+  }
 
   Map<String, Object?> toJson() => {
     'version': LocalLearningRepository.currentVersion,
@@ -268,6 +383,14 @@ class _Memory {
           'exposureCount': t.exposureCount,
           'errorCount': t.errorCount,
           'successfulUseCount': t.successfulUseCount,
+          if (t.weightedExposure != t.exposureCount ||
+              t.weightedErrors != t.errorCount ||
+              t.weightedSuccesses != t.successfulUseCount) ...{
+            'weightedExposure': t.weightedExposure,
+            'weightedErrors': t.weightedErrors,
+            'weightedSuccesses': t.weightedSuccesses,
+          },
+          if (!t.proof.isEmpty) 'proof': t.proof.toJson(),
           'lastSeenAt': t.lastSeenAt?.toIso8601String(),
         },
     ],
@@ -280,9 +403,16 @@ class _Memory {
           'meaning': v.meaning,
           'exposureCount': v.exposureCount,
           'successfulUseCount': v.successfulUseCount,
+          if (v.weightedExposure != v.exposureCount ||
+              v.weightedSuccesses != v.successfulUseCount) ...{
+            'weightedExposure': v.weightedExposure,
+            'weightedSuccesses': v.weightedSuccesses,
+          },
+          if (!v.proof.isEmpty) 'proof': v.proof.toJson(),
           'lastSeenAt': v.lastSeenAt.toIso8601String(),
         },
     ],
+    if (applied.isNotEmpty) 'appliedEvents': applied,
   };
 
   LearnerLearningSummary toSummary() {

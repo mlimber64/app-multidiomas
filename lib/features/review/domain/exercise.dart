@@ -1,5 +1,9 @@
 import 'package:flutter/foundation.dart' show listEquals;
 
+import '../../learning/domain/learning_state.dart';
+import '../../learning/domain/practice_evidence.dart';
+import 'review_item.dart';
+
 /// How a review item is practiced.
 enum ExerciseType {
   /// Type the corrected form of a mistake the learner made.
@@ -34,6 +38,7 @@ class Exercise {
     required this.correctAnswer,
     this.options = const [],
     this.explanation = '',
+    this.adaptation = AdaptationStrategy.keep,
   }) : assert(
          options.isEmpty || options.contains(correctAnswer),
          'The correct answer must be one of the options',
@@ -58,6 +63,12 @@ class Exercise {
   /// Why the answer is right, from learning memory; empty when none is known.
   final String explanation;
 
+  /// The strategy this exercise was built with for the learner's state on the
+  /// concept. [AdaptationStrategy.keep] also when nothing in it could be
+  /// adapted. It never changes what the exercise proves: see [ExerciseType]
+  /// and `ExercisePracticeType`.
+  final AdaptationStrategy adaptation;
+
   bool get isMultipleChoice => options.isNotEmpty;
 
   @override
@@ -69,6 +80,7 @@ class Exercise {
       other.prompt == prompt &&
       other.correctAnswer == correctAnswer &&
       other.explanation == explanation &&
+      other.adaptation == adaptation &&
       listEquals(other.options, options);
 
   @override
@@ -79,9 +91,33 @@ class Exercise {
     prompt,
     correctAnswer,
     explanation,
+    adaptation,
     Object.hashAll(options),
   );
 
   @override
   String toString() => 'Exercise($id, $type)';
+}
+
+/// What an exercise asks of the learner, as practice evidence: the one place
+/// that classifies them. Typing the answer is production; choosing between
+/// options is recognition, a weaker proof.
+extension ExercisePracticeType on ExerciseType {
+  PracticeEvidenceType get practiceType => switch (this) {
+    // The learner types the corrected sentence.
+    ExerciseType.errorCorrection => PracticeEvidenceType.production,
+    // The learner picks one of the options.
+    ExerciseType.grammarChoice => PracticeEvidenceType.recognition,
+    // The learner types the missing word (no options).
+    ExerciseType.vocabularyContext => PracticeEvidenceType.production,
+  };
+
+  /// The exercise a review item of [type] is practiced with today (the
+  /// generator makes exactly one kind per item type), for callers that do not
+  /// say which exercise was answered.
+  static ExerciseType forItem(ReviewItemType type) => switch (type) {
+    ReviewItemType.error => ExerciseType.errorCorrection,
+    ReviewItemType.grammar => ExerciseType.grammarChoice,
+    ReviewItemType.vocabulary => ExerciseType.vocabularyContext,
+  };
 }

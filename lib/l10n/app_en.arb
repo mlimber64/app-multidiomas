@@ -297,6 +297,11 @@
   "spellIt": "Spell it",
   "stopListening": "Stop",
   "hearItRight": "Hear how it is said and written correctly:",
+  "translationLabel": "Translation",
+  "teacherVoiceLabel": "Teacher's voice",
+  "teacherVoiceHint": "Used when the teacher's messages are read aloud. The exact voice depends on the ones installed on your phone.",
+  "voiceFemale": "Female",
+  "voiceMale": "Male",
   "listenToMessage": "Listen to the message",
   "noVoiceInstalled": "Your phone has no voice installed for this language. You can install one in Settings, Language, Text-to-speech output.",
   "speechFailed": "I couldn't play the audio.",
@@ -311,5 +316,145 @@
   "recordingTooShort": "The recording was too short. Speak a little longer.",
   "voiceMessage": "Voice message",
   "voiceListening": "Listening…",
-  "voiceNotUnderstood": "The audio was not understood"
+  "voiceNotUnderstood": "The audio was not understood",
+  "routineTitle": "Your practice for today",
+  "routineIntro": "This is what is worth practicing today.",
+  "routinePreparing": "Preparing your practice",
+  "routineError": "I couldn't prepare your practice for today. Please try again.",
+  "routineStep3Title": "Consolidate",
+  "routineReviewDesc": "{count, plural, =1{1 exercise to review} other{{count} exercises to review}}",
+  "@routineReviewDesc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineReviewNone": "Nothing to review today.",
+  "routineWordsDesc": "{count, plural, =1{1 word to consolidate} other{{count} words to consolidate}}",
+  "@routineWordsDesc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routineWordsNone": "No words to consolidate today.",
+  "routineStepDone": "Done",
+  "routineStepLocked": "Finish the previous step first.",
+  "routineCtaStart": "Start",
+  "routineContinue": "Back to your practice",
+  "routineCompleted": "Done for today! 🎉",
+  "routineCompletedBody": "You've done today's practice. Come back tomorrow.",
+  "routineProgress": "{done}/{total}",
+  "@routineProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "routineProgressSemantics": "{done} of {total} steps done",
+  "@routineProgressSemantics": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "situationIntroductionTitle": "Introduce yourself",
+  "situationIntroductionDesc": "You meet someone at a party: talk about where you live, what you do and what you enjoy.",
+  "situationYesterdayTitle": "What did you do yesterday?",
+  "situationYesterdayDesc": "A friend asks how yesterday went: tell them where you went and what you did.",
+  "situationWorkdayTitle": "Your day",
+  "situationWorkdayDesc": "A colleague asks about your day at work or study.",
+  "situationCafeTitle": "At the café",
+  "situationCafeDesc": "Order something to eat and drink and ask a question about the place.",
+  "situationDirectionsTitle": "How do I get there?",
+  "situationDirectionsDesc": "You are in a town you do not know: ask how to get to a place.",
+  "situationShoppingTitle": "Shopping",
+  "situationShoppingDesc": "Look for something to buy: ask about size, color and price.",
+  "situationDescribingTitle": "Describe it",
+  "situationDescribingDesc": "Describe a person or a place you know well and what you think of them.",
+  "situationPlansTitle": "Let’s make a plan",
+  "situationPlansDesc": "Plan the weekend or a trip with someone.",
+  "missionBanner": "Mission: {title}",
+  "@missionBanner": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "missionFinish": "Finish the mission",
+  "missionKeepGoing": "Write a little more to be able to finish.",
+  "wordsStepIntro": "Go over these words you have met.",
+  "wordsStepContext": "Complete:",
+  "wordsStepReveal": "Show the word",
+  "wordsStepFinish": "I'm done",
+  "guidanceReasonReviews": "{count, plural, =1{You have 1 exercise to review.} other{You have {count} exercises to review.}}",
+  "@guidanceReasonReviews": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "guidanceReasonTopic": "Today we keep working on {topic}.",
+  "@guidanceReasonTopic": {
+    "placeholders": {
+      "topic": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceReasonGoal": "We keep working on your goal: {goal}.",
+  "@guidanceReasonGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceReasonWords": "{count, plural, =1{You have 1 word to consolidate.} other{You have {count} words to consolidate.}}",
+  "@guidanceReasonWords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "guidanceStart": "Start your practice",
+  "guidanceContinue": "Continue your practice",
+  "guidanceCompleted": "Practice completed",
+  "guidanceStepDone": "{step}: done",
+  "@guidanceStepDone": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceStepPending": "{step}: to do",
+  "@guidanceStepPending": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceStepNone": "{step}: nothing today",
+  "@guidanceStepNone": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -10,6 +10,8 @@ import '../../../shared/widgets/empty_state_card.dart';
 import '../../../shared/widgets/error_state_view.dart';
 import '../../../shared/widgets/fade_slide_in.dart';
 import '../../../shared/widgets/selectable_option_tile.dart';
+import '../../daily_routine/domain/daily_routine.dart';
+import '../../daily_routine/presentation/daily_routine_controller.dart';
 import '../../learning/domain/grammar_topic.dart';
 import '../../learning/presentation/learning_labels.dart';
 import '../domain/exercise.dart';
@@ -19,8 +21,15 @@ import 'review_session_controller.dart';
 /// "Ripassa": one review session. It only renders [ReviewSessionState] and
 /// forwards `start`, `submitAnswer` and `continueSession` to the controller;
 /// it never evaluates answers, schedules or touches storage.
+///
+/// With [routine] it is step 1 of the daily routine: up to three exercises,
+/// only from the review items the routine chose, and finishing it marks the
+/// step as done and goes back to the routine. The review itself works exactly
+/// the same.
 class ReviewScreen extends ConsumerStatefulWidget {
-  const ReviewScreen({super.key});
+  const ReviewScreen({this.routine = false, super.key});
+
+  final bool routine;
 
   @override
   ConsumerState<ReviewScreen> createState() => _ReviewScreenState();
@@ -34,12 +43,22 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
     // modified while the widget tree is being built.
     Future.microtask(() {
       if (!mounted) return;
-      final controller = ref.read(reviewSessionControllerProvider.notifier);
       if (ref.read(reviewSessionControllerProvider).status ==
           ReviewSessionStatus.idle) {
-        controller.start();
+        _start();
       }
     });
+  }
+
+  /// Starts (or restarts) the session: the usual one, or the routine's.
+  void _start() {
+    final controller = ref.read(reviewSessionControllerProvider.notifier);
+    if (!widget.routine) {
+      controller.start();
+      return;
+    }
+    final chosen = ref.read(dailyRoutineProvider).value?.step1.itemIds;
+    controller.start(size: ReviewStep.maxItems, onlyItems: chosen?.toSet());
   }
 
   @override
@@ -60,12 +79,12 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
             ),
             ReviewSessionStatus.error => ErrorStateView(
               message: context.l10n.reviewError,
-              onRetry: controller.start,
+              onRetry: _start,
             ),
             ReviewSessionStatus.completed =>
               state.total == 0
-                  ? const _EmptySession()
-                  : _Completed(summary: state.summary),
+                  ? _EmptySession(routine: widget.routine)
+                  : _Completed(summary: state.summary, routine: widget.routine),
             ReviewSessionStatus.answering ||
             ReviewSessionStatus.submitting ||
             ReviewSessionStatus.feedback => _ExercisePage(
@@ -466,18 +485,31 @@ class _FeedbackCard extends StatelessWidget {
 // End states
 // ---------------------------------------------------------------------------
 
-class _BackToPath extends StatelessWidget {
-  const _BackToPath();
+/// How a finished review ends: back to the path, or, inside the daily routine,
+/// marking its first step done and going on with the routine.
+class _BackToPath extends ConsumerWidget {
+  const _BackToPath({this.routine = false});
+
+  final bool routine;
 
   @override
-  Widget build(BuildContext context) => FilledButton(
-    onPressed: () => context.go(AppRoutes.progress),
-    child: Text(context.l10n.backToPath),
+  Widget build(BuildContext context, WidgetRef ref) => FilledButton(
+    onPressed: () async {
+      if (!routine) return context.go(AppRoutes.progress);
+      // The routine's step is done when its review is finished.
+      await ref.read(dailyRoutineProvider.notifier).completeStep(1);
+      if (context.mounted) context.go(AppRoutes.dailyRoutine);
+    },
+    child: Text(
+      routine ? context.l10n.routineContinue : context.l10n.backToPath,
+    ),
   );
 }
 
 class _EmptySession extends StatelessWidget {
-  const _EmptySession();
+  const _EmptySession({this.routine = false});
+
+  final bool routine;
 
   @override
   Widget build(BuildContext context) {
@@ -488,7 +520,7 @@ class _EmptySession extends StatelessWidget {
           icon: Icons.replay,
           title: context.l10n.reviewEmptyTitle,
           message: context.l10n.reviewEmptyBody,
-          action: const _BackToPath(),
+          action: _BackToPath(routine: routine),
         ),
       ],
     );
@@ -496,7 +528,9 @@ class _EmptySession extends StatelessWidget {
 }
 
 class _Completed extends StatelessWidget {
-  const _Completed({required this.summary});
+  const _Completed({required this.summary, this.routine = false});
+
+  final bool routine;
 
   final ReviewSessionSummary summary;
 
@@ -531,7 +565,7 @@ class _Completed extends StatelessWidget {
                   for (final line in lines)
                     Text(line, style: theme.textTheme.bodyLarge),
                   const SizedBox(height: AppSpacing.lg),
-                  const _BackToPath(),
+                  _BackToPath(routine: routine),
                 ],
               ),
             ),

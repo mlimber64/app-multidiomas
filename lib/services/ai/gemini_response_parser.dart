@@ -94,6 +94,7 @@ Result<AIResponse> parseAssistantPayload(String text) {
             message: message.trim(),
             corrections: _corrections(json['corrections']),
             transcript: transcript is String ? transcript.trim() : null,
+            translation: _translation(json['translation']),
           ),
         );
       }
@@ -115,6 +116,14 @@ Result<AIResponse> parseAssistantPayload(String text) {
     }
     return Success(AIResponse(message: cleaned));
   }
+}
+
+/// The translation of the message: a non-empty string, or nothing. Never an
+/// error: a reply without a usable translation is still a usable reply.
+String? _translation(Object? raw) {
+  if (raw is! String) return null;
+  final trimmed = raw.trim();
+  return trimmed.isEmpty ? null : trimmed;
 }
 
 List<Correction> _corrections(Object? raw) {

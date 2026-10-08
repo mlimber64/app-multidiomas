@@ -1,4 +1,6 @@
 import 'language_scope.dart';
+import 'learning_state.dart';
+import 'practice_evidence.dart';
 import 'relevance.dart';
 
 /// A word or expression the learner has run into that is relevant for
@@ -12,7 +14,24 @@ class UserVocabulary {
     this.meaning,
     this.exposureCount = 1,
     this.successfulUseCount = 0,
-  });
+    double? weightedExposure,
+    double? weightedSuccesses,
+    this.proof = PracticeProof.empty,
+  }) : _weightedExposure = weightedExposure,
+       _weightedSuccesses = weightedSuccesses;
+
+  final double? _weightedExposure;
+  final double? _weightedSuccesses;
+
+  /// The counts weighted by how strong each piece of evidence was (see
+  /// `EvidenceStrength`); equal to the plain counts for a word only ever met
+  /// in conversation, and for every record written before practice evidence.
+  double get weightedExposure => _weightedExposure ?? exposureCount.toDouble();
+  double get weightedSuccesses =>
+      _weightedSuccesses ?? successfulUseCount.toDouble();
+
+  bool get hasWeightedCounts =>
+      _weightedExposure != null || _weightedSuccesses != null;
 
   /// Builds an item with the canonical id for ([word], [language]).
   factory UserVocabulary.of({
@@ -39,6 +58,13 @@ class UserVocabulary {
   final String id;
   final String word;
 
+  /// What the learner has demonstrated with this word (see `PracticeProof`).
+  final PracticeProof proof;
+
+  /// Where the learner stands on this word: derived, never stored. A word is
+  /// only in the memory because the learner struggled with it.
+  LearningState get learningState => proof.stateOf(hadDifficulty: true);
+
   /// Language of [word] (ISO code, `it` for Italian).
   final String language;
 
@@ -50,9 +76,9 @@ class UserVocabulary {
 
   /// Approximate mastery 0.0..1.0 = successful uses / exposures (derived, same
   /// naive estimate as `GrammarTopicProgress.confidence`).
-  double get confidence => exposureCount == 0
+  double get confidence => weightedExposure <= 0
       ? 0
-      : (successfulUseCount / exposureCount).clamp(0.0, 1.0);
+      : (weightedSuccesses / weightedExposure).clamp(0.0, 1.0);
 
   /// How much this word deserves reinforcement now, in the same spirit as the
   /// other priorities: `(1 − mastery) × recency`. Derived, never stored; words
@@ -73,6 +99,35 @@ class UserVocabulary {
       lastSeenAt: occurrence.lastSeenAt.isAfter(lastSeenAt)
           ? occurrence.lastSeenAt
           : lastSeenAt,
+      weightedExposure: weightedExposure + occurrence.weightedExposure,
+      weightedSuccesses: weightedSuccesses + occurrence.weightedSuccesses,
+      proof: proof,
     );
   }
+
+  /// Takes one piece of practice into the word, [weight] times as much as a
+  /// full occurrence in conversation. An [occurrence] is the word met in the
+  /// learner's own writing (it moves the plain counts and the last time
+  /// seen); practice that is not (a review) only moves the weighted counts.
+  UserVocabulary practice({
+    required DateTime at,
+    required bool success,
+    double weight = 1,
+    bool occurrence = false,
+    PracticeEvidenceType? evidenceType,
+    String? context,
+  }) => UserVocabulary(
+    id: id,
+    word: word,
+    language: language,
+    meaning: meaning,
+    exposureCount: exposureCount + (occurrence ? 1 : 0),
+    successfulUseCount: successfulUseCount + (occurrence && success ? 1 : 0),
+    lastSeenAt: occurrence && at.isAfter(lastSeenAt) ? at : lastSeenAt,
+    weightedExposure: weightedExposure + weight,
+    weightedSuccesses: weightedSuccesses + (success ? weight : 0),
+    proof: evidenceType == null
+        ? proof
+        : proof.record(type: evidenceType, success: success, context: context),
+  );
 }

@@ -197,6 +197,50 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: AppSpacing.md),
+            Card(
+              margin: EdgeInsets.zero,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.teacherVoiceLabel,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l.teacherVoiceHint,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    SegmentedButton<VoiceGender>(
+                      segments: [
+                        ButtonSegment(
+                          value: VoiceGender.female,
+                          label: Text(l.voiceFemale),
+                          icon: const Icon(Icons.record_voice_over_outlined),
+                        ),
+                        ButtonSegment(
+                          value: VoiceGender.male,
+                          label: Text(l.voiceMale),
+                          icon: const Icon(Icons.record_voice_over),
+                        ),
+                      ],
+                      selected: {profile.teacherVoice},
+                      showSelectedIcon: false,
+                      onSelectionChanged: (selection) => saveProfile(
+                        ScaffoldMessenger.of(context),
+                        profile.copyWith(teacherVoice: selection.first),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
             Text(
               l.profileLocalNote,
               style: theme.textTheme.bodySmall?.copyWith(

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/conversation/presentation/conversation_screen.dart';
+import '../../features/daily_routine/presentation/daily_routine_screen.dart';
+import '../../features/daily_routine/presentation/vocabulary_step_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/home/presentation/home_shell.dart';
 import '../../features/learning/presentation/learning_screen.dart';
@@ -24,6 +26,11 @@ abstract final class AppRoutes {
 
   /// "Ripassa": a focused full-screen flow above the shell (no bottom bar).
   static const review = '/review';
+
+  /// "La tua pratica di oggi" and its steps: full-screen flows above the shell.
+  static const dailyRoutine = '/routine';
+  static const routineReview = '/routine/review';
+  static const routineWords = '/routine/words';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -51,6 +58,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const OnboardingScreen(),
       ),
       GoRoute(path: AppRoutes.review, builder: (_, _) => const ReviewScreen()),
+      GoRoute(
+        path: AppRoutes.dailyRoutine,
+        builder: (_, _) => const DailyRoutineScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.routineReview,
+        builder: (_, _) => const ReviewScreen(routine: true),
+      ),
+      GoRoute(
+        path: AppRoutes.routineWords,
+        builder: (_, _) => const VocabularyStepScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => HomeShell(navigationShell: shell),
         branches: [

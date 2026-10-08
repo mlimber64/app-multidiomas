@@ -185,6 +185,11 @@
   "spellIt": "Deletrear",
   "stopListening": "Detener",
   "hearItRight": "Escucha cómo se dice y se escribe bien:",
+  "translationLabel": "Traducción",
+  "teacherVoiceLabel": "Voz del profesor",
+  "teacherVoiceHint": "Se usa al leer en voz alta los mensajes del profesor. La voz exacta depende de las que tengas instaladas en el teléfono.",
+  "voiceFemale": "Femenina",
+  "voiceMale": "Masculina",
   "listenToMessage": "Escuchar el mensaje",
   "noVoiceInstalled": "Tu teléfono no tiene una voz instalada para este idioma. Puedes instalarla en Ajustes, Idioma, Salida de texto a voz.",
   "speechFailed": "No he podido reproducir el audio.",
@@ -199,5 +204,104 @@
   "recordingTooShort": "La grabación fue demasiado corta. Mantén el mensaje un poco más.",
   "voiceMessage": "Mensaje de voz",
   "voiceListening": "Escuchando…",
-  "voiceNotUnderstood": "No se entendió el audio"
+  "voiceNotUnderstood": "No se entendió el audio",
+  "routineTitle": "Tu práctica de hoy",
+  "routineIntro": "Esto es lo que te conviene practicar hoy.",
+  "routinePreparing": "Preparando tu práctica",
+  "routineError": "No he podido preparar tu práctica de hoy. Inténtalo de nuevo.",
+  "routineStep3Title": "Consolida",
+  "routineReviewDesc": "{count, plural, =1{1 ejercicio para repasar} other{{count} ejercicios para repasar}}",
+  "routineReviewNone": "Hoy no hay nada que repasar.",
+  "routineWordsDesc": "{count, plural, =1{1 palabra para consolidar} other{{count} palabras para consolidar}}",
+  "routineWordsNone": "Hoy no hay palabras para consolidar.",
+  "routineStepDone": "Hecho",
+  "routineStepLocked": "Primero termina el paso anterior.",
+  "routineCtaStart": "Empezar",
+  "routineContinue": "Seguir con la práctica",
+  "routineCompleted": "¡Completada! 🎉",
+  "routineCompletedBody": "Has hecho tu práctica de hoy. Vuelve mañana.",
+  "routineProgress": "{done}/{total}",
+  "routineProgressSemantics": "{done} de {total} pasos hechos",
+  "situationIntroductionTitle": "Preséntate",
+  "situationIntroductionDesc": "Conoces a alguien en una fiesta: habla de dónde vives, a qué te dedicas y qué te gusta.",
+  "situationYesterdayTitle": "¿Qué hiciste ayer?",
+  "situationYesterdayDesc": "Un amigo te pregunta cómo te fue ayer: cuéntale adónde fuiste y qué hiciste.",
+  "situationWorkdayTitle": "Tu jornada",
+  "situationWorkdayDesc": "Un compañero te pregunta por tu día de trabajo o de estudio.",
+  "situationCafeTitle": "En la cafetería",
+  "situationCafeDesc": "Pide algo de comer y de beber y haz una pregunta sobre el local.",
+  "situationDirectionsTitle": "¿Cómo llego?",
+  "situationDirectionsDesc": "Estás en una ciudad que no conoces: pregunta cómo llegar a un sitio.",
+  "situationShoppingTitle": "De compras",
+  "situationShoppingDesc": "Busca algo que comprar: pregunta por la talla, el color y el precio.",
+  "situationDescribingTitle": "Describe",
+  "situationDescribingDesc": "Describe a una persona o un lugar que conoces bien y qué piensas de ellos.",
+  "situationPlansTitle": "Hagamos un plan",
+  "situationPlansDesc": "Organiza con alguien el fin de semana o un viaje.",
+  "missionBanner": "Misión: {title}",
+  "missionFinish": "Terminar la misión",
+  "missionKeepGoing": "Escribe un poco más para poder terminar.",
+  "wordsStepIntro": "Repasa estas palabras que has encontrado.",
+  "wordsStepContext": "Completa:",
+  "wordsStepReveal": "Mostrar la palabra",
+  "wordsStepFinish": "He terminado",
+  "guidanceReasonReviews": "{count, plural, =1{Tienes 1 ejercicio para repasar.} other{Tienes {count} ejercicios para repasar.}}",
+  "@guidanceReasonReviews": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "guidanceReasonTopic": "Hoy seguimos trabajando en {topic}.",
+  "@guidanceReasonTopic": {
+    "placeholders": {
+      "topic": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceReasonGoal": "Seguimos trabajando en tu objetivo: {goal}.",
+  "@guidanceReasonGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceReasonWords": "{count, plural, =1{Tienes 1 palabra para consolidar.} other{Tienes {count} palabras para consolidar.}}",
+  "@guidanceReasonWords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "guidanceStart": "Empieza tu práctica",
+  "guidanceContinue": "Continúa tu práctica",
+  "guidanceCompleted": "Práctica completada",
+  "guidanceStepDone": "{step}: hecho",
+  "@guidanceStepDone": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceStepPending": "{step}: por hacer",
+  "@guidanceStepPending": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "guidanceStepNone": "{step}: nada por hoy",
+  "@guidanceStepNone": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  }
 }

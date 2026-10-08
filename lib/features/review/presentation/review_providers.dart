@@ -22,6 +22,7 @@ final reviewEngineProvider = Provider<ReviewEngine>(
     learningLanguage: ref.watch(
       userLearningProfileProvider.select((p) => p.learningLanguage),
     ),
+    evidence: ref.watch(practiceEvidenceRecorderProvider),
   ),
 );
 

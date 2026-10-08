@@ -3,6 +3,7 @@ import 'grammar_topic.dart';
 import 'language_scope.dart';
 import 'learning_error.dart';
 import 'learning_summary.dart';
+import 'practice_evidence.dart';
 import 'user_vocabulary.dart';
 
 /// Persistence boundary for the learner's learning memory. Holds data, not
@@ -37,6 +38,13 @@ abstract interface class LearningRepository {
     required DateTime at,
     String language = legacyLanguageCode,
   });
+
+  /// Applies one piece of practice evidence to the memory, once: the event id
+  /// is remembered (a bounded number of them) and the same event arriving
+  /// again changes nothing. Returns whether the memory changed. Evidence about
+  /// an item the memory does not hold changes nothing, except the learner's
+  /// own conversation, which is how items first get there.
+  Future<Result<bool>> applyPracticeEvidence(PracticeEvidence evidence);
 
   /// Erases all learning memory (conversations are untouched).
   Future<Result<void>> clearLearningData();

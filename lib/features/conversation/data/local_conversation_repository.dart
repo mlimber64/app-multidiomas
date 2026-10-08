@@ -65,6 +65,7 @@ class LocalConversationRepository implements ConversationRepository {
           'createdAt': m.createdAt.toIso8601String(),
           'corrections': m.corrections.map((x) => x.toJson()).toList(),
           if (m.isVoice) 'voice': true,
+          if (m.translation != null) 'translation': m.translation,
         },
     ],
   };
@@ -119,7 +120,15 @@ class LocalConversationRepository implements ConversationRepository {
           ? [for (final c in rawCorrections) ?Correction.tryFromJson(c)]
           : const [],
       isVoice: json['voice'] == true,
+      translation: _translation(json['translation']),
     );
+  }
+
+  /// Messages stored before translations existed have none.
+  String? _translation(Object? value) {
+    if (value is! String) return null;
+    final trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
   }
 
   DateTime? _date(Object? value) =>
