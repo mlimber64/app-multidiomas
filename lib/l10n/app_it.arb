@@ -316,5 +316,10 @@
   "homeTileReviewSub": "{count, plural, =1{1 in sospeso} other{{count} in sospeso}}",
   "homeTileReviewNone": "Tutto in ordine",
   "homeTileWordsSub": "{count, plural, =1{1 da consolidare} other{{count} da consolidare}}",
-  "homeTileWordsNone": "Il tuo vocabolario"
+  "homeTileWordsNone": "Il tuo vocabolario",
+  "priorityHigh": "Alta",
+  "priorityMedium": "Media",
+  "priorityLow": "Bassa",
+  "priorityLabel": "Priorità: {level}",
+  "learnSubtitle": "Su cosa lavorare ora"
 }

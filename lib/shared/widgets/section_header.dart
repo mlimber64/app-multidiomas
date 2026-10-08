@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_text_styles.dart';
 import '../../app/theme/app_tokens.dart';
 
 /// Title of a group of content, with an optional one-line explanation.
+/// Rediseño: título de sección en Fraunces 22.
 class SectionHeader extends StatelessWidget {
   const SectionHeader({required this.title, this.subtitle, super.key});
 
@@ -11,7 +13,6 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Column(
@@ -19,17 +20,12 @@ class SectionHeader extends StatelessWidget {
         children: [
           Semantics(
             header: true,
-            child: Text(title, style: theme.textTheme.titleLarge),
+            child: Text(title, style: AppTextStyles.sectionTitle),
           ),
           if (subtitle != null)
             Padding(
               padding: const EdgeInsets.only(top: AppSpacing.xs),
-              child: Text(
-                subtitle!,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
+              child: Text(subtitle!, style: AppTextStyles.screenSubtitle),
             ),
         ],
       ),

@@ -1707,6 +1707,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your vocabulary'**
   String get homeTileWordsNone;
+
+  /// No description provided for @priorityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get priorityHigh;
+
+  /// No description provided for @priorityMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get priorityMedium;
+
+  /// No description provided for @priorityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get priorityLow;
+
+  /// No description provided for @priorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority: {level}'**
+  String priorityLabel(String level);
+
+  /// No description provided for @learnSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What to work on now'**
+  String get learnSubtitle;
 }
 
 class _AppLocalizationsDelegate

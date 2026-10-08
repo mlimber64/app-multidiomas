@@ -316,5 +316,10 @@
   "homeTileReviewSub": "{count, plural, =1{1 pendiente} other{{count} pendientes}}",
   "homeTileReviewNone": "Todo al día",
   "homeTileWordsSub": "{count, plural, =1{1 por consolidar} other{{count} por consolidar}}",
-  "homeTileWordsNone": "Tu vocabulario"
+  "homeTileWordsNone": "Tu vocabulario",
+  "priorityHigh": "Alta",
+  "priorityMedium": "Media",
+  "priorityLow": "Baja",
+  "priorityLabel": "Prioridad: {level}",
+  "learnSubtitle": "Qué reforzar ahora"
 }

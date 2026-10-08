@@ -977,4 +977,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get homeTileWordsNone => 'Tu vocabulario';
+
+  @override
+  String get priorityHigh => 'Alta';
+
+  @override
+  String get priorityMedium => 'Media';
+
+  @override
+  String get priorityLow => 'Baja';
+
+  @override
+  String priorityLabel(String level) {
+    return 'Prioridad: $level';
+  }
+
+  @override
+  String get learnSubtitle => 'Qué reforzar ahora';
 }

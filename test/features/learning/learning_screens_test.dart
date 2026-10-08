@@ -443,7 +443,7 @@ void main() {
       expect(find.textContaining('esercizio'), findsNothing);
       expect(find.textContaining('Quiz'), findsNothing);
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Parliamo'));
+      await tester.tap(find.widgetWithText(PrimaryButton, 'Parliamo'));
       await tester.pumpAndSettle();
       expect(
         find.descendant(of: _screenTitle, matching: find.text('Parla')),

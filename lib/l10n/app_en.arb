@@ -504,5 +504,17 @@
       }
     }
   },
-  "homeTileWordsNone": "Your vocabulary"
+  "homeTileWordsNone": "Your vocabulary",
+  "priorityHigh": "High",
+  "priorityMedium": "Medium",
+  "priorityLow": "Low",
+  "priorityLabel": "Priority: {level}",
+  "@priorityLabel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "learnSubtitle": "What to work on now"
 }
