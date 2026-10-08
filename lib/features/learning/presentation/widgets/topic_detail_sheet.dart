@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/app_router.dart';
+import '../../../../app/theme/app_text_styles.dart';
 import '../../../../app/theme/app_tokens.dart';
+import '../../../../shared/ui/primary_button.dart';
 import '../../../../l10n/l10n.dart';
 import '../../domain/learning_overview.dart';
 import '../learning_labels.dart';
@@ -28,8 +30,6 @@ class _TopicDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
     final improving = view.standing == TopicStanding.improving;
     final l = context.l10n;
 
@@ -43,7 +43,7 @@ class _TopicDetail extends StatelessWidget {
           AppSpacing.lg,
         ),
         children: [
-          Text(view.topic.label(l), style: theme.textTheme.headlineSmall),
+          Text(view.topic.label(l), style: AppTextStyles.sectionTitle),
           const SizedBox(height: AppSpacing.sm),
           Text(
             improving
@@ -51,7 +51,7 @@ class _TopicDetail extends StatelessWidget {
                 : view.hasProgress
                 ? l.topicProgressWorth
                 : l.topicWorthFocus,
-            style: theme.textTheme.bodyLarge,
+            style: AppTextStyles.body,
           ),
           if (view.hasProgress) ...[
             const SizedBox(height: AppSpacing.md),
@@ -60,27 +60,24 @@ class _TopicDetail extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: view.correctShare,
                 minHeight: 8,
+                color: AppColors.green,
+                backgroundColor: AppColors.track,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
               l.correctOutOf(view.successfulUses, view.appearances),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
+              style: AppTextStyles.small,
             ),
           ],
           if (view.relatedTopics.isNotEmpty) ...[
             const SizedBox(height: AppSpacing.lg),
-            Text(l.workingOn, style: theme.textTheme.titleMedium),
+            Text(l.workingOn, style: AppTextStyles.rowTitle),
             const SizedBox(height: AppSpacing.xs),
             for (final t in view.relatedTopics)
               Padding(
                 padding: const EdgeInsets.only(top: AppSpacing.xs),
-                child: Text(
-                  '• ${t.label(l)}',
-                  style: theme.textTheme.bodyLarge,
-                ),
+                child: Text('• ${t.label(l)}', style: AppTextStyles.body),
               ),
           ],
           if (view.relatedErrors.isNotEmpty) ...[
@@ -89,7 +86,7 @@ class _TopicDetail extends StatelessWidget {
               view.relatedErrors.any((e) => e.isRecurring)
                   ? l.recurringErrors
                   : l.mistakes,
-              style: theme.textTheme.titleMedium,
+              style: AppTextStyles.rowTitle,
             ),
             const SizedBox(height: AppSpacing.sm),
             for (final e in view.relatedErrors)
@@ -99,14 +96,14 @@ class _TopicDetail extends StatelessWidget {
               ),
           ],
           const SizedBox(height: AppSpacing.lg),
-          Text(l.keepUsingIt, style: theme.textTheme.bodyLarge),
+          Text(l.keepUsingIt, style: AppTextStyles.body),
           const SizedBox(height: AppSpacing.md),
-          FilledButton(
+          PrimaryButton(
+            label: l.letsTalk,
             onPressed: () {
               Navigator.of(context).pop();
               context.go(AppRoutes.conversation);
             },
-            child: Text(l.letsTalk),
           ),
         ],
       ),

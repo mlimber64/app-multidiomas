@@ -48,7 +48,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get navProfile => 'Perfil';
 
   @override
-  String get homeGreeting => '¡Hola! 👋';
+  String get homeGreeting => '¡Hola!';
 
   @override
   String get homeReady => '¿Listo para practicar hoy?';
@@ -898,4 +898,159 @@ class AppLocalizationsEs extends AppLocalizations {
   String guidanceStepNone(String step) {
     return '$step: nada por hoy';
   }
+
+  @override
+  String homeStreakDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String streakLabel(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días',
+      one: '1 día',
+    );
+    return 'Racha de $_temp0';
+  }
+
+  @override
+  String get routineStartPractice => 'Empezar práctica';
+
+  @override
+  String get routineHeroReview => 'Repasa lo que viste';
+
+  @override
+  String get routineHeroTalk => 'Habla con tu profesor';
+
+  @override
+  String get routineHeroWords => 'Consolida tus palabras';
+
+  @override
+  String get homeTileConversationSub => 'Habla libre';
+
+  @override
+  String homeTileLearnSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count áreas a reforzar',
+      one: '1 área a reforzar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileLearnNone => 'Qué reforzar';
+
+  @override
+  String homeTileReviewSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pendientes',
+      one: '1 pendiente',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileReviewNone => 'Todo al día';
+
+  @override
+  String homeTileWordsSub(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count por consolidar',
+      one: '1 por consolidar',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeTileWordsNone => 'Tu vocabulario';
+
+  @override
+  String get priorityHigh => 'Alta';
+
+  @override
+  String get priorityMedium => 'Media';
+
+  @override
+  String get priorityLow => 'Baja';
+
+  @override
+  String priorityLabel(String level) {
+    return 'Prioridad: $level';
+  }
+
+  @override
+  String get learnSubtitle => 'Qué reforzar ahora';
+
+  @override
+  String get wordsTabToConsolidate => 'Por consolidar';
+
+  @override
+  String get wordsTabInUse => 'En uso';
+
+  @override
+  String get wordsTabAll => 'Todas';
+
+  @override
+  String get wordsNoMeaning => 'Aún sin significado guardado';
+
+  @override
+  String wordUsesSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Usada correctamente $count veces',
+      one: 'Usada correctamente una vez',
+      zero: 'Aún sin uso correcto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String progressRingCaption(int improving, int total) {
+    return '$improving de $total áreas mejorando';
+  }
+
+  @override
+  String get progressWeekTitle => 'Esta semana';
+
+  @override
+  String get weekInitials => 'L,M,X,J,V,S,D';
+
+  @override
+  String weekSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días de práctica esta semana',
+      one: '1 día de práctica esta semana',
+      zero: 'Ningún día de práctica esta semana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statWords => 'Palabras vistas';
+
+  @override
+  String get statImproving => 'Áreas mejorando';
+
+  @override
+  String get statReinforce => 'Áreas a reforzar';
+
+  @override
+  String get voiceTest => 'Probar voz';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 import 'package:parla_con_me/features/learning/data/local_learning_repository.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
 import 'package:parla_con_me/features/learning/domain/learning_error.dart';
@@ -9,8 +10,9 @@ import 'package:parla_con_me/features/review/presentation/review_screen.dart';
 import '../../support/in_memory_local_storage.dart';
 import '../../support/pump_app.dart';
 
-Finder get _ripassaTile =>
-    find.descendant(of: find.byType(Card), matching: find.text('Ripassa')).last;
+Finder get _ripassaTile => find
+    .descendant(of: find.byType(AppCard), matching: find.text('Ripassa'))
+    .last;
 
 Future<InMemoryLocalStorage> _seeded() async {
   final storage = InMemoryLocalStorage();
@@ -48,7 +50,7 @@ void main() {
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     expect(find.byType(ReviewScreen, skipOffstage: false), findsNothing);
-    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(AppBottomNav), findsOneWidget);
   });
 
   testWidgets('leaving mid-session records nothing; reopening starts fresh', (
@@ -125,7 +127,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationBar),
+        of: find.byType(AppBottomNav),
         matching: find.text('Home'),
       ),
     );

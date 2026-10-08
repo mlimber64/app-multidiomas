@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/router/app_router.dart';
+import '../../../../app/theme/app_text_styles.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../conversation/presentation/conversation_controller.dart';
@@ -24,25 +25,27 @@ class ScenarioBanner extends ConsumerWidget {
       conversationControllerProvider.select((s) => s.scenarioReady),
     );
     final l = context.l10n;
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
 
-    return Material(
-      color: scheme.secondaryContainer,
+    // NUEVO: la misión se ve como una tarjeta celeste del diseño.
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      decoration: BoxDecoration(
+        color: AppColors.feedbackBg,
+        border: Border.all(color: AppColors.feedbackBorder),
+        borderRadius: BorderRadius.circular(AppRadius.panel),
+      ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.md,
-          AppSpacing.sm,
-          AppSpacing.md,
-          AppSpacing.sm,
-        ),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.flag_outlined, color: scheme.onSecondaryContainer),
+                const Icon(
+                  Icons.flag_outlined,
+                  color: AppColors.feedbackAccent,
+                ),
                 const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Column(
@@ -50,15 +53,15 @@ class ScenarioBanner extends ConsumerWidget {
                     children: [
                       Text(
                         l.missionBanner(scenario.title),
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: scheme.onSecondaryContainer,
+                        style: AppTextStyles.rowTitle.copyWith(
+                          color: AppColors.feedbackText,
                         ),
                       ),
                       if (!ready)
                         Text(
                           l.missionKeepGoing,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: scheme.onSecondaryContainer,
+                          style: AppTextStyles.small.copyWith(
+                            color: AppColors.feedbackSub,
                           ),
                         ),
                     ],

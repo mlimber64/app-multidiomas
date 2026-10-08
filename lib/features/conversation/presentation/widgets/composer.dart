@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../app/theme/app_text_styles.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../services/audio/audio_clip.dart';
 import '../../../../services/audio/voice_recorder.dart';
+import '../../../../shared/ui/app_action_chip.dart';
 import '../../../voice/presentation/speech_controller.dart';
 import '../../../voice/presentation/voice_input_controller.dart';
 
@@ -91,7 +93,6 @@ class _ComposerState extends ConsumerState<Composer> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     ref.listen(voiceInputControllerProvider, _onVoiceChange);
     final recording = ref.watch(
       voiceInputControllerProvider.select((s) => s.isRecording),
@@ -99,18 +100,17 @@ class _ComposerState extends ConsumerState<Composer> {
     final startedAt = ref.watch(
       voiceInputControllerProvider.select((s) => s.startedAt),
     );
-    return Material(
-      color: scheme.surface,
-      elevation: AppElevation.card,
+    // NUEVO: zona de entrada del diseño: fondo blanco con una línea suave
+    // encima, chips de acción, campo de 52 con borde verde y botones redondos.
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.inputAreaBorder)),
+      ),
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            AppSpacing.sm,
-            AppSpacing.md,
-            AppSpacing.sm,
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
           child: recording
               ? _RecordingBar(
                   startedAt: startedAt ?? DateTime.now(),
@@ -126,20 +126,26 @@ class _ComposerState extends ConsumerState<Composer> {
 
   Widget _typing(BuildContext context) {
     final l = context.l10n;
+    final fieldBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppRadius.button),
+      borderSide: const BorderSide(color: AppColors.green, width: 1.5),
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Tooltip(
           message: l.correctMeHint,
-          child: FilterChip(
-            label: Text(l.correctMe),
-            avatar: const Icon(Icons.edit_note, size: 18),
+          child: AppActionChip(
+            label: l.correctMe,
+            icon: Icons.edit_note,
+            variant: AppActionChipVariant.neutral,
             selected: widget.correctionMode,
-            onSelected: widget.onCorrectionModeChanged,
+            onPressed: () =>
+                widget.onCorrectionModeChanged(!widget.correctionMode),
           ),
         ),
-        const SizedBox(height: AppSpacing.sm),
+        const SizedBox(height: 2),
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -148,14 +154,23 @@ class _ComposerState extends ConsumerState<Composer> {
                 controller: _controller,
                 minLines: 1,
                 maxLines: 5,
+                style: AppTextStyles.bodyStrong.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
                 textCapitalization: TextCapitalization.sentences,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
                   hintText: l.composerHint,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm + 2,
+                  constraints: const BoxConstraints(
+                    minHeight: AppSizes.control,
                   ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
+                  border: fieldBorder,
+                  enabledBorder: fieldBorder,
+                  focusedBorder: fieldBorder,
                 ),
               ),
             ),
@@ -174,12 +189,25 @@ class _ComposerState extends ConsumerState<Composer> {
                       IconButton.outlined(
                         tooltip: l.recordVoice,
                         onPressed: widget.canSend ? _startRecording : null,
+                        style: IconButton.styleFrom(
+                          fixedSize: const Size.square(AppSizes.control),
+                          foregroundColor: AppColors.green,
+                          backgroundColor: AppColors.mintSoft,
+                          side: const BorderSide(color: AppColors.green),
+                        ),
                         icon: const Icon(Icons.mic_none),
                       ),
                     if (!hasText) const SizedBox(width: AppSpacing.xs),
                     IconButton.filled(
                       tooltip: l.send,
                       onPressed: enabled ? _submit : null,
+                      style: IconButton.styleFrom(
+                        fixedSize: const Size.square(AppSizes.control),
+                        backgroundColor: AppColors.green,
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: AppColors.track,
+                        disabledForegroundColor: AppColors.placeholder,
+                      ),
                       icon: widget.sending
                           ? const SizedBox(
                               width: 20,
@@ -239,7 +267,6 @@ class _RecordingBarState extends State<_RecordingBar> {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final scheme = Theme.of(context).colorScheme;
     final elapsed = DateTime.now().difference(widget.startedAt);
     final minutes = elapsed.inMinutes;
     final seconds = (elapsed.inSeconds % 60).toString().padLeft(2, '0');
@@ -251,7 +278,11 @@ class _RecordingBarState extends State<_RecordingBar> {
           icon: const Icon(Icons.delete_outline),
         ),
         const SizedBox(width: AppSpacing.sm),
-        Icon(Icons.fiber_manual_record, size: 14, color: scheme.error),
+        const Icon(
+          Icons.fiber_manual_record,
+          size: 14,
+          color: AppColors.errorStrike,
+        ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Semantics(
@@ -259,13 +290,18 @@ class _RecordingBarState extends State<_RecordingBar> {
             label: l.recordingNow,
             child: Text(
               '${l.recordingNow}  $minutes:$seconds',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: AppTextStyles.bodyStrong,
             ),
           ),
         ),
         IconButton.filled(
           tooltip: l.recordingSend,
           onPressed: widget.onSend,
+          style: IconButton.styleFrom(
+            fixedSize: const Size.square(AppSizes.control),
+            backgroundColor: AppColors.green,
+            foregroundColor: Colors.white,
+          ),
           icon: const Icon(Icons.arrow_upward),
         ),
       ],

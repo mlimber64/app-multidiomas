@@ -15,6 +15,7 @@ import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
 import 'package:parla_con_me/features/learning/domain/learning_error.dart';
 import 'package:parla_con_me/features/learning/domain/user_vocabulary.dart';
 import 'package:parla_con_me/features/profile/domain/user_learning_profile.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 
 import '../../support/fake_ai_service.dart';
 import '../../support/in_memory_local_storage.dart';
@@ -71,7 +72,9 @@ Future<void> _pumpWith(
 
 Finder get _card => find.byType(RoutineCard);
 Finder _inCard(Finder f) => find.descendant(of: _card, matching: f);
-Finder _cta(String label) => _inCard(find.widgetWithText(FilledButton, label));
+// El botón principal de la tarjeta (el hero) y su etiqueta.
+Finder get _button => _inCard(find.byType(PrimaryButton));
+Finder _cta(String label) => _inCard(find.widgetWithText(PrimaryButton, label));
 
 DailyRoutine _step2(DailyRoutine r) => r.completeStep1()!;
 
@@ -117,17 +120,18 @@ void main() {
     tester,
   ) async {
     await _pumpWith(tester, await _storage());
-    expect(_inCard(find.text('La tua pratica di oggi')), findsOneWidget);
+    expect(_inCard(find.text('LA TUA PRATICA DI OGGI')), findsOneWidget);
+    expect(_inCard(find.text('Ripassa quello che hai visto')), findsOneWidget);
     expect(_inCard(find.text('Hai 1 esercizio da ripassare.')), findsOneWidget);
-    expect(_cta('Ripassa'), findsOneWidget);
-    expect(_inCard(find.text('Inizia la tua pratica')), findsOneWidget);
+    expect(_cta('Inizia la pratica'), findsOneWidget);
+    expect(_inCard(find.text('Ripassa')), findsOneWidget);
     expect(_inCard(find.text('0/3')), findsOneWidget);
     expect(_inCard(find.text('Consolida')), findsOneWidget);
   });
 
   testWidgets('step 1 CTA opens the real review session', (tester) async {
     await _pumpWith(tester, await _storage());
-    await tester.tap(_cta('Ripassa'));
+    await tester.tap(_cta('Inizia la pratica'));
     await tester.pumpAndSettle();
     expect(find.text('Correggi la frase'), findsOneWidget);
     expect(find.byType(DailyRoutineScreen), findsNothing);
@@ -147,11 +151,11 @@ void main() {
       _inCard(find.textContaining('Oggi lavoriamo ancora su')),
       findsOneWidget,
     );
-    expect(_cta('Parla'), findsOneWidget);
-    expect(_inCard(find.text('Continua la tua pratica')), findsOneWidget);
+    expect(_inCard(find.text('Parla con il tuo insegnante')), findsOneWidget);
+    expect(_cta('Continua la pratica'), findsOneWidget);
     expect(_inCard(find.text('1/3')), findsOneWidget);
 
-    await tester.tap(_cta('Parla'));
+    await tester.tap(_button);
     await tester.pumpAndSettle();
     expect(find.textContaining('Missione:'), findsOneWidget);
     expect(find.byType(DailyRoutineScreen), findsNothing);
@@ -173,7 +177,8 @@ void main() {
   ) async {
     await _pumpWith(tester, await _storage(), change: _step3);
     expect(_inCard(find.text('Hai 1 parola da consolidare.')), findsOneWidget);
-    await tester.tap(_cta('Consolida'));
+    expect(_inCard(find.text('Consolida le tue parole')), findsOneWidget);
+    await tester.tap(_cta('Continua la pratica'));
     await tester.pumpAndSettle();
     expect(find.text('ciao'), findsOneWidget);
     expect(find.byType(DailyRoutineScreen), findsNothing);
@@ -185,16 +190,14 @@ void main() {
     await _pumpWith(tester, await _storage(), change: _done);
     expect(_inCard(find.text('Pratica completata')), findsOneWidget);
     expect(_inCard(find.text('3/3')), findsOneWidget);
-    await tester.tap(_inCard(find.byType(FilledButton)));
+    await tester.tap(_button);
     await tester.pumpAndSettle();
     expect(find.byType(DailyRoutineScreen), findsOneWidget);
   });
 
-  testWidgets('the overview button still opens the full routine', (
-    tester,
-  ) async {
+  testWidgets('the card itself still opens the full routine', (tester) async {
     await _pumpWith(tester, await _storage());
-    await tester.tap(_inCard(find.text('Inizia la tua pratica')));
+    await tester.tap(_inCard(find.text('Ripassa quello che hai visto')));
     await tester.pumpAndSettle();
     expect(find.byType(DailyRoutineScreen), findsOneWidget);
   });
@@ -212,10 +215,7 @@ void main() {
       ),
     );
     expect(_inCard(find.text('La tua pratica di oggi')), findsOneWidget);
-    expect(_cta('Ripassa'), findsNothing);
-    expect(_cta('Parla'), findsNothing);
-    expect(_cta('Consolida'), findsNothing);
-    expect(_cta('Inizia la tua pratica'), findsOneWidget);
+    expect(_cta('Inizia la pratica'), findsOneWidget);
   });
 
   testWidgets('loading: nothing is shown on Home', (tester) async {
@@ -235,7 +235,7 @@ void main() {
       profile: onboardedProfile,
       overrides: [dailyRoutineProvider.overrideWith(_FailingRoutine.new)],
     );
-    expect(_inCard(find.byType(FilledButton)), findsNothing);
+    expect(_inCard(find.byType(PrimaryButton)), findsNothing);
     expect(_inCard(find.text('Riprova')), findsOneWidget);
   });
 
@@ -245,13 +245,12 @@ void main() {
       await _storage(),
       profile: onboardedProfile.copyWith(uiLanguage: AppLanguage.english),
     );
-    expect(_inCard(find.text('Your practice for today')), findsOneWidget);
+    expect(_inCard(find.text('YOUR PRACTICE FOR TODAY')), findsOneWidget);
     expect(
       _inCard(find.text('You have 1 exercise to review.')),
       findsOneWidget,
     );
-    expect(_cta('Review'), findsOneWidget);
-    expect(_inCard(find.text('Start your practice')), findsOneWidget);
+    expect(_cta('Start practice'), findsOneWidget);
   });
 
   testWidgets('Spanish interface, narrow width, large text: no overflow', (
@@ -268,8 +267,7 @@ void main() {
       _inCard(find.text('Tienes 1 ejercicio para repasar.')),
       findsOneWidget,
     );
-    expect(_cta('Repasar'), findsOneWidget);
-    expect(_inCard(find.text('Empieza tu práctica')), findsOneWidget);
+    expect(_cta('Empezar práctica'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -281,7 +279,7 @@ void main() {
     expect(find.bySemanticsLabel(RegExp('Ripassa: fatto')), findsOneWidget);
     expect(find.bySemanticsLabel(RegExp('Parla: da fare')), findsOneWidget);
     expect(find.bySemanticsLabel(RegExp('Consolida: da fare')), findsOneWidget);
-    final size = tester.getSize(_cta('Parla'));
+    final size = tester.getSize(_button);
     expect(size.height, greaterThanOrEqualTo(48));
     handle.dispose();
   });
@@ -300,7 +298,7 @@ void main() {
 
     // Away to the overview and back, several times.
     for (var i = 0; i < 3; i++) {
-      await tester.tap(_inCard(find.text('Inizia la tua pratica')));
+      await tester.tap(_inCard(find.text('Ripassa quello che hai visto')));
       await tester.pumpAndSettle();
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();

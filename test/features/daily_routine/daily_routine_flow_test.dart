@@ -49,8 +49,12 @@ Finder _button(String label) => find.widgetWithText(FilledButton, label);
 Finder get _homeCard => find.byType(RoutineCard);
 
 Future<void> _openRoutine(WidgetTester tester) async {
+  // Toda la tarjeta hero abre la rutina completa.
   await tester.tap(
-    find.descendant(of: _homeCard, matching: find.byType(TextButton)),
+    find.descendant(
+      of: _homeCard,
+      matching: find.text('LA TUA PRATICA DI OGGI'),
+    ),
   );
   await tester.pumpAndSettle();
 }
@@ -73,7 +77,7 @@ void main() {
     expect(
       find.descendant(
         of: _homeCard,
-        matching: find.text('La tua pratica di oggi'),
+        matching: find.text('LA TUA PRATICA DI OGGI'),
       ),
       findsOneWidget,
     );
@@ -82,10 +86,7 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.descendant(
-        of: _homeCard,
-        matching: find.text('Inizia la tua pratica'),
-      ),
+      find.descendant(of: _homeCard, matching: find.text('Inizia la pratica')),
       findsOneWidget,
     );
     expect(storage.data['daily_routine'], isNotNull, reason: 'planned once');
@@ -223,7 +224,7 @@ void main() {
     expect(
       find.descendant(
         of: _homeCard,
-        matching: find.text('Continua la tua pratica'),
+        matching: find.text('Continua la pratica'),
       ),
       findsOneWidget,
     );

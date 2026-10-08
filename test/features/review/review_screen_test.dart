@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 import 'package:parla_con_me/core/errors/failure.dart';
 import 'package:parla_con_me/features/learning/data/local_learning_repository.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
@@ -111,7 +112,9 @@ Future<_FakeSession> _open(
     ],
   );
   await tester.tap(
-    find.descendant(of: find.byType(Card), matching: find.text('Ripassa')).last,
+    find
+        .descendant(of: find.byType(AppCard), matching: find.text('Ripassa'))
+        .last,
   );
   await tester.pump();
   await tester.pump();
@@ -137,7 +140,7 @@ void main() {
       );
       expect(fake.starts, 1);
       await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(NavigationBar), findsNothing);
+      expect(find.byType(AppBottomNav), findsNothing);
       expect(fake.starts, 1, reason: 'rebuilds never start another session');
     });
 
@@ -151,8 +154,8 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
-      expect(find.byType(NavigationBar), findsOneWidget);
-      expect(find.text('Il tuo percorso'), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsOneWidget);
+      expect(find.text('IL TUO PERCORSO'), findsOneWidget);
       expect(fake.submitted, isEmpty);
     });
 
@@ -170,10 +173,10 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(_button('Torna al percorso'));
       await tester.pumpAndSettle();
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(AppBar),
+          of: find.byType(ScreenHeader),
           matching: find.text('Percorso'),
         ),
         findsOneWidget,
@@ -524,7 +527,10 @@ void main() {
       await pumpApp(tester, storage, profile: onboardedProfile);
       await tester.tap(
         find
-            .descendant(of: find.byType(Card), matching: find.text('Ripassa'))
+            .descendant(
+              of: find.byType(AppCard),
+              matching: find.text('Ripassa'),
+            )
             .last,
       );
       await tester.pumpAndSettle();
@@ -553,7 +559,7 @@ void main() {
 
       await tester.tap(_button('Torna al percorso'));
       await tester.pumpAndSettle();
-      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(find.byType(AppBottomNav), findsOneWidget);
     });
   });
 }

@@ -181,7 +181,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeGreeting.
   ///
   /// In en, this message translates to:
-  /// **'Hi! 👋'**
+  /// **'Hi!'**
   String get homeGreeting;
 
   /// No description provided for @homeReady.
@@ -1629,6 +1629,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{step}: nothing today'**
   String guidanceStepNone(String step);
+
+  /// No description provided for @homeStreakDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String homeStreakDays(int count);
+
+  /// No description provided for @streakLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1-day streak} other{{count}-day streak}}'**
+  String streakLabel(int count);
+
+  /// No description provided for @routineStartPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Start practice'**
+  String get routineStartPractice;
+
+  /// No description provided for @routineHeroReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Review what you saw'**
+  String get routineHeroReview;
+
+  /// No description provided for @routineHeroTalk.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk with your teacher'**
+  String get routineHeroTalk;
+
+  /// No description provided for @routineHeroWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Consolidate your words'**
+  String get routineHeroWords;
+
+  /// No description provided for @homeTileConversationSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Free talk'**
+  String get homeTileConversationSub;
+
+  /// No description provided for @homeTileLearnSub.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 area to reinforce} other{{count} areas to reinforce}}'**
+  String homeTileLearnSub(int count);
+
+  /// No description provided for @homeTileLearnNone.
+  ///
+  /// In en, this message translates to:
+  /// **'What to reinforce'**
+  String get homeTileLearnNone;
+
+  /// No description provided for @homeTileReviewSub.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 pending} other{{count} pending}}'**
+  String homeTileReviewSub(int count);
+
+  /// No description provided for @homeTileReviewNone.
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up'**
+  String get homeTileReviewNone;
+
+  /// No description provided for @homeTileWordsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 to consolidate} other{{count} to consolidate}}'**
+  String homeTileWordsSub(int count);
+
+  /// No description provided for @homeTileWordsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your vocabulary'**
+  String get homeTileWordsNone;
+
+  /// No description provided for @priorityHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get priorityHigh;
+
+  /// No description provided for @priorityMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get priorityMedium;
+
+  /// No description provided for @priorityLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get priorityLow;
+
+  /// No description provided for @priorityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority: {level}'**
+  String priorityLabel(String level);
+
+  /// No description provided for @learnSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What to work on now'**
+  String get learnSubtitle;
+
+  /// No description provided for @wordsTabToConsolidate.
+  ///
+  /// In en, this message translates to:
+  /// **'To consolidate'**
+  String get wordsTabToConsolidate;
+
+  /// No description provided for @wordsTabInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'In use'**
+  String get wordsTabInUse;
+
+  /// No description provided for @wordsTabAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get wordsTabAll;
+
+  /// No description provided for @wordsNoMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'No meaning saved yet'**
+  String get wordsNoMeaning;
+
+  /// No description provided for @wordUsesSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Not used correctly yet} =1{Used correctly once} other{Used correctly {count} times}}'**
+  String wordUsesSemantics(int count);
+
+  /// No description provided for @progressRingCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'{improving} of {total} areas improving'**
+  String progressRingCaption(int improving, int total);
+
+  /// No description provided for @progressWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get progressWeekTitle;
+
+  /// No description provided for @weekInitials.
+  ///
+  /// In en, this message translates to:
+  /// **'M,T,W,T,F,S,S'**
+  String get weekInitials;
+
+  /// No description provided for @weekSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No practice days this week} =1{1 practice day this week} other{{count} practice days this week}}'**
+  String weekSemantics(int count);
+
+  /// No description provided for @statWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Words met'**
+  String get statWords;
+
+  /// No description provided for @statImproving.
+  ///
+  /// In en, this message translates to:
+  /// **'Areas improving'**
+  String get statImproving;
+
+  /// No description provided for @statReinforce.
+  ///
+  /// In en, this message translates to:
+  /// **'Areas to reinforce'**
+  String get statReinforce;
+
+  /// No description provided for @voiceTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Test voice'**
+  String get voiceTest;
 }
 
 class _AppLocalizationsDelegate

@@ -2,9 +2,12 @@ import 'package:flutter/foundation.dart' show setEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme/app_text_styles.dart';
 import '../../../app/theme/app_tokens.dart';
 import '../../../l10n/l10n.dart';
+import '../../../shared/ui/ui.dart';
 import '../../../shared/widgets/content_width.dart';
+import '../../voice/presentation/widgets/listen_button.dart';
 import '../../../shared/widgets/multi_select_option_list.dart';
 import '../../../shared/widgets/selectable_option_tile.dart';
 import '../domain/user_learning_profile.dart';
@@ -20,7 +23,6 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(userLearningProfileProvider);
     final controller = ref.read(userLearningProfileProvider.notifier);
-    final theme = Theme.of(context);
     final l = context.l10n;
 
     Future<void> saveProfile(
@@ -79,19 +81,17 @@ class ProfileScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l.navProfile)),
-      body: ContentWidth(
-        child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          children: [
-            Text(l.profileHeading, style: theme.textTheme.titleLarge),
-            const SizedBox(height: AppSpacing.md),
-            Card(
-              margin: EdgeInsets.zero,
-              clipBehavior: Clip.antiAlias,
-              child: Column(
+      backgroundColor: AppColors.bg,
+      body: SafeArea(
+        child: ContentWidth(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            children: [
+              ScreenHeader(title: l.navProfile, subtitle: l.profileHeading),
+              const SizedBox(height: AppSpacing.lg),
+              SettingsList(
                 children: [
-                  _PreferenceTile(
+                  SettingsRow(
                     label: l.supportLanguageLabel,
                     value: profile.supportLanguage.label,
                     onTap: () => edit<AppLanguage>(
@@ -107,8 +107,7 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const Divider(height: 1),
-                  _PreferenceTile(
+                  SettingsRow(
                     label: l.learningLanguageRow,
                     value: profile.learningLanguage.label,
                     onTap: () => edit<AppLanguage>(
@@ -118,8 +117,7 @@ class ProfileScreen extends ConsumerWidget {
                       (v) => profile.copyWith(learningLanguage: v),
                     ),
                   ),
-                  const Divider(height: 1),
-                  _PreferenceTile(
+                  SettingsRow(
                     label: l.uiLanguageLabel,
                     value: profile.effectiveUiLanguage.label,
                     // Choosing the support language goes back to "follow it".
@@ -132,10 +130,9 @@ class ProfileScreen extends ConsumerWidget {
                           : profile.copyWith(uiLanguage: v),
                     ),
                   ),
-                  const Divider(height: 1),
-                  _PreferenceTile(
+                  SettingsRow(
                     label: l.rowLevel,
-                    value: profile.level?.label(l),
+                    value: profile.level?.label(l) ?? l.notSet,
                     onTap: () => edit<LanguageLevel>(
                       l.levelQuestion,
                       levelOptions(l),
@@ -143,8 +140,7 @@ class ProfileScreen extends ConsumerWidget {
                       (v) => profile.copyWith(level: v),
                     ),
                   ),
-                  const Divider(height: 1),
-                  _PreferenceTile(
+                  SettingsRow(
                     label: l.rowGoals,
                     value: joinLabels(
                       l,
@@ -162,8 +158,7 @@ class ProfileScreen extends ConsumerWidget {
                       apply: (v) => profile.copyWith(goals: v),
                     ),
                   ),
-                  const Divider(height: 1),
-                  _PreferenceTile(
+                  SettingsRow(
                     label: l.rowAreas,
                     value: joinLabels(
                       l,
@@ -182,97 +177,80 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Card(
-              margin: EdgeInsets.zero,
-              child: SwitchListTile(
-                title: Text(l.speakRepliesLabel),
-                subtitle: Text(l.speakRepliesHint),
-                value: profile.speakReplies,
-                onChanged: (v) => saveProfile(
-                  ScaffoldMessenger.of(context),
-                  profile.copyWith(speakReplies: v),
+              const SizedBox(height: 14),
+              AppCard(
+                radius: AppRadius.panel,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: SwitchListTile(
+                  title: Text(
+                    l.speakRepliesLabel,
+                    style: AppTextStyles.rowTitle,
+                  ),
+                  subtitle: Text(
+                    l.speakRepliesHint,
+                    style: AppTextStyles.small,
+                  ),
+                  value: profile.speakReplies,
+                  onChanged: (v) => saveProfile(
+                    ScaffoldMessenger.of(context),
+                    profile.copyWith(speakReplies: v),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Card(
-              margin: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
+              const SizedBox(height: 14),
+              // NUEVO: tarjeta de voz: elección femenina / masculina en
+              // píldoras y un botón para oír la voz elegida.
+              AppCard(
+                radius: AppRadius.panel,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      l.teacherVoiceLabel,
-                      style: theme.textTheme.titleMedium,
-                    ),
+                    Text(l.teacherVoiceLabel, style: AppTextStyles.rowTitle),
                     const SizedBox(height: AppSpacing.xs),
-                    Text(
-                      l.teacherVoiceHint,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                    Text(l.teacherVoiceHint, style: AppTextStyles.small),
+                    const SizedBox(height: AppSpacing.md),
+                    SegmentedPills<VoiceGender>(
+                      selected: profile.teacherVoice,
+                      items: [
+                        (VoiceGender.female, l.voiceFemale),
+                        (VoiceGender.male, l.voiceMale),
+                      ],
+                      onChanged: (gender) => saveProfile(
+                        ScaffoldMessenger.of(context),
+                        profile.copyWith(teacherVoice: gender),
                       ),
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    SegmentedButton<VoiceGender>(
-                      segments: [
-                        ButtonSegment(
-                          value: VoiceGender.female,
-                          label: Text(l.voiceFemale),
-                          icon: const Icon(Icons.record_voice_over_outlined),
-                        ),
-                        ButtonSegment(
-                          value: VoiceGender.male,
-                          label: Text(l.voiceMale),
-                          icon: const Icon(Icons.record_voice_over),
-                        ),
-                      ],
-                      selected: {profile.teacherVoice},
-                      showSelectedIcon: false,
-                      onSelectionChanged: (selection) => saveProfile(
-                        ScaffoldMessenger.of(context),
-                        profile.copyWith(teacherVoice: selection.first),
-                      ),
+                    ListenButton(
+                      speechKey: 'profile:voice-test',
+                      text: voiceSampleText(profile.learningLanguage),
+                      label: l.voiceTest,
+                      icon: Icons.play_arrow_rounded,
+                      chip: AppActionChipVariant.mint,
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              l.profileLocalNote,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              const SizedBox(height: AppSpacing.lg),
+              // NUEVO: pie con candado: todo se queda en este dispositivo.
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.lock_outline,
+                    size: 18,
+                    color: AppColors.muted,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(l.profileLocalNote, style: AppTextStyles.small),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    );
-  }
-}
-
-class _PreferenceTile extends StatelessWidget {
-  const _PreferenceTile({
-    required this.label,
-    required this.value,
-    required this.onTap,
-  });
-
-  final String label;
-  final String? value;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      minTileHeight: AppSizes.minTouch,
-      title: Text(label),
-      subtitle: Text(value ?? context.l10n.notSet),
-      trailing: const Icon(Icons.edit_outlined),
-      onTap: onTap,
     );
   }
 }
@@ -300,7 +278,7 @@ class _OptionSheet<T> extends StatelessWidget {
           AppSpacing.lg,
         ),
         children: [
-          Text(title, style: Theme.of(context).textTheme.titleLarge),
+          Text(title, style: AppTextStyles.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           for (final (value, label) in options)
             Padding(
@@ -356,7 +334,7 @@ class _MultiOptionSheetState<T extends Enum>
           AppSpacing.lg,
         ),
         children: [
-          Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
+          Text(widget.title, style: AppTextStyles.sectionTitle),
           const SizedBox(height: AppSpacing.md),
           MultiSelectOptionList<T>(
             options: widget.options,
@@ -373,11 +351,11 @@ class _MultiOptionSheetState<T extends Enum>
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          FilledButton(
+          PrimaryButton(
+            label: context.l10n.save,
             onPressed: _selected.length >= widget.min
                 ? () => Navigator.of(context).pop(_selected)
                 : null,
-            child: Text(context.l10n.save),
           ),
         ],
       ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_text_styles.dart';
 import '../../app/theme/app_tokens.dart';
+import '../ui/ui.dart';
 
 /// A friendly "nothing here yet" block: it should read as the start of
 /// something, not as something broken. No numbers, no zeros.
+/// Rediseño: tarjeta blanca con un círculo menta para el icono.
 class EmptyStateCard extends StatelessWidget {
   const EmptyStateCard({
     required this.icon,
@@ -20,20 +23,23 @@ class EmptyStateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
+    return SizedBox(
+      width: double.infinity,
+      child: AppCard(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 36, color: scheme.primary),
+            IconCircle(
+              icon: icon,
+              size: 52,
+              iconSize: 28,
+              background: AppColors.mint,
+            ),
             const SizedBox(height: AppSpacing.md),
-            Text(title, style: theme.textTheme.titleLarge),
+            Text(title, style: AppTextStyles.sectionTitle),
             const SizedBox(height: AppSpacing.sm),
-            Text(message, style: theme.textTheme.bodyLarge),
+            Text(message, style: AppTextStyles.body),
             if (action != null) ...[
               const SizedBox(height: AppSpacing.lg),
               action!,

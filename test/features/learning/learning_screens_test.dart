@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 import 'package:parla_con_me/app/providers.dart';
 import 'package:parla_con_me/core/result/result.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
@@ -17,6 +18,12 @@ import '../../support/fake_ai_service.dart';
 import '../../support/in_memory_local_storage.dart';
 import '../../support/learning_fixtures.dart';
 import '../../support/pump_app.dart';
+
+// El título de pantalla: la AppBar o, en las pantallas rediseñadas, el
+// ScreenHeader.
+final _screenTitle = find.byWidgetPredicate(
+  (w) => w is AppBar || w is ScreenHeader,
+);
 
 /// Opens the app over a controlled memory. The window is made tall: lists
 /// build lazily, so on a phone-sized test window anything below the fold does
@@ -38,7 +45,7 @@ Future<void> _open(
 
 Future<void> _goTo(WidgetTester tester, String tab) async {
   await tester.tap(
-    find.descendant(of: find.byType(NavigationBar), matching: find.text(tab)),
+    find.descendant(of: find.byType(AppBottomNav), matching: find.text(tab)),
   );
   await tester.pumpAndSettle();
 }
@@ -107,7 +114,7 @@ void main() {
       await _open(tester, FakeMemoryRepository());
       await _goTo(tester, 'Percorso');
 
-      expect(find.text('Il tuo percorso'), findsOneWidget);
+      expect(find.text('Il tuo percorso'), findsNothing);
       expect(find.text('Stiamo iniziando a conoscerti.'), findsOneWidget);
       expect(
         find.text('Parla con me e qui vedrai come evolve il tuo percorso.'),
@@ -142,6 +149,16 @@ void main() {
         _expectNoTechnicalLanguage();
       },
     );
+
+    testWidgets('ring, week and stats come from real data', (tester) async {
+      await _open(tester, _fullMemory());
+      await _goTo(tester, 'Percorso');
+      expect(find.byType(ProgressRing), findsOneWidget);
+      expect(find.text('Questa settimana'), findsOneWidget);
+      expect(find.text('Parole incontrate'), findsOneWidget);
+      expect(find.text('Aree in miglioramento'), findsOneWidget);
+      expect(find.text('Aree da rinforzare'), findsOneWidget);
+    });
 
     testWidgets('improvement is not listed among the weaknesses', (
       tester,
@@ -336,7 +353,7 @@ void main() {
       await _open(tester, repo);
       await tester.tap(
         find.descendant(
-          of: find.byType(NavigationBar),
+          of: find.byType(AppBottomNav),
           matching: find.text('Percorso'),
         ),
       );
@@ -436,10 +453,10 @@ void main() {
       expect(find.textContaining('esercizio'), findsNothing);
       expect(find.textContaining('Quiz'), findsNothing);
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Parliamo'));
+      await tester.tap(find.widgetWithText(PrimaryButton, 'Parliamo'));
       await tester.pumpAndSettle();
       expect(
-        find.descendant(of: find.byType(AppBar), matching: find.text('Parla')),
+        find.descendant(of: _screenTitle, matching: find.text('Parla')),
         findsOneWidget,
       );
     });
@@ -497,7 +514,12 @@ void main() {
       await _open(tester, _fullMemory());
       await _goTo(tester, 'Parole');
 
-      expect(find.text('Le tue parole'), findsOneWidget);
+      // Se abre en "Da consolidare"; "Tutte" muestra los dos grupos.
+      expect(find.text('Parole da consolidare'), findsOneWidget);
+      expect(find.text('Parole che stai usando'), findsNothing);
+      await tester.tap(find.text('Tutte'));
+      await tester.pumpAndSettle();
+      expect(find.text('Le tue parole'), findsNothing);
       expect(find.text('Parole da consolidare'), findsOneWidget);
       expect(find.text('Parole che stai usando'), findsOneWidget);
       expect(find.text('prenotazione'), findsOneWidget);
@@ -508,7 +530,7 @@ void main() {
       );
       expect(find.text('scontrino'), findsOneWidget);
       expect(find.text('La stai usando'), findsOneWidget);
-      expect(find.text('Da consolidare'), findsNWidgets(3));
+      expect(find.text('Da consolidare'), findsNWidgets(4)); // 3 + la pestaña
       expect(find.byType(VocabularyTile), findsNWidgets(4));
       _expectNoTechnicalLanguage();
     });
@@ -543,6 +565,17 @@ void main() {
       await _goTo(tester, 'Parole');
       expect(find.text('Parole che stai usando'), findsOneWidget);
       expect(find.text('Parole da consolidare'), findsNothing);
+    });
+
+    testWidgets('the tabs filter the words', (tester) async {
+      await _open(tester, _fullMemory());
+      await _goTo(tester, 'Parole');
+      await tester.tap(find.text('In uso'));
+      await tester.pumpAndSettle();
+      expect(find.text('Parole che stai usando'), findsOneWidget);
+      expect(find.text('Parole da consolidare'), findsNothing);
+      expect(find.text('scontrino'), findsOneWidget);
+      expect(find.text('prenotazione'), findsNothing);
     });
 
     testWidgets('unreadable memory: friendly error', (tester) async {
@@ -585,8 +618,7 @@ void main() {
       _expectNoTechnicalLanguage();
 
       // Declared profile and learned memory are separate things on screen.
-      expect(find.text('Livello'), findsOneWidget);
-      expect(find.text('A2 — Elementare'), findsOneWidget);
+      expect(find.text('A2 · Elementare'), findsOneWidget);
     });
 
     testWidgets('only improvement: just the good news', (tester) async {
@@ -632,10 +664,7 @@ void main() {
       await tester.tap(find.text('Il tuo focus'));
       await tester.pumpAndSettle();
       expect(
-        find.descendant(
-          of: find.byType(AppBar),
-          matching: find.text('Percorso'),
-        ),
+        find.descendant(of: _screenTitle, matching: find.text('Percorso')),
         findsOneWidget,
       );
       expect(find.text('Stai migliorando'), findsOneWidget);

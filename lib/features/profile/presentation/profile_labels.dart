@@ -88,3 +88,15 @@ List<(LearningGoal, String)> goalOptions(AppLocalizations l) => [
 List<(LearningFocus, String)> focusOptions(AppLocalizations l) => [
   for (final v in LearningFocus.values) (v, v.label(l)),
 ];
+
+// NUEVO: frase corta, en el idioma que se aprende, para probar la voz del
+// profesor desde el perfil.
+String voiceSampleText(AppLanguage language) => switch (language) {
+  AppLanguage.italian => 'Ciao! Sono il tuo insegnante.',
+  AppLanguage.spanish => '¡Hola! Soy tu profesor.',
+  AppLanguage.english => 'Hello! I am your teacher.',
+  AppLanguage.french => 'Bonjour ! Je suis ton professeur.',
+  AppLanguage.portuguese => 'Olá! Eu sou o seu professor.',
+  AppLanguage.german => 'Hallo! Ich bin dein Lehrer.',
+  AppLanguage.mandarin => '你好！我是你的老师。',
+};

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/theme/app_text_styles.dart';
 import '../../app/theme/app_tokens.dart';
 import '../../l10n/l10n.dart';
 
@@ -16,23 +17,18 @@ class ErrorStateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.cloud_off_outlined,
-              size: 40,
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+            Icon(Icons.cloud_off_outlined, size: 40, color: AppColors.muted),
             const SizedBox(height: AppSpacing.md),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge,
+              style: AppTextStyles.body,
             ),
             const SizedBox(height: AppSpacing.md),
             FilledButton.tonalIcon(

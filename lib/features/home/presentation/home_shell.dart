@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme/app_tokens.dart';
 import '../../../l10n/l10n.dart';
+import '../../../shared/ui/app_bottom_nav.dart';
 
 /// App container: bottom navigation across Home and the five areas.
 /// Each branch keeps its own navigation stack. Labels are kept short so six
@@ -15,42 +17,46 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = context.l10n;
     return Scaffold(
+      backgroundColor: AppColors.bg,
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
+      // NUEVO: la barra del diseño sustituye a la NavigationBar de Material;
+      // la lógica de índice y de ramas es la misma.
+      bottomNavigationBar: AppBottomNav(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (i) => navigationShell.goBranch(
+        onSelected: (i) => navigationShell.goBranch(
           i,
           initialLocation: i == navigationShell.currentIndex,
         ),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
+        items: [
+          AppBottomNavItem(
+            icon: Icons.home_outlined,
+            selectedIcon: Icons.home,
             label: l.navHome,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.chat_bubble_outline),
-            selectedIcon: const Icon(Icons.chat_bubble),
+          AppBottomNavItem(
+            icon: Icons.chat_bubble_outline,
+            selectedIcon: Icons.chat_bubble,
             label: l.navTalk,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.school_outlined),
-            selectedIcon: const Icon(Icons.school),
+          AppBottomNavItem(
+            icon: Icons.school_outlined,
+            selectedIcon: Icons.school,
             label: l.navLearn,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.menu_book_outlined),
-            selectedIcon: const Icon(Icons.menu_book),
+          AppBottomNavItem(
+            icon: Icons.menu_book_outlined,
+            selectedIcon: Icons.menu_book,
             label: l.navWords,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.insights_outlined),
-            selectedIcon: const Icon(Icons.insights),
+          // show_chart no tiene variante rellena: la píldora marca el activo.
+          AppBottomNavItem(
+            icon: Icons.show_chart,
+            selectedIcon: Icons.show_chart,
             label: l.navPath,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
+          AppBottomNavItem(
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
             label: l.navProfile,
           ),
         ],
