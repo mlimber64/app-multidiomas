@@ -626,6 +626,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get hearItRight => 'Ascolta come si dice e si scrive correttamente:';
 
   @override
+  String get translationLabel => 'Traduzione';
+
+  @override
+  String get teacherVoiceLabel => 'Voce dell\'insegnante';
+
+  @override
+  String get teacherVoiceHint =>
+      'Usata quando i messaggi dell\'insegnante vengono letti ad alta voce. La voce esatta dipende da quelle installate sul telefono.';
+
+  @override
+  String get voiceFemale => 'Femminile';
+
+  @override
+  String get voiceMale => 'Maschile';
+
+  @override
   String get listenToMessage => 'Ascolta il messaggio';
 
   @override
@@ -673,4 +689,213 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get voiceNotUnderstood => 'L’audio non è stato compreso';
+
+  @override
+  String get routineTitle => 'La tua pratica di oggi';
+
+  @override
+  String get routineIntro =>
+      'Queste sono le cose che ti conviene praticare oggi.';
+
+  @override
+  String get routinePreparing => 'Preparo la tua pratica';
+
+  @override
+  String get routineError =>
+      'Non sono riuscito a preparare la tua pratica di oggi. Riprova.';
+
+  @override
+  String get routineStep3Title => 'Consolida';
+
+  @override
+  String routineReviewDesc(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count esercizi da ripassare',
+      one: '1 esercizio da ripassare',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get routineReviewNone => 'Oggi non c’è niente da ripassare.';
+
+  @override
+  String routineWordsDesc(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count parole da consolidare',
+      one: '1 parola da consolidare',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get routineWordsNone => 'Oggi non ci sono parole da consolidare.';
+
+  @override
+  String get routineStepDone => 'Fatto';
+
+  @override
+  String get routineStepLocked => 'Prima completa il passo precedente.';
+
+  @override
+  String get routineCtaStart => 'Inizia';
+
+  @override
+  String get routineContinue => 'Continua la pratica';
+
+  @override
+  String get routineCompleted => 'Completata! 🎉';
+
+  @override
+  String get routineCompletedBody =>
+      'Hai fatto la tua pratica di oggi. Torna domani.';
+
+  @override
+  String routineProgress(int done, int total) {
+    return '$done/$total';
+  }
+
+  @override
+  String routineProgressSemantics(int done, int total) {
+    return '$done di $total passi fatti';
+  }
+
+  @override
+  String get situationIntroductionTitle => 'Presentati';
+
+  @override
+  String get situationIntroductionDesc =>
+      'Conosci qualcuno a una festa: parla di dove vivi, di cosa fai e dei tuoi interessi.';
+
+  @override
+  String get situationYesterdayTitle => 'Cosa hai fatto ieri?';
+
+  @override
+  String get situationYesterdayDesc =>
+      'Un amico ti chiede com’è andata ieri: racconta dove sei stato e cosa hai fatto.';
+
+  @override
+  String get situationWorkdayTitle => 'La tua giornata';
+
+  @override
+  String get situationWorkdayDesc =>
+      'Un collega ti chiede della tua giornata di lavoro o di studio.';
+
+  @override
+  String get situationCafeTitle => 'Al bar';
+
+  @override
+  String get situationCafeDesc =>
+      'Ordina qualcosa da mangiare e da bere e fai una domanda sul locale.';
+
+  @override
+  String get situationDirectionsTitle => 'Come arrivo?';
+
+  @override
+  String get situationDirectionsDesc =>
+      'Sei in una città che non conosci: chiedi la strada per un posto.';
+
+  @override
+  String get situationShoppingTitle => 'In negozio';
+
+  @override
+  String get situationShoppingDesc =>
+      'Cerca qualcosa da comprare: chiedi taglia, colore e prezzo.';
+
+  @override
+  String get situationDescribingTitle => 'Descrivi';
+
+  @override
+  String get situationDescribingDesc =>
+      'Descrivi una persona o un luogo che conosci bene e cosa pensi di loro.';
+
+  @override
+  String get situationPlansTitle => 'Facciamo un piano';
+
+  @override
+  String get situationPlansDesc =>
+      'Organizza con qualcuno il fine settimana o un viaggio.';
+
+  @override
+  String missionBanner(String title) {
+    return 'Missione: $title';
+  }
+
+  @override
+  String get missionFinish => 'Termina la missione';
+
+  @override
+  String get missionKeepGoing => 'Scrivi ancora un po’ per poter terminare.';
+
+  @override
+  String get wordsStepIntro => 'Ripassa queste parole che hai incontrato.';
+
+  @override
+  String get wordsStepContext => 'Completa:';
+
+  @override
+  String get wordsStepReveal => 'Mostra la parola';
+
+  @override
+  String get wordsStepFinish => 'Ho finito';
+
+  @override
+  String guidanceReasonReviews(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hai $count esercizi da ripassare.',
+      one: 'Hai 1 esercizio da ripassare.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String guidanceReasonTopic(String topic) {
+    return 'Oggi lavoriamo ancora su $topic.';
+  }
+
+  @override
+  String guidanceReasonGoal(String goal) {
+    return 'Continuiamo a lavorare sul tuo obiettivo: $goal.';
+  }
+
+  @override
+  String guidanceReasonWords(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hai $count parole da consolidare.',
+      one: 'Hai 1 parola da consolidare.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get guidanceStart => 'Inizia la tua pratica';
+
+  @override
+  String get guidanceContinue => 'Continua la tua pratica';
+
+  @override
+  String get guidanceCompleted => 'Pratica completata';
+
+  @override
+  String guidanceStepDone(String step) {
+    return '$step: fatto';
+  }
+
+  @override
+  String guidanceStepPending(String step) {
+    return '$step: da fare';
+  }
+
+  @override
+  String guidanceStepNone(String step) {
+    return '$step: niente per oggi';
+  }
 }

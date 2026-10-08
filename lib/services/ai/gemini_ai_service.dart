@@ -35,8 +35,8 @@ class GeminiAIService implements AIService {
   static const outputFormatInstruction = '''
 
 OUTPUT FORMAT (mandatory): reply with ONLY one JSON object, no markdown, no code fences:
-{"message": string, "transcript": string or null, "corrections": [{"original": string, "corrected": string, "explanation": string, "naturalAlternative": string or null, "category": "grammar"|"vocabulary"|"pronunciation"|"naturalExpression"|"spelling"|"other"}]}
-"message" is your conversational reply. "corrections" is [] when there is nothing worth correcting. "transcript" is null unless the learner's latest message is an audio recording, in which case it is what they said.''';
+{"message": string, "translation": string or null, "transcript": string or null, "corrections": [{"original": string, "corrected": string, "correctedTranslation": string or null, "explanation": string, "naturalAlternative": string or null, "category": "grammar"|"vocabulary"|"pronunciation"|"naturalExpression"|"spelling"|"other"}]}
+"message" is your conversational reply. "translation" is "message" translated into the learner's support language when the instructions ask for it, otherwise null. "correctedTranslation" is "corrected" translated the same way, otherwise null. "corrections" is [] when there is nothing worth correcting. "transcript" is null unless the learner's latest message is an audio recording, in which case it is what they said.''';
 
   final AppConfig _config;
   final http.Client _client;

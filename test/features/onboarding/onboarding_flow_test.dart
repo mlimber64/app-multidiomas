@@ -95,7 +95,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
     await pumpApp(tester, storage);
     expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Empezar'), findsNothing);
+    expect(find.text('Tu profesor de idiomas personal.'), findsNothing);
   });
 
   testWidgets('back returns to the previous step keeping the selection', (

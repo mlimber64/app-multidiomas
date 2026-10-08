@@ -30,7 +30,10 @@ class _FakeSession extends ReviewSessionController {
   ReviewSessionState build() => const ReviewSessionState();
 
   @override
-  Future<void> start() async {
+  Future<void> start({
+    int size = reviewSessionSize,
+    Set<String>? onlyItems,
+  }) async {
     starts++;
     state = const ReviewSessionState(status: ReviewSessionStatus.loading);
     onStart?.call(this);
@@ -108,7 +111,7 @@ Future<_FakeSession> _open(
     ],
   );
   await tester.tap(
-    find.descendant(of: find.byType(Card), matching: find.text('Ripassa')),
+    find.descendant(of: find.byType(Card), matching: find.text('Ripassa')).last,
   );
   await tester.pump();
   await tester.pump();
@@ -493,7 +496,7 @@ void main() {
       final bottom = tester.getRect(_button('Controlla')).bottom;
       expect(
         bottom,
-        lessThanOrEqualTo(800 - 400),
+        lessThanOrEqualTo(1500 - 400),
         reason: 'above the keyboard',
       );
     });
@@ -520,7 +523,9 @@ void main() {
       }
       await pumpApp(tester, storage, profile: onboardedProfile);
       await tester.tap(
-        find.descendant(of: find.byType(Card), matching: find.text('Ripassa')),
+        find
+            .descendant(of: find.byType(Card), matching: find.text('Ripassa'))
+            .last,
       );
       await tester.pumpAndSettle();
 
@@ -540,7 +545,11 @@ void main() {
       expect(find.text('1 esercizio completato'), findsOneWidget);
       expect(find.text('0 corrette'), findsOneWidget);
       expect(find.text('1 da riprovare'), findsOneWidget);
-      expect(storage.data.keys.toSet(), {'learning_memory', 'review_memory'});
+      expect(storage.data.keys.toSet(), {
+        'learning_memory',
+        'review_memory',
+        'daily_routine',
+      });
 
       await tester.tap(_button('Torna al percorso'));
       await tester.pumpAndSettle();

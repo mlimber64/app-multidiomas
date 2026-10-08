@@ -15,6 +15,7 @@ import 'learning_overview.dart';
 import 'learning_repository.dart';
 import 'learning_signal.dart';
 import 'learning_summary.dart';
+import 'practice_evidence.dart';
 import 'success_detection.dart';
 import 'user_vocabulary.dart';
 
@@ -31,14 +32,24 @@ import 'user_vocabulary.dart';
 /// What it deliberately does NOT do: analyze language in general, count a
 /// topic as used correctly without a prior mistake to compare against, send
 /// anything to an AI, or decide what to practice next.
-class DefaultLearningEngine implements LearningEngine {
+class DefaultLearningEngine
+    implements LearningEngine, PracticeEvidenceRecorder {
   DefaultLearningEngine(
     this._repository, {
     required this.rules,
     DateTime Function()? clock,
+    this.onMemoryChanged,
   }) : _clock = clock ?? DateTime.now;
 
   final LearningRepository _repository;
+
+  /// Called after the engine really changed the learning memory: once per
+  /// [analyze] that wrote something, once per [apply] or
+  /// [recordPracticeEvidence] that changed something. Never when nothing
+  /// changed (foreign language, repeated event, unknown item, failed write).
+  /// It is how whoever shows the memory learns that it must read it again; the
+  /// engine knows nothing about who that is.
+  final void Function()? onMemoryChanged;
 
   /// The rules of the language the learner is learning (from their profile):
   /// the engine coordinates and asks them, it never branches on a language.
@@ -94,6 +105,7 @@ class DefaultLearningEngine implements LearningEngine {
   Future<Result<void>> analyze({
     required String userMessage,
     required AIResponse response,
+    String? contextId,
   }) async {
     final now = _clock();
     AppFailure? firstFailure;
@@ -114,14 +126,18 @@ class DefaultLearningEngine implements LearningEngine {
         );
     }
 
+    var changed = false;
     for (final signal in [...errorSignals, ...successSignals]) {
       // Keep going after a failure so one bad write doesn't drop the rest.
-      switch (await apply(signal)) {
+      switch (await _applySignal(signal, contextId: contextId)) {
         case Failure(:final failure):
           firstFailure ??= failure;
-        case Success():
+        case Success(value: final didChange):
+          changed = changed || didChange;
       }
     }
+    // One notification per analysis, and only if the memory really changed.
+    if (changed) onMemoryChanged?.call();
     final failure = firstFailure;
     return failure == null ? const Success(null) : Failure(failure);
   }
@@ -278,60 +294,165 @@ class DefaultLearningEngine implements LearningEngine {
 
   /// Applies one signal to the memory.
   Future<Result<void>> apply(LearningSignal signal) async {
+    switch (await _applySignal(signal)) {
+      case Failure(:final failure):
+        return Failure(failure);
+      case Success(value: final changed):
+        if (changed) onMemoryChanged?.call();
+        return const Success(null);
+    }
+  }
+
+  /// Writes the memory for one signal. Returns whether it changed.
+  ///
+  /// Every write to `learning_memory` is made here, through the repository:
+  /// the mistakes (and the vocabulary they teach) are recorded as such, and
+  /// everything that proves command of a topic or a word goes through
+  /// [PracticeEvidence], the same contract the review uses.
+  Future<Result<bool>> _applySignal(
+    LearningSignal signal, {
+    String? contextId,
+  }) async {
     final m = signal.metadata;
     switch (signal.type) {
       case LearningSignalType.grammarError:
       case LearningSignalType.correction:
-        return _repository.recordError(_errorFrom(signal));
+        return _changed(_repository.recordError(_errorFrom(signal)));
 
       case LearningSignalType.vocabularyIssue:
         final recorded = await _repository.recordError(_errorFrom(signal));
-        if (recorded is Failure<void>) return recorded;
+        if (recorded is Failure<void>) return Failure(recorded.failure);
         // The correct word is relevant vocabulary the learner struggled with.
         final word = m[SignalKeys.word];
-        if (word is! String) return recorded;
-        return _repository.recordVocabulary(
+        if (word is! String) return const Success(true);
+        final vocabulary = await _repository.recordVocabulary(
           UserVocabulary.of(
             word: word,
             at: signal.createdAt,
             language: learningLanguage.code,
           ),
         );
+        // The mistake is already in the memory even if the word is not.
+        return vocabulary is Failure<void>
+            ? Failure(vocabulary.failure)
+            : const Success(true);
 
       case LearningSignalType.topicExposure:
         final topic = _topicFrom(m[SignalKeys.topic]);
-        if (topic == null) return const Success(null);
-        return _repository.recordGrammarTopicExposure(
-          topic,
-          language: learningLanguage.code,
-          at: signal.createdAt,
-          wasError: m[SignalKeys.wasError] == true,
+        if (topic == null) return const Success(false);
+        if (m[SignalKeys.wasError] != true) {
+          // A topic that came up without a mistake. Kept as a plain exposure
+          // (a full occurrence, no success) rather than as exposure evidence,
+          // whose weight is that of something merely seen. The analysis never
+          // produces it today (see `interpret`); it stays inside the engine,
+          // the only writer.
+          return _changed(
+            _repository.recordGrammarTopicExposure(
+              topic,
+              language: learningLanguage.code,
+              at: signal.createdAt,
+            ),
+          );
+        }
+        return _applyEvidence(
+          _conversationEvidence(
+            signal,
+            PracticeEvidenceOutcome.failure,
+            grammarTopic: topic,
+            contextId: contextId,
+          ),
         );
 
       case LearningSignalType.successfulGrammarUse:
         final topic = _topicFrom(m[SignalKeys.topic]);
-        if (topic == null) return const Success(null);
-        return _repository.recordSuccessfulGrammarUse(
-          topic,
-          language: learningLanguage.code,
-          at: signal.createdAt,
+        if (topic == null) return const Success(false);
+        return _applyEvidence(
+          _conversationEvidence(
+            signal,
+            PracticeEvidenceOutcome.success,
+            grammarTopic: topic,
+            contextId: contextId,
+          ),
         );
 
       case LearningSignalType.successfulVocabularyUse:
         final word = m[SignalKeys.word];
         if (word is! String || word.trim().isEmpty) {
-          return const Success(null);
+          return const Success(false);
         }
-        return _repository.recordVocabulary(
-          UserVocabulary.of(
-            word: word,
-            at: signal.createdAt,
-            language: learningLanguage.code,
-            meaning: m[SignalKeys.meaning] as String?,
-            successfulUseCount: 1,
+        if (m[SignalKeys.meaning] is String) {
+          return _changed(
+            _repository.recordVocabulary(
+              UserVocabulary.of(
+                word: word,
+                at: signal.createdAt,
+                language: learningLanguage.code,
+                meaning: m[SignalKeys.meaning] as String?,
+                successfulUseCount: 1,
+              ),
+            ),
+          );
+        }
+        return _applyEvidence(
+          _conversationEvidence(
+            signal,
+            PracticeEvidenceOutcome.success,
+            vocabularyWord: word,
+            contextId: contextId,
           ),
         );
     }
+  }
+
+  static Future<Result<bool>> _changed(Future<Result<void>> write) async =>
+      switch (await write) {
+        Failure(:final failure) => Failure(failure),
+        Success() => const Success(true),
+      };
+
+  /// What the learner wrote in conversation, as practice evidence: the same
+  /// contract review uses. Written language is the strongest proof there is.
+  PracticeEvidence _conversationEvidence(
+    LearningSignal signal,
+    PracticeEvidenceOutcome outcome, {
+    GrammarTopic? grammarTopic,
+    String? vocabularyWord,
+    String? contextId,
+  }) => PracticeEvidence(
+    eventId: 'conversation:${signal.id}',
+    source: PracticeEvidenceSource.conversation,
+    type: PracticeEvidenceType.production,
+    outcome: outcome,
+    learningLanguage: learningLanguage.code,
+    occurredAt: signal.createdAt,
+    grammarTopic: grammarTopic?.name,
+    vocabularyWord: vocabularyWord,
+    contextId: contextId,
+    referenceId: vocabularyWord == null
+        ? null
+        : UserVocabulary.idFor(vocabularyWord, learningLanguage.code),
+  );
+
+  /// The one way practice (conversation or review) reaches learning memory.
+  /// Evidence for another language is not ours to record; the same event twice
+  /// counts once (the repository remembers it).
+  @override
+  Future<Result<void>> recordPracticeEvidence(PracticeEvidence evidence) async {
+    switch (await _applyEvidence(evidence)) {
+      case Failure(:final failure):
+        return Failure(failure);
+      case Success(value: final changed):
+        if (changed) onMemoryChanged?.call();
+        return const Success(null);
+    }
+  }
+
+  /// Applies [evidence] and says whether the memory changed.
+  Future<Result<bool>> _applyEvidence(PracticeEvidence evidence) async {
+    if (evidence.learningLanguage != learningLanguage.code) {
+      return const Success(false);
+    }
+    return _repository.applyPracticeEvidence(evidence);
   }
 
   LearningError _errorFrom(LearningSignal signal) {

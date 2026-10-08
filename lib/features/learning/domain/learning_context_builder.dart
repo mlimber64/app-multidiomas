@@ -1,6 +1,7 @@
 import 'grammar_topic.dart';
 import 'learning_context.dart';
 import 'learning_error.dart';
+import 'learning_state.dart';
 import 'learning_summary.dart';
 import 'user_vocabulary.dart';
 
@@ -9,6 +10,8 @@ const maxPriorityTopics = 3;
 const maxRecurringErrors = 3;
 const maxVocabularyToReinforce = 5;
 const maxPositiveSignals = 2;
+const maxStretchTopics = 2;
+const maxStretchWords = 3;
 
 /// Anything whose priority has decayed below this is no longer worth
 /// mentioning: a lone mistake stops counting after about six weeks without
@@ -68,14 +71,23 @@ LearningContext buildLearningContext(
     vocabulary.add(word.toLowerCase());
   }
 
+  final priorityTopics = [
+    for (final t in selectTopicsToReinforce(
+      summary,
+      now,
+    ).take(maxPriorityTopics))
+      t.topic,
+  ];
+
   return LearningContext(
-    priorityTopics: [
-      for (final t in selectTopicsToReinforce(
-        summary,
-        now,
-      ).take(maxPriorityTopics))
-        t.topic,
-    ],
+    priorityTopics: priorityTopics,
+    topicStrategies: selectTopicStrategies(summary, priorityTopics),
+    stretchWords: [
+      for (final w in selectStretchWords(summary, language))
+        if (_clean(w.word) case final word?
+            when !vocabulary.contains(word.toLowerCase()))
+          word.toLowerCase(),
+    ].take(maxStretchWords).toList(),
     recurringErrors: recurringErrors,
     vocabularyToReinforce: vocabulary,
     positiveSignals: [
@@ -99,7 +111,7 @@ LearningContext buildLearningContext(
 /// enough correct uses at a good enough rate.
 bool isImprovingTopic(GrammarTopicProgress t) =>
     t.errorCount > 0 &&
-    t.successfulUseCount >= improvedMinSuccesses &&
+    t.weightedSuccesses >= improvedMinSuccesses &&
     t.confidence >= improvedMinMastery;
 
 /// Topics that were a problem and are now improving, strongest first.
@@ -108,7 +120,7 @@ List<GrammarTopicProgress> selectImprovingTopics(
   DateTime now,
 ) => summary.grammarTopics.where(isImprovingTopic).toList()
   ..sort((a, b) {
-    final bySuccesses = b.successfulUseCount.compareTo(a.successfulUseCount);
+    final bySuccesses = b.weightedSuccesses.compareTo(a.weightedSuccesses);
     return bySuccesses != 0
         ? bySuccesses
         : (b.lastSeenAt ?? now).compareTo(a.lastSeenAt ?? now);
@@ -142,6 +154,59 @@ List<LearningError> selectRecurringErrors(
         e,
   ];
 }
+
+/// How demanding the practice of each topic should be: the strategy of the
+/// state of each of [priorityTopics] (as they come), then the topics already
+/// consolidated (at most [maxStretchTopics], the best proven first), which are
+/// ready for more. Derived from the topic's own evidence; the declared level
+/// plays no part. Stable: same memory, same order.
+Map<GrammarTopic, AdaptationStrategy> selectTopicStrategies(
+  LearnerLearningSummary summary,
+  List<GrammarTopic> priorityTopics,
+) {
+  final byTopic = {for (final t in summary.grammarTopics) t.topic: t};
+  final strategies = <GrammarTopic, AdaptationStrategy>{};
+  for (final topic in priorityTopics) {
+    final progress = byTopic[topic];
+    if (progress != null) {
+      strategies[topic] = progress.learningState.strategy;
+    }
+  }
+  final consolidated =
+      [
+        for (final t in summary.grammarTopics)
+          if (t.learningState == LearningState.consolidated &&
+              !strategies.containsKey(t.topic))
+            t,
+      ]..sort((a, b) {
+        final byProof = b.proof.productionSuccesses.compareTo(
+          a.proof.productionSuccesses,
+        );
+        return byProof != 0 ? byProof : a.topic.name.compareTo(b.topic.name);
+      });
+  for (final t in consolidated.take(maxStretchTopics)) {
+    strategies[t.topic] = t.learningState.strategy;
+  }
+  return strategies;
+}
+
+/// Words of the learning [language] the learner already produces well
+/// (consolidated), best proven first.
+List<UserVocabulary> selectStretchWords(
+  LearnerLearningSummary summary,
+  String language,
+) =>
+    [
+      for (final v in summary.vocabularyItems)
+        if (v.language == language &&
+            v.learningState == LearningState.consolidated)
+          v,
+    ]..sort((a, b) {
+      final byProof = b.proof.productionSuccesses.compareTo(
+        a.proof.productionSuccesses,
+      );
+      return byProof != 0 ? byProof : a.id.compareTo(b.id);
+    });
 
 /// Words of the learning [language] (ISO code) not known yet and still
 /// relevant, most relevant first.

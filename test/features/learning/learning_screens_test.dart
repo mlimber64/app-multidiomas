@@ -617,7 +617,14 @@ void main() {
       await _open(tester, FakeMemoryRepository()..failing = true);
       expect(find.text('Parliamo'), findsOneWidget);
       expect(find.text('Il tuo percorso inizia qui.'), findsNothing);
-      expect(find.text('Riprova'), findsNothing);
+      // Only the routine card reports it, on its own, with its own retry.
+      expect(
+        find.text(
+          'Non sono riuscito a preparare la tua pratica di oggi. Riprova.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Riprova'), findsOneWidget);
     });
 
     testWidgets('the focus opens Percorso', (tester) async {
@@ -643,7 +650,15 @@ void main() {
       for (final tab in ['Percorso', 'Impara', 'Parole', 'Home']) {
         await _goTo(tester, tab);
       }
-      expect(storage.accessedKeys, isEmpty);
+      // Only the daily routine's own repositories (its plan and the review
+      // memory it asks the ReviewEngine about) touch storage, never a screen.
+      expect(
+        storage.accessedKeys.toSet().difference({
+          'daily_routine',
+          'review_memory',
+        }),
+        isEmpty,
+      );
     },
   );
 

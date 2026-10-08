@@ -7,6 +7,7 @@ import '../../../app/theme/app_tokens.dart';
 import '../../../l10n/l10n.dart';
 import '../../../shared/widgets/content_width.dart';
 import '../../../shared/widgets/fade_slide_in.dart';
+import '../../daily_routine/presentation/widgets/routine_card.dart';
 import '../../learning/presentation/learning_labels.dart';
 import '../../learning/presentation/learning_providers.dart';
 import '../../profile/domain/user_learning_profile.dart';
@@ -43,12 +44,14 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              FadeSlideIn(delay: step, child: const _HeroCard()),
+              FadeSlideIn(delay: step, child: const RoutineCard()),
               const SizedBox(height: AppSpacing.lg),
-              FadeSlideIn(delay: step * 2, child: const _QuickActions()),
+              FadeSlideIn(delay: step * 2, child: const _HeroCard()),
+              const SizedBox(height: AppSpacing.lg),
+              FadeSlideIn(delay: step * 3, child: const _QuickActions()),
               const SizedBox(height: AppSpacing.lg),
               FadeSlideIn(
-                delay: step * 3,
+                delay: step * 4,
                 child: _JourneyCard(profile: profile),
               ),
             ],

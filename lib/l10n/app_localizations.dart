@@ -1210,6 +1210,36 @@ abstract class AppLocalizations {
   /// **'Hear how it is said and written correctly:'**
   String get hearItRight;
 
+  /// No description provided for @translationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get translationLabel;
+
+  /// No description provided for @teacherVoiceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher\'s voice'**
+  String get teacherVoiceLabel;
+
+  /// No description provided for @teacherVoiceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Used when the teacher\'s messages are read aloud. The exact voice depends on the ones installed on your phone.'**
+  String get teacherVoiceHint;
+
+  /// No description provided for @voiceFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get voiceFemale;
+
+  /// No description provided for @voiceMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get voiceMale;
+
   /// No description provided for @listenToMessage.
   ///
   /// In en, this message translates to:
@@ -1299,6 +1329,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The audio was not understood'**
   String get voiceNotUnderstood;
+
+  /// No description provided for @routineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your practice for today'**
+  String get routineTitle;
+
+  /// No description provided for @routineIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'This is what is worth practicing today.'**
+  String get routineIntro;
+
+  /// No description provided for @routinePreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing your practice'**
+  String get routinePreparing;
+
+  /// No description provided for @routineError.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t prepare your practice for today. Please try again.'**
+  String get routineError;
+
+  /// No description provided for @routineStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Consolidate'**
+  String get routineStep3Title;
+
+  /// No description provided for @routineReviewDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise to review} other{{count} exercises to review}}'**
+  String routineReviewDesc(int count);
+
+  /// No description provided for @routineReviewNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to review today.'**
+  String get routineReviewNone;
+
+  /// No description provided for @routineWordsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 word to consolidate} other{{count} words to consolidate}}'**
+  String routineWordsDesc(int count);
+
+  /// No description provided for @routineWordsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No words to consolidate today.'**
+  String get routineWordsNone;
+
+  /// No description provided for @routineStepDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get routineStepDone;
+
+  /// No description provided for @routineStepLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the previous step first.'**
+  String get routineStepLocked;
+
+  /// No description provided for @routineCtaStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get routineCtaStart;
+
+  /// No description provided for @routineContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to your practice'**
+  String get routineContinue;
+
+  /// No description provided for @routineCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Done for today! 🎉'**
+  String get routineCompleted;
+
+  /// No description provided for @routineCompletedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve done today\'s practice. Come back tomorrow.'**
+  String get routineCompletedBody;
+
+  /// No description provided for @routineProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{total}'**
+  String routineProgress(int done, int total);
+
+  /// No description provided for @routineProgressSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} steps done'**
+  String routineProgressSemantics(int done, int total);
+
+  /// No description provided for @situationIntroductionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Introduce yourself'**
+  String get situationIntroductionTitle;
+
+  /// No description provided for @situationIntroductionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You meet someone at a party: talk about where you live, what you do and what you enjoy.'**
+  String get situationIntroductionDesc;
+
+  /// No description provided for @situationYesterdayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What did you do yesterday?'**
+  String get situationYesterdayTitle;
+
+  /// No description provided for @situationYesterdayDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'A friend asks how yesterday went: tell them where you went and what you did.'**
+  String get situationYesterdayDesc;
+
+  /// No description provided for @situationWorkdayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day'**
+  String get situationWorkdayTitle;
+
+  /// No description provided for @situationWorkdayDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'A colleague asks about your day at work or study.'**
+  String get situationWorkdayDesc;
+
+  /// No description provided for @situationCafeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'At the café'**
+  String get situationCafeTitle;
+
+  /// No description provided for @situationCafeDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Order something to eat and drink and ask a question about the place.'**
+  String get situationCafeDesc;
+
+  /// No description provided for @situationDirectionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I get there?'**
+  String get situationDirectionsTitle;
+
+  /// No description provided for @situationDirectionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You are in a town you do not know: ask how to get to a place.'**
+  String get situationDirectionsDesc;
+
+  /// No description provided for @situationShoppingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get situationShoppingTitle;
+
+  /// No description provided for @situationShoppingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Look for something to buy: ask about size, color and price.'**
+  String get situationShoppingDesc;
+
+  /// No description provided for @situationDescribingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe it'**
+  String get situationDescribingTitle;
+
+  /// No description provided for @situationDescribingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe a person or a place you know well and what you think of them.'**
+  String get situationDescribingDesc;
+
+  /// No description provided for @situationPlansTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Let’s make a plan'**
+  String get situationPlansTitle;
+
+  /// No description provided for @situationPlansDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan the weekend or a trip with someone.'**
+  String get situationPlansDesc;
+
+  /// No description provided for @missionBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission: {title}'**
+  String missionBanner(String title);
+
+  /// No description provided for @missionFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the mission'**
+  String get missionFinish;
+
+  /// No description provided for @missionKeepGoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a little more to be able to finish.'**
+  String get missionKeepGoing;
+
+  /// No description provided for @wordsStepIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Go over these words you have met.'**
+  String get wordsStepIntro;
+
+  /// No description provided for @wordsStepContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete:'**
+  String get wordsStepContext;
+
+  /// No description provided for @wordsStepReveal.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the word'**
+  String get wordsStepReveal;
+
+  /// No description provided for @wordsStepFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m done'**
+  String get wordsStepFinish;
+
+  /// No description provided for @guidanceReasonReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You have 1 exercise to review.} other{You have {count} exercises to review.}}'**
+  String guidanceReasonReviews(int count);
+
+  /// No description provided for @guidanceReasonTopic.
+  ///
+  /// In en, this message translates to:
+  /// **'Today we keep working on {topic}.'**
+  String guidanceReasonTopic(String topic);
+
+  /// No description provided for @guidanceReasonGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'We keep working on your goal: {goal}.'**
+  String guidanceReasonGoal(String goal);
+
+  /// No description provided for @guidanceReasonWords.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You have 1 word to consolidate.} other{You have {count} words to consolidate.}}'**
+  String guidanceReasonWords(int count);
+
+  /// No description provided for @guidanceStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your practice'**
+  String get guidanceStart;
+
+  /// No description provided for @guidanceContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue your practice'**
+  String get guidanceContinue;
+
+  /// No description provided for @guidanceCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice completed'**
+  String get guidanceCompleted;
+
+  /// No description provided for @guidanceStepDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{step}: done'**
+  String guidanceStepDone(String step);
+
+  /// No description provided for @guidanceStepPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{step}: to do'**
+  String guidanceStepPending(String step);
+
+  /// No description provided for @guidanceStepNone.
+  ///
+  /// In en, this message translates to:
+  /// **'{step}: nothing today'**
+  String guidanceStepNone(String step);
 }
 
 class _AppLocalizationsDelegate

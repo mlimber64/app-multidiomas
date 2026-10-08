@@ -1,3 +1,4 @@
+import 'package:parla_con_me/features/learning/domain/practice_evidence.dart';
 import 'package:parla_con_me/features/learning/domain/language_scope.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -57,6 +58,9 @@ class _CountingRepository implements LearningRepository {
     required DateTime at,
     String language = legacyLanguageCode,
   }) => _inner.recordSuccessfulGrammarUse(t, at: at, language: language);
+  @override
+  Future<Result<bool>> applyPracticeEvidence(PracticeEvidence e) =>
+      _inner.applyPracticeEvidence(e);
   @override
   Future<Result<void>> clearLearningData() => _inner.clearLearningData();
 }

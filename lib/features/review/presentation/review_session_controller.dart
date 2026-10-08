@@ -42,11 +42,17 @@ class ReviewSessionController extends Notifier<ReviewSessionState> {
   @override
   ReviewSessionState build() => const ReviewSessionState();
 
-  /// Prepares a session: the review queue in its own order, the first
-  /// [reviewSessionSize] candidates that can produce an exercise (the others
-  /// are skipped without any result being recorded). The selection is a
-  /// snapshot; the queue is not read again during the session.
-  Future<void> start() async {
+  /// Prepares a session: the review queue in its own order, the first [size]
+  /// candidates that can produce an exercise (the others are skipped without
+  /// any result being recorded). The selection is a snapshot; the queue is not
+  /// read again during the session.
+  ///
+  /// With [onlyItems] the session is limited to those review items (the ones
+  /// the daily routine chose); whatever is no longer due is simply left out.
+  Future<void> start({
+    int size = reviewSessionSize,
+    Set<String>? onlyItems,
+  }) async {
     final status = state.status;
     if (status != ReviewSessionStatus.idle &&
         status != ReviewSessionStatus.completed &&
@@ -64,7 +70,10 @@ class ReviewSessionController extends Notifier<ReviewSessionState> {
         );
     if (!_current(generation)) return;
     if (queue case Failure(:final failure)) return _fail(failure);
-    final items = (queue as Success<List<ReviewItem>>).value;
+    final items = [
+      for (final item in (queue as Success<List<ReviewItem>>).value)
+        if (onlyItems == null || onlyItems.contains(item.id)) item,
+    ];
     if (items.isEmpty) {
       state = const ReviewSessionState(status: ReviewSessionStatus.completed);
       return;
@@ -79,7 +88,7 @@ class ReviewSessionController extends Notifier<ReviewSessionState> {
     final exercises = <Exercise>[];
     var skipped = 0;
     for (final item in items) {
-      if (exercises.length == reviewSessionSize) break;
+      if (exercises.length == size) break;
       switch (generator.generate(item, learned)) {
         case Success(value: final exercise):
           exercises.add(exercise);
@@ -126,6 +135,7 @@ class ReviewSessionController extends Notifier<ReviewSessionState> {
           itemId: exercise.reviewItemId,
           result: correct ? ReviewResult.success : ReviewResult.failure,
           now: ref.read(reviewSessionClockProvider)(),
+          exercise: exercise.type,
         );
     if (!_current(generation)) return true;
     if (recorded case Failure(:final failure)) {
@@ -133,6 +143,8 @@ class ReviewSessionController extends Notifier<ReviewSessionState> {
       _fail(failure);
       return true;
     }
+    // If the answer taught the learning memory something, the learning engine
+    // has already moved `learningRevisionProvider`: nothing to do here.
 
     final summary = state.summary;
     state = state.copyWith(

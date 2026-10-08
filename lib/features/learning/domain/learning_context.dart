@@ -1,4 +1,5 @@
 import 'grammar_topic.dart';
+import 'learning_state.dart';
 
 /// A mistake worth keeping in mind, reduced to what a teacher needs: what the
 /// learner tends to write and the correct form. No ids, dates or counts.
@@ -23,6 +24,8 @@ class LearningContext {
     this.recurringErrors = const <ContextError>[],
     this.vocabularyToReinforce = const <String>[],
     this.positiveSignals = const <GrammarTopic>[],
+    this.topicStrategies = const <GrammarTopic, AdaptationStrategy>{},
+    this.stretchWords = const <String>[],
   });
 
   /// Nothing worth sending: the AI behaves exactly as without memory.
@@ -41,9 +44,20 @@ class LearningContext {
   /// not simplify or over-correct there.
   final List<GrammarTopic> positiveSignals;
 
+  /// How demanding the practice of each topic named here should be, by the
+  /// state of that topic alone (see `LearningState`): the topics to reinforce,
+  /// plus those already consolidated. The learner's overall level is not
+  /// touched. In a stable order.
+  final Map<GrammarTopic, AdaptationStrategy> topicStrategies;
+
+  /// Words the learner already produces well: to be used in new contexts.
+  final List<String> stretchWords;
+
   bool get isEmpty =>
       priorityTopics.isEmpty &&
       recurringErrors.isEmpty &&
       vocabularyToReinforce.isEmpty &&
-      positiveSignals.isEmpty;
+      positiveSignals.isEmpty &&
+      topicStrategies.isEmpty &&
+      stretchWords.isEmpty;
 }

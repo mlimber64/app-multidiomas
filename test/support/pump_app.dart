@@ -20,7 +20,7 @@ Future<void> pumpApp(
   UserLearningProfile? profile,
   List<Override> overrides = const [],
 }) async {
-  tester.view.physicalSize = const Size(1080, 2400);
+  tester.view.physicalSize = const Size(1080, 4500);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
 

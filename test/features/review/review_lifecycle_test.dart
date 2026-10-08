@@ -10,7 +10,7 @@ import '../../support/in_memory_local_storage.dart';
 import '../../support/pump_app.dart';
 
 Finder get _ripassaTile =>
-    find.descendant(of: find.byType(Card), matching: find.text('Ripassa'));
+    find.descendant(of: find.byType(Card), matching: find.text('Ripassa')).last;
 
 Future<InMemoryLocalStorage> _seeded() async {
   final storage = InMemoryLocalStorage();

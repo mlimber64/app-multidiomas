@@ -4,6 +4,7 @@ import '../../learning/domain/error_pattern.dart';
 import '../../learning/domain/grammar_topic.dart';
 import '../../learning/domain/language_scope.dart';
 import '../../learning/domain/learning_error.dart';
+import '../../learning/domain/learning_state.dart';
 import '../../learning/domain/learning_summary.dart';
 import '../../profile/domain/user_learning_profile.dart';
 import 'exercise.dart';
@@ -45,6 +46,11 @@ class DefaultExerciseGenerator implements ExerciseGenerator {
   /// Most options a grammar choice shows.
   static const maxOptions = 4;
 
+  /// Options of a grammar choice for a topic the learner is weak at: the right
+  /// form against the mistake they make, nothing else. Guided, and still a
+  /// choice, so it still only proves recognition.
+  static const guidedOptions = 2;
+
   @override
   Result<Exercise> generate(ReviewItem item, LearnerLearningSummary summary) {
     // Only what belongs to the learner's language can become an exercise.
@@ -78,11 +84,18 @@ class DefaultExerciseGenerator implements ExerciseGenerator {
 
   Result<Exercise> _grammar(ReviewItem item, LearnerLearningSummary s) {
     GrammarTopic? topic;
+    AdaptationStrategy strategy = AdaptationStrategy.keep;
     for (final t in s.grammarTopics) {
       if (scopedId(learningLanguage.code, t.topic.name) == item.sourceId) {
         topic = t.topic;
+        strategy = t.learningState.strategy;
       }
     }
+    // Weak: guided. New or improving: as usual. Consolidated: as usual too,
+    // since the options are already the most the learner's own forms allow.
+    final limit = strategy == AdaptationStrategy.simplify
+        ? guidedOptions
+        : maxOptions;
     if (topic == null) {
       return _unavailable(ExerciseUnavailableReason.sourceMissing, item);
     }
@@ -99,7 +112,7 @@ class DefaultExerciseGenerator implements ExerciseGenerator {
     // forms of this topic's other errors, in a fixed order.
     final forms = <String>[];
     void add(String form) {
-      if (forms.length < maxOptions && !forms.contains(form)) forms.add(form);
+      if (forms.length < limit && !forms.contains(form)) forms.add(form);
     }
 
     add(main.corrected);
@@ -120,6 +133,7 @@ class DefaultExerciseGenerator implements ExerciseGenerator {
         options: options,
         correctAnswer: main.corrected,
         explanation: main.explanation,
+        adaptation: strategy,
       ),
     );
   }

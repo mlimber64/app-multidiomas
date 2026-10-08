@@ -29,8 +29,14 @@ abstract interface class LearningEngine {
   /// the AI answered (including structured corrections). Updates the memory.
   /// A failure here must never affect the conversation: callers treat this
   /// layer as secondary.
+  ///
+  /// [contextId] identifies the conversation, so that evidence from one
+  /// conversation is never taken for evidence from several (see
+  /// `PracticeEvidence.contextId`). Without it the evidence counts as coming
+  /// from one single, unknown interaction.
   Future<Result<void>> analyze({
     required String userMessage,
     required AIResponse response,
+    String? contextId,
   });
 }

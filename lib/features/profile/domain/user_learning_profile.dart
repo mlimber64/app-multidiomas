@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart' show setEquals;
 
 import '../../../core/result/result.dart';
+import '../../../shared/models/voice_gender.dart';
 import 'language_pair.dart';
 
+export '../../../shared/models/voice_gender.dart';
 export 'language_pair.dart';
 
 /// Self-reported level in the learning language (CEFR). [notSure] is a real,
@@ -73,6 +75,7 @@ class UserLearningProfile {
     this.goals = const <LearningGoal>{},
     this.focusAreas = const <LearningFocus>{},
     this.speakReplies = false,
+    this.teacherVoice = VoiceGender.female,
     this.onboardingCompleted = false,
   });
 
@@ -106,6 +109,9 @@ class UserLearningProfile {
   /// Read the teacher's replies aloud (a reply to a voice message is always
   /// read aloud).
   final bool speakReplies;
+
+  /// The kind of voice the teacher is read aloud with. Presentation only.
+  final VoiceGender teacherVoice;
   final bool onboardingCompleted;
 
   /// The two languages together.
@@ -134,6 +140,7 @@ class UserLearningProfile {
     Set<LearningGoal>? goals,
     Set<LearningFocus>? focusAreas,
     bool? speakReplies,
+    VoiceGender? teacherVoice,
     bool? onboardingCompleted,
   }) {
     return UserLearningProfile(
@@ -144,6 +151,7 @@ class UserLearningProfile {
       goals: goals ?? this.goals,
       focusAreas: focusAreas ?? this.focusAreas,
       speakReplies: speakReplies ?? this.speakReplies,
+      teacherVoice: teacherVoice ?? this.teacherVoice,
       onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
     );
   }
@@ -158,6 +166,7 @@ class UserLearningProfile {
       setEquals(other.goals, goals) &&
       setEquals(other.focusAreas, focusAreas) &&
       other.speakReplies == speakReplies &&
+      other.teacherVoice == teacherVoice &&
       other.onboardingCompleted == onboardingCompleted;
 
   @override
@@ -169,6 +178,7 @@ class UserLearningProfile {
     Object.hashAllUnordered(goals),
     Object.hashAllUnordered(focusAreas),
     speakReplies,
+    teacherVoice,
     onboardingCompleted,
   );
 }
