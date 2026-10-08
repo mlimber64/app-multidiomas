@@ -1018,4 +1018,36 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String progressRingCaption(int improving, int total) {
+    return '$improving de $total áreas mejorando';
+  }
+
+  @override
+  String get progressWeekTitle => 'Esta semana';
+
+  @override
+  String get weekInitials => 'L,M,X,J,V,S,D';
+
+  @override
+  String weekSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días de práctica esta semana',
+      one: '1 día de práctica esta semana',
+      zero: 'Ningún día de práctica esta semana',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statWords => 'Palabras vistas';
+
+  @override
+  String get statImproving => 'Áreas mejorando';
+
+  @override
+  String get statReinforce => 'Áreas a reforzar';
 }

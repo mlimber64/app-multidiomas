@@ -5,6 +5,7 @@ export 'app_card.dart';
 export 'dotted_box.dart';
 export 'icon_tile.dart';
 export 'primary_button.dart';
+export 'progress_ring.dart';
 export 'screen_header.dart';
 export 'segment_progress.dart';
 export 'segmented_pills.dart';

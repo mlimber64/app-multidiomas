@@ -528,5 +528,29 @@
         "type": "int"
       }
     }
-  }
+  },
+  "progressRingCaption": "{improving} of {total} areas improving",
+  "@progressRingCaption": {
+    "placeholders": {
+      "improving": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "progressWeekTitle": "This week",
+  "weekInitials": "M,T,W,T,F,S,S",
+  "weekSemantics": "{count, plural, =0{No practice days this week} =1{1 practice day this week} other{{count} practice days this week}}",
+  "@weekSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statWords": "Words met",
+  "statImproving": "Areas improving",
+  "statReinforce": "Areas to reinforce"
 }

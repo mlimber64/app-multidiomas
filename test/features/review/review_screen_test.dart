@@ -176,7 +176,7 @@ void main() {
       expect(find.byType(AppBottomNav), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(AppBar),
+          of: find.byType(ScreenHeader),
           matching: find.text('Percorso'),
         ),
         findsOneWidget,

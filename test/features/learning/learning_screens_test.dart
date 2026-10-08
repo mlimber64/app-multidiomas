@@ -114,7 +114,7 @@ void main() {
       await _open(tester, FakeMemoryRepository());
       await _goTo(tester, 'Percorso');
 
-      expect(find.text('Il tuo percorso'), findsOneWidget);
+      expect(find.text('Il tuo percorso'), findsNothing);
       expect(find.text('Stiamo iniziando a conoscerti.'), findsOneWidget);
       expect(
         find.text('Parla con me e qui vedrai come evolve il tuo percorso.'),
@@ -149,6 +149,16 @@ void main() {
         _expectNoTechnicalLanguage();
       },
     );
+
+    testWidgets('ring, week and stats come from real data', (tester) async {
+      await _open(tester, _fullMemory());
+      await _goTo(tester, 'Percorso');
+      expect(find.byType(ProgressRing), findsOneWidget);
+      expect(find.text('Questa settimana'), findsOneWidget);
+      expect(find.text('Parole incontrate'), findsOneWidget);
+      expect(find.text('Aree in miglioramento'), findsOneWidget);
+      expect(find.text('Aree da rinforzare'), findsOneWidget);
+    });
 
     testWidgets('improvement is not listed among the weaknesses', (
       tester,

@@ -1767,6 +1767,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Not used correctly yet} =1{Used correctly once} other{Used correctly {count} times}}'**
   String wordUsesSemantics(int count);
+
+  /// No description provided for @progressRingCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'{improving} of {total} areas improving'**
+  String progressRingCaption(int improving, int total);
+
+  /// No description provided for @progressWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get progressWeekTitle;
+
+  /// No description provided for @weekInitials.
+  ///
+  /// In en, this message translates to:
+  /// **'M,T,W,T,F,S,S'**
+  String get weekInitials;
+
+  /// No description provided for @weekSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No practice days this week} =1{1 practice day this week} other{{count} practice days this week}}'**
+  String weekSemantics(int count);
+
+  /// No description provided for @statWords.
+  ///
+  /// In en, this message translates to:
+  /// **'Words met'**
+  String get statWords;
+
+  /// No description provided for @statImproving.
+  ///
+  /// In en, this message translates to:
+  /// **'Areas improving'**
+  String get statImproving;
+
+  /// No description provided for @statReinforce.
+  ///
+  /// In en, this message translates to:
+  /// **'Areas to reinforce'**
+  String get statReinforce;
 }
 
 class _AppLocalizationsDelegate

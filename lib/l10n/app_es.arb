@@ -326,5 +326,12 @@
   "wordsTabInUse": "En uso",
   "wordsTabAll": "Todas",
   "wordsNoMeaning": "Aún sin significado guardado",
-  "wordUsesSemantics": "{count, plural, =0{Aún sin uso correcto} =1{Usada correctamente una vez} other{Usada correctamente {count} veces}}"
+  "wordUsesSemantics": "{count, plural, =0{Aún sin uso correcto} =1{Usada correctamente una vez} other{Usada correctamente {count} veces}}",
+  "progressRingCaption": "{improving} de {total} áreas mejorando",
+  "progressWeekTitle": "Esta semana",
+  "weekInitials": "L,M,X,J,V,S,D",
+  "weekSemantics": "{count, plural, =0{Ningún día de práctica esta semana} =1{1 día de práctica esta semana} other{{count} días de práctica esta semana}}",
+  "statWords": "Palabras vistas",
+  "statImproving": "Áreas mejorando",
+  "statReinforce": "Áreas a reforzar"
 }
