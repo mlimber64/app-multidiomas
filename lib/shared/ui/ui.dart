@@ -2,6 +2,7 @@
 export 'app_action_chip.dart';
 export 'app_bottom_nav.dart';
 export 'app_card.dart';
+export 'dotted_box.dart';
 export 'icon_tile.dart';
 export 'primary_button.dart';
 export 'screen_header.dart';

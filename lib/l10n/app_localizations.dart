@@ -1737,6 +1737,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What to work on now'**
   String get learnSubtitle;
+
+  /// No description provided for @wordsTabToConsolidate.
+  ///
+  /// In en, this message translates to:
+  /// **'To consolidate'**
+  String get wordsTabToConsolidate;
+
+  /// No description provided for @wordsTabInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'In use'**
+  String get wordsTabInUse;
+
+  /// No description provided for @wordsTabAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get wordsTabAll;
+
+  /// No description provided for @wordsNoMeaning.
+  ///
+  /// In en, this message translates to:
+  /// **'No meaning saved yet'**
+  String get wordsNoMeaning;
+
+  /// No description provided for @wordUsesSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Not used correctly yet} =1{Used correctly once} other{Used correctly {count} times}}'**
+  String wordUsesSemantics(int count);
 }
 
 class _AppLocalizationsDelegate

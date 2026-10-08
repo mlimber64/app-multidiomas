@@ -321,5 +321,10 @@
   "priorityMedium": "Media",
   "priorityLow": "Bassa",
   "priorityLabel": "Priorità: {level}",
-  "learnSubtitle": "Su cosa lavorare ora"
+  "learnSubtitle": "Su cosa lavorare ora",
+  "wordsTabToConsolidate": "Da consolidare",
+  "wordsTabInUse": "In uso",
+  "wordsTabAll": "Tutte",
+  "wordsNoMeaning": "Ancora nessun significato salvato",
+  "wordUsesSemantics": "{count, plural, =0{Ancora nessun uso corretto} =1{Usata correttamente una volta} other{Usata correttamente {count} volte}}"
 }

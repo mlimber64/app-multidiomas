@@ -994,4 +994,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get learnSubtitle => 'Su cosa lavorare ora';
+
+  @override
+  String get wordsTabToConsolidate => 'Da consolidare';
+
+  @override
+  String get wordsTabInUse => 'In uso';
+
+  @override
+  String get wordsTabAll => 'Tutte';
+
+  @override
+  String get wordsNoMeaning => 'Ancora nessun significato salvato';
+
+  @override
+  String wordUsesSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Usata correttamente $count volte',
+      one: 'Usata correttamente una volta',
+      zero: 'Ancora nessun uso corretto',
+    );
+    return '$_temp0';
+  }
 }

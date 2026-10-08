@@ -321,5 +321,10 @@
   "priorityMedium": "Media",
   "priorityLow": "Baja",
   "priorityLabel": "Prioridad: {level}",
-  "learnSubtitle": "Qué reforzar ahora"
+  "learnSubtitle": "Qué reforzar ahora",
+  "wordsTabToConsolidate": "Por consolidar",
+  "wordsTabInUse": "En uso",
+  "wordsTabAll": "Todas",
+  "wordsNoMeaning": "Aún sin significado guardado",
+  "wordUsesSemantics": "{count, plural, =0{Aún sin uso correcto} =1{Usada correctamente una vez} other{Usada correctamente {count} veces}}"
 }

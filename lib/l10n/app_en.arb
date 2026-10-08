@@ -516,5 +516,17 @@
       }
     }
   },
-  "learnSubtitle": "What to work on now"
+  "learnSubtitle": "What to work on now",
+  "wordsTabToConsolidate": "To consolidate",
+  "wordsTabInUse": "In use",
+  "wordsTabAll": "All",
+  "wordsNoMeaning": "No meaning saved yet",
+  "wordUsesSemantics": "{count, plural, =0{Not used correctly yet} =1{Used correctly once} other{Used correctly {count} times}}",
+  "@wordUsesSemantics": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

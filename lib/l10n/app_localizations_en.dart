@@ -995,4 +995,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get learnSubtitle => 'What to work on now';
+
+  @override
+  String get wordsTabToConsolidate => 'To consolidate';
+
+  @override
+  String get wordsTabInUse => 'In use';
+
+  @override
+  String get wordsTabAll => 'All';
+
+  @override
+  String get wordsNoMeaning => 'No meaning saved yet';
+
+  @override
+  String wordUsesSemantics(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Used correctly $count times',
+      one: 'Used correctly once',
+      zero: 'Not used correctly yet',
+    );
+    return '$_temp0';
+  }
 }

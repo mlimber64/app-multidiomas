@@ -504,7 +504,12 @@ void main() {
       await _open(tester, _fullMemory());
       await _goTo(tester, 'Parole');
 
-      expect(find.text('Le tue parole'), findsOneWidget);
+      // Se abre en "Da consolidare"; "Tutte" muestra los dos grupos.
+      expect(find.text('Parole da consolidare'), findsOneWidget);
+      expect(find.text('Parole che stai usando'), findsNothing);
+      await tester.tap(find.text('Tutte'));
+      await tester.pumpAndSettle();
+      expect(find.text('Le tue parole'), findsNothing);
       expect(find.text('Parole da consolidare'), findsOneWidget);
       expect(find.text('Parole che stai usando'), findsOneWidget);
       expect(find.text('prenotazione'), findsOneWidget);
@@ -515,7 +520,7 @@ void main() {
       );
       expect(find.text('scontrino'), findsOneWidget);
       expect(find.text('La stai usando'), findsOneWidget);
-      expect(find.text('Da consolidare'), findsNWidgets(3));
+      expect(find.text('Da consolidare'), findsNWidgets(4)); // 3 + la pestaña
       expect(find.byType(VocabularyTile), findsNWidgets(4));
       _expectNoTechnicalLanguage();
     });
@@ -550,6 +555,17 @@ void main() {
       await _goTo(tester, 'Parole');
       expect(find.text('Parole che stai usando'), findsOneWidget);
       expect(find.text('Parole da consolidare'), findsNothing);
+    });
+
+    testWidgets('the tabs filter the words', (tester) async {
+      await _open(tester, _fullMemory());
+      await _goTo(tester, 'Parole');
+      await tester.tap(find.text('In uso'));
+      await tester.pumpAndSettle();
+      expect(find.text('Parole che stai usando'), findsOneWidget);
+      expect(find.text('Parole da consolidare'), findsNothing);
+      expect(find.text('scontrino'), findsOneWidget);
+      expect(find.text('prenotazione'), findsNothing);
     });
 
     testWidgets('unreadable memory: friendly error', (tester) async {
