@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/features/conversation/presentation/widgets/message_bubble.dart';
 import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:parla_con_me/app/providers.dart';
@@ -558,7 +559,14 @@ void main() {
         InMemoryLocalStorage(),
         profile: onboardedProfile.copyWith(teacherVoice: VoiceGender.male),
       );
-      await tester.tap(find.text('Ascolta').first);
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byType(CorrectionCard),
+              matching: find.text('Ascolta'),
+            )
+            .first,
+      );
       await tester.pumpAndSettle();
       expect(run.speech.spoken.single.text, 'sono andato');
       expect(run.speech.spoken.single.gender, VoiceGender.male);

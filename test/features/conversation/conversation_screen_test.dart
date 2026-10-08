@@ -236,19 +236,19 @@ void main() {
       final ai = FakeAIService();
       await _openParla(tester, ai, storage: storage);
 
-      final newButton = find.widgetWithIcon(
-        IconButton,
-        Icons.add_comment_outlined,
+      final newButton = find.descendant(
+        of: find.byTooltip('Nuova conversazione'),
+        matching: find.byType(InkResponse),
       );
       expect(
-        tester.widget<IconButton>(newButton).onPressed,
+        tester.widget<InkResponse>(newButton).onTap,
         isNull,
         reason: 'nothing to reset yet',
       );
 
       await tester.tap(find.text('La mia giornata'));
       await tester.pumpAndSettle();
-      expect(tester.widget<IconButton>(newButton).onPressed, isNotNull);
+      expect(tester.widget<InkResponse>(newButton).onTap, isNotNull);
 
       await tester.tap(newButton);
       await tester.pumpAndSettle();

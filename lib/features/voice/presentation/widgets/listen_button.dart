@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../services/speech/speech_service.dart';
+import '../../../../shared/ui/app_action_chip.dart';
 import '../../../profile/presentation/profile_controller.dart';
 import '../speech_controller.dart';
 
@@ -18,6 +19,7 @@ class ListenButton extends ConsumerWidget {
     this.icon = Icons.volume_up_outlined,
     this.pace = SpeechPace.normal,
     this.tooltip,
+    this.chip,
     super.key,
   });
 
@@ -28,6 +30,10 @@ class ListenButton extends ConsumerWidget {
   final IconData icon;
   final SpeechPace pace;
   final String? tooltip;
+
+  /// NUEVO: si se indica, el botón se dibuja como el chip de acción del
+  /// diseño (con [label], o con el tooltip / "Escuchar" si no lo hay).
+  final AppActionChipVariant? chip;
 
   Future<void> _tap(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
@@ -52,6 +58,23 @@ class ListenButton extends ConsumerWidget {
       speechControllerProvider.select((s) => s.playingKey == speechKey),
     );
     final l = context.l10n;
+    final variant = chip;
+    if (variant != null) {
+      final shownLabel = playing
+          ? l.stopListening
+          : label ?? tooltip ?? l.listen;
+      final chipButton = AppActionChip(
+        label: shownLabel,
+        icon: playing ? Icons.stop_circle_outlined : icon,
+        variant: variant,
+        onPressed: () => _tap(context, ref),
+      );
+      // Con un tooltip propio (el del mensaje) se conserva como ayuda.
+      final hint = playing ? l.stopListening : tooltip;
+      return hint == null
+          ? chipButton
+          : Tooltip(message: hint, child: chipButton);
+    }
     final shownIcon = Icon(playing ? Icons.stop_circle_outlined : icon);
     if (label == null) {
       return IconButton(

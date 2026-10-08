@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/features/conversation/presentation/widgets/message_bubble.dart';
+import 'package:parla_con_me/shared/ui/app_action_chip.dart';
 import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
 import 'package:parla_con_me/app/providers.dart';
 import 'package:parla_con_me/core/result/result.dart';
@@ -75,7 +77,12 @@ class _Chat {
   }
 }
 
-Finder _textButton(String label) => find.widgetWithText(TextButton, label);
+// Los chips de la tarjeta de corrección (el mensaje del profesor también
+// tiene su propio chip "Ascolta" fuera de la tarjeta).
+Finder _textButton(String label) => find.descendant(
+  of: find.byType(CorrectionCard),
+  matching: find.widgetWithText(AppActionChip, label),
+);
 
 void main() {
   group('listening to the teacher and to the corrections', () {

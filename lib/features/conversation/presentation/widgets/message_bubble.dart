@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_text_styles.dart';
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/l10n.dart';
 import '../../../../services/speech/speech_service.dart';
 import '../../../../shared/models/correction.dart';
+import '../../../../shared/ui/app_action_chip.dart';
 import '../../../voice/domain/speech_text.dart';
 import '../../../voice/presentation/speech_controller.dart';
 import '../../../voice/presentation/widgets/listen_button.dart';
@@ -25,7 +27,6 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final isUser = message.role == MessageRole.user;
     final width = MediaQuery.sizeOf(context).width;
 
@@ -42,30 +43,38 @@ class MessageBubble extends StatelessWidget {
           children: [
             Semantics(
               label: isUser ? context.l10n.roleYou : context.l10n.roleTeacher,
+              // NUEVO: burbuja del diseño: profesor blanco con borde (esquina
+              // inferior izquierda de 6), alumno verde (inferior derecha de 6).
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: isUser ? scheme.primary : scheme.surfaceContainerHigh,
+                  color: isUser ? AppColors.green : AppColors.surface,
+                  border: isUser ? null : Border.all(color: AppColors.border),
                   borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(AppRadius.lg),
-                    topRight: const Radius.circular(AppRadius.lg),
-                    bottomLeft: Radius.circular(isUser ? AppRadius.lg : 6),
-                    bottomRight: Radius.circular(isUser ? 6 : AppRadius.lg),
+                    topLeft: const Radius.circular(AppRadius.panel),
+                    topRight: const Radius.circular(AppRadius.panel),
+                    bottomLeft: Radius.circular(isUser ? AppRadius.panel : 6),
+                    bottomRight: Radius.circular(isUser ? 6 : AppRadius.panel),
                   ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm + 2,
+                    horizontal: 16,
+                    vertical: 12,
                   ),
-                  child: _content(context, isUser, scheme),
+                  child: _content(context, isUser),
                 ),
               ),
             ),
             if (!isUser)
-              ListenButton(
-                speechKey: speechKeyOf(message.id),
-                text: message.content,
-                tooltip: context.l10n.listenToMessage,
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: ListenButton(
+                  speechKey: speechKeyOf(message.id),
+                  text: message.content,
+                  tooltip: context.l10n.listenToMessage,
+                  label: context.l10n.listen,
+                  chip: AppActionChipVariant.mint,
+                ),
               ),
             for (var i = 0; i < message.corrections.length; i++)
               Padding(
@@ -86,12 +95,7 @@ class MessageBubble extends StatelessWidget {
 extension on MessageBubble {
   /// A typed message: its words and, for the teacher, their translation under
   /// them inside the same bubble (the words always come first).
-  Widget _withTranslation(
-    BuildContext context,
-    bool isUser,
-    ColorScheme scheme,
-    TextStyle? style,
-  ) {
+  Widget _withTranslation(BuildContext context, bool isUser, TextStyle style) {
     final target = SelectableText(message.content, style: style);
     final translation = isUser ? null : message.translation;
     if (translation == null) return target;
@@ -101,7 +105,7 @@ extension on MessageBubble {
       children: [
         target,
         const SizedBox(height: AppSpacing.sm),
-        TranslationLine(text: translation, color: scheme.onSurfaceVariant),
+        TranslationLine(text: translation, color: AppColors.muted),
       ],
     );
   }
@@ -109,12 +113,12 @@ extension on MessageBubble {
   /// The words of the message; for a voice message, with a microphone and, while
   /// the transcript has not arrived (or was never understood), what is going
   /// on instead of an empty bubble.
-  Widget _content(BuildContext context, bool isUser, ColorScheme scheme) {
-    final style = Theme.of(context).textTheme.bodyLarge?.copyWith(
-      color: isUser ? scheme.onPrimary : scheme.onSurface,
+  Widget _content(BuildContext context, bool isUser) {
+    final style = AppTextStyles.chat.copyWith(
+      color: isUser ? Colors.white : AppColors.ink,
     );
     if (!message.isVoice) {
-      return _withTranslation(context, isUser, scheme, style);
+      return _withTranslation(context, isUser, style);
     }
     final l = context.l10n;
     final waiting = message.content.isEmpty;
@@ -124,7 +128,7 @@ extension on MessageBubble {
         Icon(
           Icons.mic,
           size: 18,
-          color: isUser ? scheme.onPrimary : scheme.onSurface,
+          color: isUser ? Colors.white : AppColors.ink,
           semanticLabel: l.voiceMessage,
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -132,7 +136,7 @@ extension on MessageBubble {
           child: waiting
               ? Text(
                   pendingVoice ? l.voiceListening : l.voiceNotUnderstood,
-                  style: style?.copyWith(fontStyle: FontStyle.italic),
+                  style: style.copyWith(fontStyle: FontStyle.italic),
                 )
               : SelectableText(message.content, style: style),
         ),
@@ -151,9 +155,10 @@ class TranslationLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(
-      context,
-    ).textTheme.bodyMedium?.copyWith(color: color, fontStyle: FontStyle.italic);
+    final style = AppTextStyles.body.copyWith(
+      color: color,
+      fontStyle: FontStyle.italic,
+    );
     return Semantics(
       label: context.l10n.translationLabel,
       child: Row(
@@ -173,6 +178,8 @@ class TranslationLine extends StatelessWidget {
   }
 }
 
+// NUEVO: tarjeta de corrección del diseño: fondo celeste de feedback, borde
+// suave, categoría con icono, "Escribiste / Mejor" y chips para escuchar.
 class CorrectionCard extends StatelessWidget {
   const CorrectionCard({
     required this.correction,
@@ -189,31 +196,34 @@ class CorrectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
+    final l = context.l10n;
     final alternative = correction.naturalAlternative;
+    final body = AppTextStyles.body.copyWith(color: AppColors.feedbackText);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: scheme.tertiaryContainer,
-        borderRadius: BorderRadius.circular(AppRadius.md),
+        color: AppColors.feedbackBg,
+        border: Border.all(color: AppColors.feedbackBorder),
+        borderRadius: BorderRadius.circular(AppRadius.panel),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.edit_note,
                   size: 20,
-                  color: scheme.onTertiaryContainer,
+                  color: AppColors.feedbackAccent,
                 ),
                 const SizedBox(width: AppSpacing.xs),
-                Text(
-                  _categoryLabel(context.l10n, correction.category),
-                  style: theme.textTheme.labelLarge?.copyWith(
-                    color: scheme.onTertiaryContainer,
+                Flexible(
+                  child: Text(
+                    _categoryLabel(l, correction.category),
+                    style: AppTextStyles.rowTitle.copyWith(
+                      color: AppColors.feedbackAccent,
+                    ),
                   ),
                 ),
               ],
@@ -224,97 +234,77 @@ class CorrectionCard extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: context.l10n.youWrote),
+                  TextSpan(text: l.youWrote),
                   TextSpan(
                     text: correction.original,
                     style: const TextStyle(
                       decoration: TextDecoration.lineThrough,
+                      decorationColor: AppColors.errorStrike,
                     ),
                   ),
                 ],
               ),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: scheme.onTertiaryContainer,
-              ),
+              style: body.copyWith(color: AppColors.feedbackSub),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: context.l10n.better),
+                  TextSpan(text: l.better),
                   TextSpan(
                     text: correction.corrected,
-                    style: const TextStyle(fontWeight: FontWeight.w700),
+                    style: const TextStyle(fontWeight: FontWeight.w800),
                   ),
                 ],
               ),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: scheme.onTertiaryContainer,
-              ),
+              style: body.copyWith(fontSize: 16),
             ),
             if (correction.correctedTranslation case final translation?) ...[
               const SizedBox(height: AppSpacing.xs),
-              TranslationLine(
-                text: translation,
-                color: scheme.onTertiaryContainer.withValues(alpha: 0.8),
-              ),
+              TranslationLine(text: translation, color: AppColors.feedbackSub),
             ],
             if (correction.explanation.isNotEmpty) ...[
               const SizedBox(height: AppSpacing.sm),
-              Text(
-                correction.explanation,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: scheme.onTertiaryContainer,
-                ),
-              ),
+              Text(correction.explanation, style: body),
             ],
             if (alternative != null) ...[
               const SizedBox(height: AppSpacing.sm),
               Text(
-                context.l10n.moreNatural(alternative),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontStyle: FontStyle.italic,
-                  color: scheme.onTertiaryContainer,
-                ),
+                l.moreNatural(alternative),
+                style: body.copyWith(fontStyle: FontStyle.italic),
               ),
             ],
             const SizedBox(height: AppSpacing.sm),
             Text(
-              context.l10n.hearItRight,
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: scheme.onTertiaryContainer,
-              ),
+              l.hearItRight,
+              style: AppTextStyles.small.copyWith(color: AppColors.feedbackSub),
             ),
-            TextButtonTheme(
-              data: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  foregroundColor: scheme.onTertiaryContainer,
+            Wrap(
+              spacing: AppSpacing.xs,
+              children: [
+                ListenButton(
+                  speechKey: correctionSpeechKey(messageId, index, 'normal'),
+                  text: correction.corrected,
+                  label: l.listen,
+                  chip: AppActionChipVariant.feedback,
                 ),
-              ),
-              child: Wrap(
-                spacing: AppSpacing.xs,
-                children: [
-                  ListenButton(
-                    speechKey: correctionSpeechKey(messageId, index, 'normal'),
-                    text: correction.corrected,
-                    label: context.l10n.listen,
-                  ),
-                  ListenButton(
-                    speechKey: correctionSpeechKey(messageId, index, 'slow'),
-                    text: correction.corrected,
-                    label: context.l10n.listenSlowly,
-                    icon: Icons.slow_motion_video,
-                    pace: SpeechPace.slow,
-                  ),
-                  ListenButton(
-                    speechKey: correctionSpeechKey(messageId, index, 'spell'),
-                    text: spellOut(correction.corrected),
-                    label: context.l10n.spellIt,
-                    icon: Icons.spellcheck,
-                    pace: SpeechPace.slow,
-                  ),
-                ],
-              ),
+                ListenButton(
+                  speechKey: correctionSpeechKey(messageId, index, 'slow'),
+                  text: correction.corrected,
+                  label: l.listenSlowly,
+                  icon: Icons.slow_motion_video,
+                  pace: SpeechPace.slow,
+                  chip: AppActionChipVariant.feedback,
+                ),
+                ListenButton(
+                  speechKey: correctionSpeechKey(messageId, index, 'spell'),
+                  text: spellOut(correction.corrected),
+                  label: l.spellIt,
+                  icon: Icons.spellcheck,
+                  pace: SpeechPace.slow,
+                  chip: AppActionChipVariant.feedback,
+                ),
+              ],
             ),
           ],
         ),

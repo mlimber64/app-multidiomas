@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme/app_text_styles.dart';
 import '../../../app/theme/app_tokens.dart';
 import '../../../l10n/l10n.dart';
+import '../../../shared/ui/ui.dart';
 import '../../../shared/widgets/content_width.dart';
 import '../../daily_routine/presentation/widgets/scenario_banner.dart';
 import '../../profile/presentation/profile_controller.dart';
@@ -40,56 +42,120 @@ class ConversationScreen extends ConsumerWidget {
         state.status != ConversationStatus.loading;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.chatTitle),
-        actions: [
-          // Replies read aloud: on/off, kept in the profile.
-          IconButton(
-            tooltip: context.l10n.speakRepliesLabel,
-            isSelected: speakReplies,
-            onPressed: () {
-              final profile = ref.read(userLearningProfileProvider);
-              ref
-                  .read(userLearningProfileProvider.notifier)
-                  .save(profile.copyWith(speakReplies: !profile.speakReplies));
-            },
-            icon: Icon(
-              speakReplies ? Icons.volume_up : Icons.volume_off_outlined,
-            ),
-          ),
-          IconButton(
-            tooltip: context.l10n.newConversation,
-            onPressed: canStartNew ? controller.startNewConversation : null,
-            icon: const Icon(Icons.add_comment_outlined),
-          ),
-        ],
-      ),
-      body: ContentWidth(
-        child: Column(
-          children: [
-            const ScenarioBanner(),
-            Expanded(
-              child: switch (state.status) {
-                ConversationStatus.loading => const Center(
-                  child: CircularProgressIndicator(),
+      backgroundColor: AppColors.bg,
+      body: SafeArea(
+        bottom: false,
+        child: ContentWidth(
+          child: Column(
+            children: [
+              // NUEVO: cabecera del diseño: título Fraunces, subtítulo y dos
+              // botones redondos (leer en voz alta / nueva conversación).
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                child: ScreenHeader(
+                  title: context.l10n.chatTitle,
+                  subtitle: context.l10n.heroSubtitle,
+                  titleStyle: AppTextStyles.chatTitle,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _HeaderButton(
+                        tooltip: context.l10n.speakRepliesLabel,
+                        selected: speakReplies,
+                        icon: speakReplies
+                            ? Icons.volume_up
+                            : Icons.volume_off_outlined,
+                        onPressed: () {
+                          final profile = ref.read(userLearningProfileProvider);
+                          ref
+                              .read(userLearningProfileProvider.notifier)
+                              .save(
+                                profile.copyWith(
+                                  speakReplies: !profile.speakReplies,
+                                ),
+                              );
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      _HeaderButton(
+                        tooltip: context.l10n.newConversation,
+                        icon: Icons.add_comment_outlined,
+                        onPressed: canStartNew
+                            ? controller.startNewConversation
+                            : null,
+                      ),
+                    ],
+                  ),
                 ),
-                _ when state.conversation.isEmpty => _Welcome(
-                  onSuggestion: controller.send,
-                ),
-                _ => _MessageList(state: state, onRetry: controller.retry),
-              },
-            ),
-            if (state.status != ConversationStatus.loading)
-              Composer(
-                canSend: state.canSend,
-                sending: state.status == ConversationStatus.sending,
-                correctionMode: state.correctionMode,
-                onSend: controller.send,
-                onSendVoice: controller.sendVoice,
-                onCorrectionModeChanged: (v) =>
-                    controller.setCorrectionMode(enabled: v),
               ),
-          ],
+              const ScenarioBanner(),
+              Expanded(
+                child: switch (state.status) {
+                  ConversationStatus.loading => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  _ when state.conversation.isEmpty => _Welcome(
+                    onSuggestion: controller.send,
+                  ),
+                  _ => _MessageList(state: state, onRetry: controller.retry),
+                },
+              ),
+              if (state.status != ConversationStatus.loading)
+                Composer(
+                  canSend: state.canSend,
+                  sending: state.status == ConversationStatus.sending,
+                  correctionMode: state.correctionMode,
+                  onSend: controller.send,
+                  onSendVoice: controller.sendVoice,
+                  onCorrectionModeChanged: (v) =>
+                      controller.setCorrectionMode(enabled: v),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// NUEVO: botón redondo de la cabecera de Hablar (44 × 44 de zona táctil).
+class _HeaderButton extends StatelessWidget {
+  const _HeaderButton({
+    required this.tooltip,
+    required this.icon,
+    required this.onPressed,
+    this.selected = false,
+  });
+
+  final String tooltip;
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: Semantics(
+        button: true,
+        enabled: onPressed != null,
+        selected: selected,
+        label: tooltip,
+        excludeSemantics: true,
+        onTap: onPressed,
+        child: Opacity(
+          opacity: onPressed == null ? 0.45 : 1,
+          child: InkResponse(
+            onTap: onPressed,
+            radius: 26,
+            child: IconCircle(
+              icon: icon,
+              size: AppSizes.tapTarget,
+              iconSize: 22,
+              background: selected ? AppColors.mint : AppColors.surface,
+              border: selected ? AppColors.green : AppColors.border,
+            ),
+          ),
         ),
       ),
     );
@@ -103,22 +169,20 @@ class _Welcome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l = context.l10n;
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       children: [
-        const SizedBox(height: AppSpacing.lg),
-        Text(l.chatWelcomeTitle, style: theme.textTheme.headlineMedium),
+        const SizedBox(height: AppSpacing.md),
+        Text(l.chatWelcomeTitle, style: AppTextStyles.sectionTitle),
         const SizedBox(height: AppSpacing.sm),
-        Text(l.chatWelcomeSubtitle, style: theme.textTheme.bodyLarge),
-        const SizedBox(height: AppSpacing.lg),
+        Text(l.chatWelcomeSubtitle, style: AppTextStyles.screenSubtitle),
+        const SizedBox(height: AppSpacing.md),
         Wrap(
           spacing: AppSpacing.sm,
-          runSpacing: AppSpacing.sm,
           children: [
             for (final s in ConversationScreen.suggestions(l))
-              ActionChip(label: Text(s), onPressed: () => onSuggestion(s)),
+              AppActionChip(label: s, onPressed: () => onSuggestion(s)),
           ],
         ),
       ],
@@ -179,12 +243,11 @@ class _ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final failure = state.failure;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: scheme.errorContainer,
-        borderRadius: BorderRadius.circular(AppRadius.md),
+        color: AppColors.terraBg,
+        borderRadius: BorderRadius.circular(AppRadius.panel),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -194,13 +257,14 @@ class _ErrorCard extends StatelessWidget {
             Text(
               failure?.userMessage(context.l10n) ??
                   context.l10n.chatErrorGeneric,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: scheme.onErrorContainer),
+              style: AppTextStyles.body.copyWith(color: AppColors.terraText),
             ),
             if (state.canRetry) ...[
               const SizedBox(height: AppSpacing.sm),
               TextButton.icon(
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.terraText,
+                ),
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
                 label: Text(context.l10n.tryAgain),

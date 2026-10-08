@@ -5,6 +5,12 @@ import 'package:parla_con_me/shared/ui/ui.dart';
 import '../../support/in_memory_local_storage.dart';
 import '../../support/pump_app.dart';
 
+// El título de pantalla: la AppBar o, en las pantallas rediseñadas, el
+// ScreenHeader.
+final _screenTitle = find.byWidgetPredicate(
+  (w) => w is AppBar || w is ScreenHeader,
+);
+
 void main() {
   testWidgets('Home shows the saved profile and an honest empty state', (
     tester,
@@ -39,10 +45,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.descendant(
-          of: find.byType(AppBar),
-          matching: find.text(expectedTitle),
-        ),
+        find.descendant(of: _screenTitle, matching: find.text(expectedTitle)),
         findsOneWidget,
         reason: text,
       );

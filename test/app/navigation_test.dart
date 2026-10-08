@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 
 import '../support/in_memory_local_storage.dart';
 import '../support/pump_app.dart';
+
+// El título de pantalla: la AppBar o, en las pantallas rediseñadas, el
+// ScreenHeader.
+final _screenTitle = find.byWidgetPredicate(
+  (w) => w is AppBar || w is ScreenHeader,
+);
 
 void main() {
   testWidgets('returning user lands on Home and can switch areas', (
@@ -24,7 +30,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(
-        find.descendant(of: find.byType(AppBar), matching: find.text(area)),
+        find.descendant(of: _screenTitle, matching: find.text(area)),
         findsOneWidget,
         reason: area,
       );

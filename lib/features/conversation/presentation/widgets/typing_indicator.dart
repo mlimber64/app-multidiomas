@@ -26,7 +26,6 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Align(
       alignment: Alignment.centerLeft,
       child: Semantics(
@@ -34,8 +33,14 @@ class _TypingIndicatorState extends State<TypingIndicator>
         child: ExcludeSemantics(
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: scheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(AppRadius.lg),
+              color: AppColors.surface,
+              border: Border.all(color: AppColors.border),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(AppRadius.panel),
+                topRight: Radius.circular(AppRadius.panel),
+                bottomRight: Radius.circular(AppRadius.panel),
+                bottomLeft: Radius.circular(6),
+              ),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -56,7 +61,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                             width: 8,
                             height: 8,
                             decoration: BoxDecoration(
-                              color: scheme.onSurfaceVariant,
+                              color: AppColors.muted,
                               shape: BoxShape.circle,
                             ),
                           ),

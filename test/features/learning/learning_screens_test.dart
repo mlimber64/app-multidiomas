@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:parla_con_me/shared/ui/app_bottom_nav.dart';
+import 'package:parla_con_me/shared/ui/ui.dart';
 import 'package:parla_con_me/app/providers.dart';
 import 'package:parla_con_me/core/result/result.dart';
 import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
@@ -18,6 +18,12 @@ import '../../support/fake_ai_service.dart';
 import '../../support/in_memory_local_storage.dart';
 import '../../support/learning_fixtures.dart';
 import '../../support/pump_app.dart';
+
+// El título de pantalla: la AppBar o, en las pantallas rediseñadas, el
+// ScreenHeader.
+final _screenTitle = find.byWidgetPredicate(
+  (w) => w is AppBar || w is ScreenHeader,
+);
 
 /// Opens the app over a controlled memory. The window is made tall: lists
 /// build lazily, so on a phone-sized test window anything below the fold does
@@ -440,7 +446,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Parliamo'));
       await tester.pumpAndSettle();
       expect(
-        find.descendant(of: find.byType(AppBar), matching: find.text('Parla')),
+        find.descendant(of: _screenTitle, matching: find.text('Parla')),
         findsOneWidget,
       );
     });
@@ -632,10 +638,7 @@ void main() {
       await tester.tap(find.text('Il tuo focus'));
       await tester.pumpAndSettle();
       expect(
-        find.descendant(
-          of: find.byType(AppBar),
-          matching: find.text('Percorso'),
-        ),
+        find.descendant(of: _screenTitle, matching: find.text('Percorso')),
         findsOneWidget,
       );
       expect(find.text('Stai migliorando'), findsOneWidget);
