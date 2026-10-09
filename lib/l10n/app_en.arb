@@ -218,6 +218,19 @@
   "uiSheetTitle": "Which language do you want the app in?",
   "rowAreas": "Areas",
   "profileLocalNote": "Your preferences stay on this device.",
+  "reminderTitle": "LingAI",
+  "reminderChannelName": "Practice reminders",
+  "reminderChannelDescription": "Nudges to complete your daily practice and protect your streak.",
+  "reminderGoalBody": "Keep moving toward your goal! Take a few minutes and complete today's practice.",
+  "reminderStreakBody": "Careful with your {days} streak! 🔥 Do a quick practice before the day ends.",
+  "@reminderStreakBody": {
+    "placeholders": {
+      "days": { "type": "String" }
+    }
+  },
+  "profileSectionReminders": "Reminders",
+  "remindersLabel": "Daily reminders",
+  "remindersHint": "One nudge in the afternoon and one at night, only if you have not practiced yet.",
   "profileSectionLanguages": "Languages",
   "profileSectionLearning": "How you learn",
   "profileSectionVoice": "Voice",

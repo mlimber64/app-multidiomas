@@ -512,6 +512,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileLocalNote => 'Your preferences stay on this device.';
 
   @override
+  String get reminderTitle => 'LingAI';
+
+  @override
+  String get reminderChannelName => 'Practice reminders';
+
+  @override
+  String get reminderChannelDescription =>
+      'Nudges to complete your daily practice and protect your streak.';
+
+  @override
+  String get reminderGoalBody =>
+      'Keep moving toward your goal! Take a few minutes and complete today\'s practice.';
+
+  @override
+  String reminderStreakBody(String days) {
+    return 'Careful with your $days streak! 🔥 Do a quick practice before the day ends.';
+  }
+
+  @override
+  String get profileSectionReminders => 'Reminders';
+
+  @override
+  String get remindersLabel => 'Daily reminders';
+
+  @override
+  String get remindersHint =>
+      'One nudge in the afternoon and one at night, only if you have not practiced yet.';
+
+  @override
   String get profileSectionLanguages => 'Languages';
 
   @override

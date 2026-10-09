@@ -1024,6 +1024,54 @@ abstract class AppLocalizations {
   /// **'Your preferences stay on this device.'**
   String get profileLocalNote;
 
+  /// No description provided for @reminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'LingAI'**
+  String get reminderTitle;
+
+  /// No description provided for @reminderChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice reminders'**
+  String get reminderChannelName;
+
+  /// No description provided for @reminderChannelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Nudges to complete your daily practice and protect your streak.'**
+  String get reminderChannelDescription;
+
+  /// No description provided for @reminderGoalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep moving toward your goal! Take a few minutes and complete today\'s practice.'**
+  String get reminderGoalBody;
+
+  /// No description provided for @reminderStreakBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Careful with your {days} streak! 🔥 Do a quick practice before the day ends.'**
+  String reminderStreakBody(String days);
+
+  /// No description provided for @profileSectionReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get profileSectionReminders;
+
+  /// No description provided for @remindersLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily reminders'**
+  String get remindersLabel;
+
+  /// No description provided for @remindersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'One nudge in the afternoon and one at night, only if you have not practiced yet.'**
+  String get remindersHint;
+
   /// No description provided for @profileSectionLanguages.
   ///
   /// In en, this message translates to:

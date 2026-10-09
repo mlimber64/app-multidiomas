@@ -154,6 +154,19 @@
   "uiSheetTitle": "In quale lingua vuoi vedere l’app?",
   "rowAreas": "Aree",
   "profileLocalNote": "Le tue preferenze restano su questo dispositivo.",
+  "reminderTitle": "LingAI",
+  "reminderChannelName": "Promemoria di pratica",
+  "reminderChannelDescription": "Avvisi per completare la pratica giornaliera e proteggere la tua serie.",
+  "reminderGoalBody": "Continua verso il tuo obiettivo! Prenditi qualche minuto e completa la pratica di oggi.",
+  "reminderStreakBody": "Attenzione alla tua serie di {days}! 🔥 Fai una pratica veloce prima che finisca la giornata.",
+  "@reminderStreakBody": {
+    "placeholders": {
+      "days": { "type": "String" }
+    }
+  },
+  "profileSectionReminders": "Promemoria",
+  "remindersLabel": "Promemoria giornalieri",
+  "remindersHint": "Un avviso nel pomeriggio e uno la sera, solo se non hai ancora praticato.",
   "profileSectionLanguages": "Lingue",
   "profileSectionLearning": "Come impari",
   "profileSectionVoice": "Voce",

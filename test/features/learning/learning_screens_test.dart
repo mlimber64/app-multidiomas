@@ -687,13 +687,14 @@ void main() {
         await _goTo(tester, tab);
       }
       // Only the daily routine's own repositories (its plan and the review
-      // memory it asks the ReviewEngine about) and the favorite words'
-      // provider touch storage, never a screen.
+      // memory it asks the ReviewEngine about), the favorite words' and the
+      // reminders' providers touch storage, never a screen.
       expect(
         storage.accessedKeys.toSet().difference({
           'daily_routine',
           'review_memory',
           'favorite_words',
+          'reminders_enabled',
         }),
         isEmpty,
       );

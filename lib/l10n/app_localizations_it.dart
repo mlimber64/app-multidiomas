@@ -509,6 +509,35 @@ class AppLocalizationsIt extends AppLocalizations {
       'Le tue preferenze restano su questo dispositivo.';
 
   @override
+  String get reminderTitle => 'LingAI';
+
+  @override
+  String get reminderChannelName => 'Promemoria di pratica';
+
+  @override
+  String get reminderChannelDescription =>
+      'Avvisi per completare la pratica giornaliera e proteggere la tua serie.';
+
+  @override
+  String get reminderGoalBody =>
+      'Continua verso il tuo obiettivo! Prenditi qualche minuto e completa la pratica di oggi.';
+
+  @override
+  String reminderStreakBody(String days) {
+    return 'Attenzione alla tua serie di $days! 🔥 Fai una pratica veloce prima che finisca la giornata.';
+  }
+
+  @override
+  String get profileSectionReminders => 'Promemoria';
+
+  @override
+  String get remindersLabel => 'Promemoria giornalieri';
+
+  @override
+  String get remindersHint =>
+      'Un avviso nel pomeriggio e uno la sera, solo se non hai ancora praticato.';
+
+  @override
   String get profileSectionLanguages => 'Lingue';
 
   @override

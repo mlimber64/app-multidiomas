@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/ai/ai_service.dart';
 import '../services/audio/record_voice_recorder.dart';
 import '../services/audio/voice_recorder.dart';
+import '../services/notifications/local_notification_service.dart';
+import '../services/notifications/notification_service.dart';
 import '../services/ai/gemini_ai_service.dart';
 import '../services/speech/flutter_tts_speech_service.dart';
 import '../services/speech/speech_service.dart';
@@ -49,3 +51,8 @@ final voiceRecorderProvider = Provider<VoiceRecorder>((ref) {
   ref.onDispose(recorder.dispose);
   return recorder;
 });
+
+/// Shows local notifications (the daily reminders). Tests swap it for a fake.
+final notificationServiceProvider = Provider<NotificationService>(
+  (ref) => LocalNotificationService(),
+);

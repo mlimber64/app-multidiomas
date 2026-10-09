@@ -510,6 +510,35 @@ class AppLocalizationsEs extends AppLocalizations {
       'Tus preferencias se quedan en este dispositivo.';
 
   @override
+  String get reminderTitle => 'LingAI';
+
+  @override
+  String get reminderChannelName => 'Recordatorios de práctica';
+
+  @override
+  String get reminderChannelDescription =>
+      'Avisos para completar tu práctica diaria y cuidar tu racha.';
+
+  @override
+  String get reminderGoalBody =>
+      '¡Sigue avanzando en tu meta! Tómate unos minutos y completa tu práctica de hoy.';
+
+  @override
+  String reminderStreakBody(String days) {
+    return '¡Cuidado con tu racha de $days! 🔥 Haz una práctica rápida antes de que termine el día.';
+  }
+
+  @override
+  String get profileSectionReminders => 'Recordatorios';
+
+  @override
+  String get remindersLabel => 'Recordatorios diarios';
+
+  @override
+  String get remindersHint =>
+      'Un aviso por la tarde y otro por la noche, solo si aún no has practicado.';
+
+  @override
   String get profileSectionLanguages => 'Idiomas';
 
   @override

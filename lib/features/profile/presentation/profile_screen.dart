@@ -11,6 +11,7 @@ import '../../voice/presentation/widgets/listen_button.dart';
 import '../../../shared/widgets/multi_select_option_list.dart';
 import '../../../shared/widgets/selectable_option_tile.dart';
 import '../domain/user_learning_profile.dart';
+import '../../reminders/data/reminder_settings.dart';
 import 'profile_controller.dart';
 import 'profile_labels.dart';
 import 'widgets/achievements_card.dart';
@@ -295,6 +296,10 @@ class ProfileScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              // NUEVO: los recordatorios diarios, que se pueden apagar aquí.
+              const SizedBox(height: AppSpacing.lg),
+              _GroupTitle(l.profileSectionReminders),
+              const _RemindersCard(),
               // NUEVO: los logros, con medallas que se desbloquean con lo que
               // la app ya sabe del esfuerzo de la persona.
               const SizedBox(height: AppSpacing.lg),
@@ -330,6 +335,48 @@ class ProfileScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// NUEVO: interruptor de los recordatorios diarios (por la tarde y por la
+// noche, solo si aún no se ha practicado). Se guarda en el dispositivo.
+class _RemindersCard extends ConsumerWidget {
+  const _RemindersCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final enabled = ref.watch(remindersEnabledProvider);
+    return AppCard(
+      radius: AppRadius.panel,
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      shadow: AppShadows.word,
+      child: SwitchListTile(
+        secondary: IconCircle(
+          icon: enabled
+              ? Icons.notifications_active_outlined
+              : Icons.notifications_off_outlined,
+          size: 38,
+          iconSize: 20,
+          background: enabled ? AppColors.amberBg : AppColors.surfaceSoft,
+          foreground: enabled ? AppColors.amberText : AppColors.muted,
+        ),
+        title: Text(l.remindersLabel, style: AppTextStyles.rowTitle),
+        subtitle: Text(l.remindersHint, style: AppTextStyles.small),
+        value: enabled,
+        activeThumbColor: Colors.white,
+        activeTrackColor: AppColors.green,
+        inactiveThumbColor: AppColors.muted,
+        inactiveTrackColor: AppColors.surfaceSoft,
+        trackOutlineColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.green
+              : AppColors.inputBorderIdle,
+        ),
+        onChanged: (value) =>
+            ref.read(remindersEnabledProvider.notifier).set(enabled: value),
       ),
     );
   }

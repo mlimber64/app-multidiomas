@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/constants/app_constants.dart';
 import '../features/profile/presentation/ui_language_providers.dart';
+import '../features/reminders/presentation/reminder_scheduler.dart';
 import '../l10n/l10n.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
@@ -13,6 +14,9 @@ class ParlaConMeApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // The daily reminders follow the learner's practice for as long as the app
+    // lives; watching the scheduler is what starts it.
+    ref.watch(reminderSchedulerProvider);
     return MaterialApp.router(
       title: AppConstants.appName,
       theme: AppTheme.light,

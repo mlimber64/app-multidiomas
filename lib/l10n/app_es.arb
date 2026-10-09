@@ -154,6 +154,19 @@
   "uiSheetTitle": "¿En qué idioma quieres ver la app?",
   "rowAreas": "Áreas",
   "profileLocalNote": "Tus preferencias se quedan en este dispositivo.",
+  "reminderTitle": "LingAI",
+  "reminderChannelName": "Recordatorios de práctica",
+  "reminderChannelDescription": "Avisos para completar tu práctica diaria y cuidar tu racha.",
+  "reminderGoalBody": "¡Sigue avanzando en tu meta! Tómate unos minutos y completa tu práctica de hoy.",
+  "reminderStreakBody": "¡Cuidado con tu racha de {days}! 🔥 Haz una práctica rápida antes de que termine el día.",
+  "@reminderStreakBody": {
+    "placeholders": {
+      "days": { "type": "String" }
+    }
+  },
+  "profileSectionReminders": "Recordatorios",
+  "remindersLabel": "Recordatorios diarios",
+  "remindersHint": "Un aviso por la tarde y otro por la noche, solo si aún no has practicado.",
   "profileSectionLanguages": "Idiomas",
   "profileSectionLearning": "Cómo aprendes",
   "profileSectionVoice": "Voz",
