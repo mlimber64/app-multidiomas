@@ -8,6 +8,7 @@ import 'german_learning_rules.dart';
 import 'italian_learning_rules.dart';
 import 'mandarin_learning_rules.dart';
 import 'portuguese_learning_rules.dart';
+import 'quechua_learning_rules.dart';
 import 'spanish_learning_rules.dart';
 import 'learning_error.dart';
 
@@ -49,7 +50,7 @@ abstract interface class LanguageLearningRules {
 
 /// The rules for [language]. A language has rules only when the app can really
 /// teach it; this is what makes it a supported learning language (see
-/// `supportedLearningLanguages`). Today: Italian, English, French, Portuguese, German, Spanish and Mandarin.
+/// `supportedLearningLanguages`). Today: Italian, English, French, Portuguese, German, Spanish, Mandarin and Southern Quechua.
 LanguageLearningRules? learningRulesFor(AppLanguage language) =>
     switch (language) {
       AppLanguage.italian => const ItalianLearningRules(),
@@ -59,4 +60,5 @@ LanguageLearningRules? learningRulesFor(AppLanguage language) =>
       AppLanguage.german => const GermanLearningRules(),
       AppLanguage.spanish => const SpanishLearningRules(),
       AppLanguage.mandarin => const MandarinLearningRules(),
+      AppLanguage.quechua => const QuechuaLearningRules(),
     };

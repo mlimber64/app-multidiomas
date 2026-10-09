@@ -45,6 +45,10 @@ enum GrammarTopic {
   structuralParticles,
   aspectParticles,
   negation,
+
+  // Southern Quechua.
+  evidentials,
+  caseSuffixes,
 }
 
 /// How the learner is doing on one [GrammarTopic].

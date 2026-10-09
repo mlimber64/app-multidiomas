@@ -124,9 +124,9 @@ void main() {
       expect(_zh.isArticle('the'), isFalse);
       expect(_zh.teachingNote, contains('simplified'));
       expect(_zh.teachingNote, contains('pinyin'));
-      // Only Chinese asks for a note so far.
+      // Only Chinese and Quechua ask for a note so far.
       for (final l in AppLanguage.values) {
-        if (l == AppLanguage.mandarin) continue;
+        if (l == AppLanguage.mandarin || l == AppLanguage.quechua) continue;
         expect(learningRulesFor(l)?.teachingNote, isNull, reason: l.name);
       }
     });

@@ -101,7 +101,8 @@ class ScenarioGenerator {
         GrammarTopic.aspectParticles => const [ScenarioSituation.yesterday],
         GrammarTopic.prepositions ||
         GrammarTopic.porVsPara ||
-        GrammarTopic.cases => const [
+        GrammarTopic.cases ||
+        GrammarTopic.caseSuffixes => const [
           ScenarioSituation.directions,
           ScenarioSituation.cafe,
         ],
@@ -126,7 +127,8 @@ class ScenarioGenerator {
         GrammarTopic.pronouns ||
         GrammarTopic.negation ||
         GrammarTopic.wordOrder ||
-        GrammarTopic.structuralParticles => const [
+        GrammarTopic.structuralParticles ||
+        GrammarTopic.evidentials => const [
           ScenarioSituation.cafe,
           ScenarioSituation.plans,
           ScenarioSituation.workday,

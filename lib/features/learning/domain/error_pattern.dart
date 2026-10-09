@@ -178,7 +178,11 @@ class ErrorPattern {
 
   static List<_Token> _tokenize(String text) {
     final tokens = <_Token>[];
-    for (final part in text.replaceAll('’', "'").split(RegExp(r'\s+'))) {
+    for (final part
+        in text
+            .replaceAll('’', "'")
+            .replaceAll(_apostrophes, "'")
+            .split(RegExp(r'\s+'))) {
       for (final piece in _pieces(part)) {
         final raw = piece.replaceAll(_edgePunctuation, '');
         if (raw.isEmpty) continue;
@@ -206,6 +210,13 @@ class ErrorPattern {
     }
     if (run.isNotEmpty) yield run.toString();
   }
+
+  /// Typographic apostrophes between two letters become the plain one, so the
+  /// ejectives of Quechua (ch'aki) are one word however they were typed.
+  static final _apostrophes = RegExp(
+    r'(?<=\p{L})[’ʼ‘´`](?=\p{L})',
+    unicode: true,
+  );
 
   static final _han = RegExp(r'[\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF]');
 

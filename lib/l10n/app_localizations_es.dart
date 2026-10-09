@@ -612,6 +612,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get topicNegation => 'Negación (不 / 没)';
 
   @override
+  String get topicEvidentials => 'Evidenciales (-mi / -si / -chá)';
+
+  @override
+  String get topicCaseSuffixes => 'Sufijos de caso (-pi / -man / -ta ...)';
+
+  @override
   String get listen => 'Escuchar';
 
   @override

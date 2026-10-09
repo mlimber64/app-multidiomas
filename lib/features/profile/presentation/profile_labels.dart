@@ -46,6 +46,7 @@ extension AppLanguageLabel on AppLanguage {
     AppLanguage.portuguese => 'Português',
     AppLanguage.german => 'Deutsch',
     AppLanguage.mandarin => '中文',
+    AppLanguage.quechua => 'Quechua (Runasimi)',
   };
 }
 
@@ -99,4 +100,5 @@ String voiceSampleText(AppLanguage language) => switch (language) {
   AppLanguage.portuguese => 'Olá! Eu sou o seu professor.',
   AppLanguage.german => 'Hallo! Ich bin dein Lehrer.',
   AppLanguage.mandarin => '你好！我是你的老师。',
+  AppLanguage.quechua => 'Allillanchu! Ñuqaqa yachachiqniykim kani.',
 };

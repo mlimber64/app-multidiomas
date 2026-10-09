@@ -9,7 +9,8 @@ enum AppLanguage {
   french('fr', 'French'),
   portuguese('pt', 'Portuguese'),
   german('de', 'German'),
-  mandarin('zh', 'Mandarin Chinese');
+  mandarin('zh', 'Mandarin Chinese'),
+  quechua('qu', 'Southern Quechua (Cusco and Bolivia)');
 
   const AppLanguage(this.code, this.englishName);
 
@@ -45,6 +46,7 @@ const supportedLearningLanguages = [
   AppLanguage.german,
   AppLanguage.spanish,
   AppLanguage.mandarin,
+  AppLanguage.quechua,
 ];
 
 const defaultSupportLanguage = AppLanguage.spanish;
