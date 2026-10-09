@@ -183,7 +183,14 @@ class _Content extends StatelessWidget {
       onButton = () => onStart(guidance);
     }
 
+    // NUEVO: con la práctica de hoy completa la tarjeta pasa de celeste a verde
+    // suave y muestra una insignia que aparece con un pequeño rebote. Todos los
+    // colores de la tarjeta salen de este par (acento y texto).
+    final accent = complete ? AppColors.green : AppColors.blue;
+    final soft = complete ? AppColors.greenDark : AppColors.blueText;
     return CelesteHeroCard(
+      color: complete ? AppColors.mint : AppColors.celeste,
+      shadow: complete ? AppShadows.success : AppShadows.hero,
       onTap: onOpenOverview,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,9 +200,7 @@ class _Content extends StatelessWidget {
               Expanded(
                 child: Text(
                   l.routineTitle.toUpperCase(),
-                  style: AppTextStyles.eyebrow.copyWith(
-                    color: AppColors.blueText,
-                  ),
+                  style: AppTextStyles.eyebrow.copyWith(color: soft),
                 ),
               ),
               Semantics(
@@ -205,7 +210,7 @@ class _Content extends StatelessWidget {
                   l.routineProgress(done, total),
                   style: AppTextStyles.bodyStrong.copyWith(
                     fontSize: 14,
-                    color: AppColors.navy,
+                    color: complete ? AppColors.greenDark : AppColors.navy,
                   ),
                 ),
               ),
@@ -216,26 +221,35 @@ class _Content extends StatelessWidget {
             total: 3,
             filled: done,
             height: 6,
-            filledColor: AppColors.blue,
+            filledColor: accent,
             emptyColor: AppColors.heroTrack,
           ),
           const SizedBox(height: 14),
-          Text(title, style: AppTextStyles.heroTitle),
+          if (complete) ...[
+            const _CompletedBadge(),
+            const SizedBox(height: 10),
+          ],
+          Text(
+            title,
+            style: AppTextStyles.heroTitle.copyWith(
+              color: complete ? AppColors.greenDark : null,
+            ),
+          ),
           if (reason.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(
               reason,
-              style: AppTextStyles.screenSubtitle.copyWith(
-                color: AppColors.blueText,
-              ),
+              style: AppTextStyles.screenSubtitle.copyWith(color: soft),
             ),
           ],
           const SizedBox(height: 14),
-          _StepPills(routine: routine),
+          _StepPills(routine: routine, accent: accent, soft: soft),
           const SizedBox(height: 14),
           PrimaryButton(
             label: buttonLabel,
-            variant: PrimaryButtonVariant.blue,
+            variant: complete
+                ? PrimaryButtonVariant.green
+                : PrimaryButtonVariant.blue,
             trailingIcon: Icons.arrow_forward,
             onPressed: onButton,
           ),
@@ -249,9 +263,15 @@ class _Content extends StatelessWidget {
 // círculo (número, número resaltado o check) y se lee en voz alta con
 // palabras, nunca solo por color. Se parte en líneas en pantallas estrechas.
 class _StepPills extends StatelessWidget {
-  const _StepPills({required this.routine});
+  const _StepPills({
+    required this.routine,
+    required this.accent,
+    required this.soft,
+  });
 
   final DailyRoutine routine;
+  final Color accent;
+  final Color soft;
 
   @override
   Widget build(BuildContext context) {
@@ -272,6 +292,8 @@ class _StepPills extends StatelessWidget {
             name: name,
             state: state,
             active: current == number,
+            accent: accent,
+            soft: soft,
           ),
       ],
     );
@@ -284,12 +306,16 @@ class _StepPill extends StatelessWidget {
     required this.name,
     required this.state,
     required this.active,
+    required this.accent,
+    required this.soft,
   });
 
   final int number;
   final String name;
   final RoutineStepState state;
   final bool active;
+  final Color accent;
+  final Color soft;
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +326,7 @@ class _StepPill extends StatelessWidget {
       RoutineStepState.unavailable => l.guidanceStepNone(name),
     };
     final completed = state == RoutineStepState.completed;
-    final textColor = active ? AppColors.navy : AppColors.blueText;
+    final textColor = active ? AppColors.navy : soft;
     return Semantics(
       label: label,
       excludeSemantics: true,
@@ -318,6 +344,8 @@ class _StepPill extends StatelessWidget {
                 number: number,
                 completed: completed,
                 filled: completed || active,
+                accent: accent,
+                soft: soft,
               ),
               const SizedBox(width: 6),
               Flexible(
@@ -339,11 +367,15 @@ class _StepCircle extends StatelessWidget {
     required this.number,
     required this.completed,
     required this.filled,
+    required this.accent,
+    required this.soft,
   });
 
   final int number;
   final bool completed;
   final bool filled;
+  final Color accent;
+  final Color soft;
 
   @override
   Widget build(BuildContext context) {
@@ -352,11 +384,9 @@ class _StepCircle extends StatelessWidget {
       height: 18,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: filled ? AppColors.blue : Colors.transparent,
+        color: filled ? accent : Colors.transparent,
         shape: BoxShape.circle,
-        border: filled
-            ? null
-            : Border.all(color: AppColors.blueText, width: 1.5),
+        border: filled ? null : Border.all(color: soft, width: 1.5),
       ),
       child: completed
           ? const Icon(Icons.check, size: 12, color: Colors.white)
@@ -365,9 +395,58 @@ class _StepCircle extends StatelessWidget {
               style: AppTextStyles.chip.copyWith(
                 fontSize: 11,
                 height: 1,
-                color: filled ? Colors.white : AppColors.blueText,
+                color: filled ? Colors.white : soft,
               ),
             ),
+    );
+  }
+}
+
+// NUEVO: insignia de "práctica completada". Entra una sola vez con un rebote
+// (escala elástica) y un destello; con las animaciones del sistema apagadas
+// aparece ya en su sitio.
+class _CompletedBadge extends StatelessWidget {
+  const _CompletedBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: reduceMotion ? 1 : 0, end: 1),
+      duration: reduceMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 700),
+      curve: Curves.elasticOut,
+      builder: (context, scale, child) => Transform.scale(
+        scale: scale,
+        alignment: Alignment.centerLeft,
+        child: child,
+      ),
+      child: Semantics(
+        label: l.guidanceCompleted,
+        excludeSemantics: true,
+        child: const Align(
+          alignment: Alignment.centerLeft,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: AppColors.green,
+              borderRadius: BorderRadius.all(Radius.circular(AppRadius.pill)),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle, size: 16, color: Colors.white),
+                  SizedBox(width: 6),
+                  Icon(Icons.auto_awesome, size: 14, color: Colors.white),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

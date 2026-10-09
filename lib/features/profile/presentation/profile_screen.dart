@@ -13,6 +13,7 @@ import '../../../shared/widgets/selectable_option_tile.dart';
 import '../domain/user_learning_profile.dart';
 import 'profile_controller.dart';
 import 'profile_labels.dart';
+import 'widgets/achievements_card.dart';
 
 /// Shows the learner's saved preferences and lets them change each one.
 /// There is no account: everything stays on this device.
@@ -89,9 +90,13 @@ class ProfileScreen extends ConsumerWidget {
             children: [
               ScreenHeader(title: l.navProfile, subtitle: l.profileHeading),
               const SizedBox(height: AppSpacing.lg),
+              // NUEVO: los ajustes van en grupos con su título, cada uno en una
+              // tarjeta elevada y con un icono sutil al inicio de cada fila.
+              _GroupTitle(l.profileSectionLanguages),
               SettingsList(
                 children: [
                   SettingsRow(
+                    icon: Icons.support_agent,
                     label: l.supportLanguageLabel,
                     value: profile.supportLanguage.label,
                     onTap: () => edit<AppLanguage>(
@@ -108,6 +113,9 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   SettingsRow(
+                    icon: Icons.translate,
+                    iconBackground: AppColors.feedbackBg,
+                    iconForeground: AppColors.feedbackAccent,
                     label: l.learningLanguageRow,
                     value: profile.learningLanguage.label,
                     onTap: () => edit<AppLanguage>(
@@ -118,6 +126,9 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   SettingsRow(
+                    icon: Icons.phone_android,
+                    iconBackground: AppColors.surfaceSoft,
+                    iconForeground: AppColors.muted,
                     label: l.uiLanguageLabel,
                     value: profile.effectiveUiLanguage.label,
                     // Choosing the support language goes back to "follow it".
@@ -130,7 +141,16 @@ class ProfileScreen extends ConsumerWidget {
                           : profile.copyWith(uiLanguage: v),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              _GroupTitle(l.profileSectionLearning),
+              SettingsList(
+                children: [
                   SettingsRow(
+                    icon: Icons.signal_cellular_alt,
+                    iconBackground: AppColors.amberBg,
+                    iconForeground: AppColors.amberText,
                     label: l.rowLevel,
                     value: profile.level?.label(l) ?? l.notSet,
                     onTap: () => edit<LanguageLevel>(
@@ -141,6 +161,7 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   SettingsRow(
+                    icon: Icons.flag_outlined,
                     label: l.rowGoals,
                     value: joinLabels(
                       l,
@@ -159,6 +180,9 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   SettingsRow(
+                    icon: Icons.track_changes,
+                    iconBackground: AppColors.feedbackBg,
+                    iconForeground: AppColors.feedbackAccent,
                     label: l.rowAreas,
                     value: joinLabels(
                       l,
@@ -177,11 +201,28 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: AppSpacing.lg),
+              _GroupTitle(l.profileSectionVoice),
+              // NUEVO: el interruptor de leer en voz alta es una píldora verde
+              // con un icono de altavoz en el pulgar, bajo un icono de color.
               AppCard(
                 radius: AppRadius.panel,
                 padding: const EdgeInsets.symmetric(vertical: 4),
+                shadow: AppShadows.word,
                 child: SwitchListTile(
+                  secondary: IconCircle(
+                    icon: profile.speakReplies
+                        ? Icons.volume_up
+                        : Icons.volume_off_outlined,
+                    size: 38,
+                    iconSize: 20,
+                    background: profile.speakReplies
+                        ? AppColors.mint
+                        : AppColors.surfaceSoft,
+                    foreground: profile.speakReplies
+                        ? AppColors.greenDark
+                        : AppColors.muted,
+                  ),
                   title: Text(
                     l.speakRepliesLabel,
                     style: AppTextStyles.rowTitle,
@@ -191,6 +232,23 @@ class ProfileScreen extends ConsumerWidget {
                     style: AppTextStyles.small,
                   ),
                   value: profile.speakReplies,
+                  thumbIcon: WidgetStateProperty.resolveWith(
+                    (states) => Icon(
+                      states.contains(WidgetState.selected)
+                          ? Icons.volume_up
+                          : Icons.volume_off,
+                      size: 16,
+                    ),
+                  ),
+                  activeThumbColor: Colors.white,
+                  activeTrackColor: AppColors.green,
+                  inactiveThumbColor: AppColors.muted,
+                  inactiveTrackColor: AppColors.surfaceSoft,
+                  trackOutlineColor: WidgetStateProperty.resolveWith(
+                    (states) => states.contains(WidgetState.selected)
+                        ? AppColors.green
+                        : AppColors.inputBorderIdle,
+                  ),
                   onChanged: (v) => saveProfile(
                     ScaffoldMessenger.of(context),
                     profile.copyWith(speakReplies: v),
@@ -199,9 +257,10 @@ class ProfileScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 14),
               // NUEVO: tarjeta de voz: elección femenina / masculina en
-              // píldoras y un botón para oír la voz elegida.
+              // píldoras verdes con icono y un botón para oír la voz elegida.
               AppCard(
                 radius: AppRadius.panel,
+                shadow: AppShadows.word,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -210,7 +269,12 @@ class ProfileScreen extends ConsumerWidget {
                     Text(l.teacherVoiceHint, style: AppTextStyles.small),
                     const SizedBox(height: AppSpacing.md),
                     SegmentedPills<VoiceGender>(
+                      emphasized: true,
                       selected: profile.teacherVoice,
+                      iconOf: (gender) => switch (gender) {
+                        VoiceGender.female => Icons.female,
+                        VoiceGender.male => Icons.male,
+                      },
                       items: [
                         (VoiceGender.female, l.voiceFemale),
                         (VoiceGender.male, l.voiceMale),
@@ -231,21 +295,37 @@ class ProfileScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              // NUEVO: los logros, con medallas que se desbloquean con lo que
+              // la app ya sabe del esfuerzo de la persona.
               const SizedBox(height: AppSpacing.lg),
-              // NUEVO: pie con candado: todo se queda en este dispositivo.
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.lock_outline,
-                    size: 18,
-                    color: AppColors.muted,
+              const AchievementsCard(),
+              const SizedBox(height: AppSpacing.xl),
+              // NUEVO: pie centrado y discreto: todo se queda en este
+              // dispositivo.
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
                   ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(l.profileLocalNote, style: AppTextStyles.small),
+                  child: Column(
+                    children: [
+                      const Icon(
+                        Icons.lock_outline,
+                        size: 16,
+                        color: AppColors.placeholder,
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        l.profileLocalNote,
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.small.copyWith(
+                          fontSize: 12,
+                          color: AppColors.placeholder,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
@@ -253,6 +333,22 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+// NUEVO: título de un grupo de ajustes.
+class _GroupTitle extends StatelessWidget {
+  const _GroupTitle(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(left: 4, bottom: AppSpacing.sm),
+    child: Semantics(
+      header: true,
+      child: Text(text.toUpperCase(), style: AppTextStyles.eyebrow),
+    ),
+  );
 }
 
 class _OptionSheet<T> extends StatelessWidget {

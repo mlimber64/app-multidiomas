@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:parla_con_me/app/theme/app_tokens.dart';
 import 'package:parla_con_me/shared/ui/ui.dart';
 
 import '../../support/in_memory_local_storage.dart';
@@ -24,6 +25,34 @@ void main() {
     expect(find.text('Tutto in ordine'), findsOneWidget);
     expect(find.text('Il tuo vocabolario'), findsOneWidget);
   });
+
+  testWidgets(
+    'Home: Talk card stands out, tiles use circular icons, journey scrolls',
+    (tester) async {
+      await pumpApp(tester, InMemoryLocalStorage(), profile: onboardedProfile);
+
+      // The Talk card is the only gradient card.
+      final cards = tester.widgetList<AppCard>(find.byType(AppCard)).toList();
+      expect(cards.where((c) => c.gradient != null), hasLength(1));
+      // The four quick tiles carry a round icon on a soft cream card.
+      final tiles = cards.where((c) => c.color == AppColors.surfaceCream);
+      expect(tiles, hasLength(4));
+      // "Tu recorrido": one horizontally scrolling row with the three items.
+      final scroll = find.descendant(
+        of: find.byType(ListView),
+        matching: find.byWidgetPredicate(
+          (w) =>
+              w is SingleChildScrollView &&
+              w.scrollDirection == Axis.horizontal,
+        ),
+      );
+      expect(scroll, findsOneWidget);
+      expect(
+        find.descendant(of: scroll, matching: find.text('A2 · Elementare')),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('main CTA and quick actions navigate to their areas', (
     tester,

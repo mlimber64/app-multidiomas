@@ -144,6 +144,13 @@ void main() {
           find.textContaining('sono andato', findRichText: true),
           findsWidgets,
         );
+        // The screen is longer now (week, figures and areas come first): the
+        // words are at the bottom, so go there like a real user would.
+        await tester.scrollUntilVisible(
+          find.text('Vedi tutte le parole'),
+          400,
+          scrollable: find.byType(Scrollable).first,
+        );
         expect(find.text('Parole'), findsWidgets);
         expect(find.text('Vedi tutte le parole'), findsOneWidget);
         _expectNoTechnicalLanguage();
@@ -680,11 +687,13 @@ void main() {
         await _goTo(tester, tab);
       }
       // Only the daily routine's own repositories (its plan and the review
-      // memory it asks the ReviewEngine about) touch storage, never a screen.
+      // memory it asks the ReviewEngine about) and the favorite words'
+      // provider touch storage, never a screen.
       expect(
         storage.accessedKeys.toSet().difference({
           'daily_routine',
           'review_memory',
+          'favorite_words',
         }),
         isEmpty,
       );

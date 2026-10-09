@@ -8,6 +8,7 @@ abstract final class AppColors {
   static const surface = Color(0xFFFFFFFF); // Tarjetas, nav, campos
   static const border = Color(0xFFE7E1D6); // Borde de tarjetas y nav
   static const surfaceSoft = Color(0xFFF1ECE2); // Franja y segmented control
+  static const surfaceCream = Color(0xFFFFFCF6); // Accesos rápidos de Inicio
   static const divider = Color(0xFFEFE9DD); // Divisores, días futuros
   static const track = Color(0xFFE2DCCF); // Segmentos vacíos de palabra
   static const inputBorderIdle = Color(0xFFCFC8BA); // Chips de acción
@@ -137,6 +138,16 @@ abstract final class AppShadows {
       blurRadius: 24,
       offset: Offset(0, 10),
     ),
+  ];
+
+  /// Hero de la práctica ya completada (verde suave).
+  static const success = [
+    BoxShadow(color: Color(0x331A5C42), blurRadius: 24, offset: Offset(0, 10)),
+  ];
+
+  /// Tarjeta "Hablemos" (verde).
+  static const talk = [
+    BoxShadow(color: Color(0x331A5C42), blurRadius: 20, offset: Offset(0, 8)),
   ];
 
   /// Tarjeta de palabra.

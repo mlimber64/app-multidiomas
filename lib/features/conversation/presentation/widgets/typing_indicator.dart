@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_tokens.dart';
 import '../../../../l10n/l10n.dart';
+import 'message_bubble.dart';
 
 /// Discreet "the teacher is thinking" bubble with three pulsing dots.
 class TypingIndicator extends StatefulWidget {
@@ -28,47 +29,60 @@ class _TypingIndicatorState extends State<TypingIndicator>
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
-      child: Semantics(
-        label: context.l10n.teacherTyping,
-        child: ExcludeSemantics(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              border: Border.all(color: AppColors.border),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(AppRadius.panel),
-                topRight: Radius.circular(AppRadius.panel),
-                bottomRight: Radius.circular(AppRadius.panel),
-                bottomLeft: Radius.circular(6),
-              ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Same avatar as the teacher's messages.
+          const TeacherAvatar(),
+          const SizedBox(width: AppSpacing.sm),
+          _bubble(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _bubble(BuildContext context) {
+    return Semantics(
+      label: context.l10n.teacherTyping,
+      child: ExcludeSemantics(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            border: Border.all(color: AppColors.border),
+            boxShadow: bubbleShadow,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(6),
+              topRight: Radius.circular(bubbleRadius),
+              bottomRight: Radius.circular(bubbleRadius),
+              bottomLeft: Radius.circular(bubbleRadius),
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.md,
-              ),
-              child: AnimatedBuilder(
-                animation: _controller,
-                builder: (_, _) => Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (var i = 0; i < 3; i++)
-                      Padding(
-                        padding: EdgeInsets.only(left: i == 0 ? 0 : 6),
-                        child: Opacity(
-                          opacity: _opacity(i),
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: AppColors.muted,
-                              shape: BoxShape.circle,
-                            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.md,
+            ),
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (_, _) => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < 3; i++)
+                    Padding(
+                      padding: EdgeInsets.only(left: i == 0 ? 0 : 6),
+                      child: Opacity(
+                        opacity: _opacity(i),
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: AppColors.muted,
+                            shape: BoxShape.circle,
                           ),
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             ),
           ),

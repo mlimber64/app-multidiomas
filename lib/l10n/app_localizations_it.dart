@@ -226,6 +226,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get correctMe => 'Correggimi';
 
   @override
+  String get quickNotUnderstood => 'Non ho capito';
+
+  @override
+  String get quickNotUnderstoodMessage =>
+      'Non ho capito. Puoi spiegarlo in un altro modo?';
+
+  @override
+  String get quickSlower => 'Più lentamente';
+
+  @override
+  String get quickSlowerMessage =>
+      'Più piano, per favore. Puoi dirlo con parole più semplici?';
+
+  @override
+  String get quickExample => 'Fammi un esempio';
+
+  @override
+  String get quickExampleMessage => 'Puoi farmi un esempio?';
+
+  @override
   String get correctMeHint => 'Il professore correggerà con più attenzione';
 
   @override
@@ -487,6 +507,78 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get profileLocalNote =>
       'Le tue preferenze restano su questo dispositivo.';
+
+  @override
+  String get profileSectionLanguages => 'Lingue';
+
+  @override
+  String get profileSectionLearning => 'Come impari';
+
+  @override
+  String get profileSectionVoice => 'Voce';
+
+  @override
+  String get achievementsTitle => 'I tuoi traguardi';
+
+  @override
+  String achievementsCount(int count, int total) {
+    return '$count di $total';
+  }
+
+  @override
+  String get achievementUnlocked => 'Sbloccato';
+
+  @override
+  String get achievementLocked => 'Da sbloccare';
+
+  @override
+  String get achFirstStepsTitle => 'Primi passi';
+
+  @override
+  String get achFirstStepsGoal => 'Pratica o conversa per la prima volta.';
+
+  @override
+  String get achStreak3Title => 'Costante';
+
+  @override
+  String get achStreak3Goal => 'Pratica 3 giorni di fila.';
+
+  @override
+  String get achStreak7Title => 'Una settimana intera';
+
+  @override
+  String get achStreak7Goal => 'Pratica 7 giorni di fila.';
+
+  @override
+  String get achFullDayTitle => 'Giornata perfetta';
+
+  @override
+  String get achFullDayGoal =>
+      'Completa tutti i passi della pratica di un giorno questa settimana.';
+
+  @override
+  String get achFirstWordTitle => 'Prima parola';
+
+  @override
+  String get achFirstWordGoal => 'Usa correttamente una parola nuova.';
+
+  @override
+  String get achWords10Title => 'Vocabolario in crescita';
+
+  @override
+  String get achWords10Goal => 'Incontra 10 parole nuove.';
+
+  @override
+  String get achImproving1Title => 'In miglioramento';
+
+  @override
+  String get achImproving1Goal => 'Migliora in un ambito che ti dava problemi.';
+
+  @override
+  String get achImproving3Title => 'Inarrestabile';
+
+  @override
+  String get achImproving3Goal => 'Migliora in 3 ambiti.';
 
   @override
   String get reviewPreparing => 'Preparo il ripasso';
@@ -1011,6 +1103,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String get wordsTabAll => 'Tutte';
 
   @override
+  String get wordsFavoriteAdd => 'Segna come preferita';
+
+  @override
+  String get wordsFavoriteRemove => 'Togli dai preferiti';
+
+  @override
+  String wordMasteryCaption(int count) {
+    return '$count/3 usi corretti';
+  }
+
+  @override
+  String get wordsEmptyConsolidateTitle => 'Tutto in pari';
+
+  @override
+  String get wordsEmptyConsolidateBody =>
+      'Ora non hai parole da consolidare. Continua a conversare e compariranno parole nuove.';
+
+  @override
+  String get wordsEmptyInUseTitle => 'Ancora nessuna parola in uso';
+
+  @override
+  String get wordsEmptyInUseBody =>
+      'Usa le parole nuove in una conversazione e le vedrai qui quando le starai usando.';
+
+  @override
   String get wordsNoMeaning => 'Ancora nessun significato salvato';
 
   @override
@@ -1056,6 +1173,60 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get statReinforce => 'Aree da rinforzare';
+
+  @override
+  String get statStreak => 'Giorni di fila';
+
+  @override
+  String get progressSkillsTitle => 'Le tue aree';
+
+  @override
+  String get progressSkillsSub => 'Dove sei più forte e dove puoi crescere.';
+
+  @override
+  String get progressSkillsMore => 'Con più pratica compariranno altre aree.';
+
+  @override
+  String get skillVocabulary => 'Vocabolario';
+
+  @override
+  String get skillGrammar => 'Grammatica';
+
+  @override
+  String get skillConsistency => 'Costanza';
+
+  @override
+  String skillVocabularyDetail(int done, int total) {
+    return '$done di $total parole in uso';
+  }
+
+  @override
+  String skillGrammarDetail(int done, int total) {
+    return '$done di $total aree in miglioramento';
+  }
+
+  @override
+  String skillConsistencyDetail(int done, int total) {
+    return '$done di $total giorni di pratica questa settimana';
+  }
+
+  @override
+  String get dayNoPractice => 'Nessuna pratica questo giorno.';
+
+  @override
+  String get dayFuture => 'Questo giorno non è ancora arrivato.';
+
+  @override
+  String get dayTodayNone =>
+      'Oggi non hai ancora praticato. È un buon momento!';
+
+  @override
+  String get progressEmptyPractice => 'Fai la pratica di oggi';
+
+  @override
+  String progressDaySemantics(String day, String status) {
+    return '$day: $status';
+  }
 
   @override
   String get voiceTest => 'Prova la voce';

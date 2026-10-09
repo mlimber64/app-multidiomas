@@ -15,6 +15,7 @@ import 'package:parla_con_me/features/learning/domain/grammar_topic.dart';
 import 'package:parla_con_me/features/learning/domain/learning_error.dart';
 import 'package:parla_con_me/features/learning/domain/user_vocabulary.dart';
 import 'package:parla_con_me/features/profile/domain/user_learning_profile.dart';
+import 'package:parla_con_me/app/theme/app_tokens.dart';
 import 'package:parla_con_me/shared/ui/ui.dart';
 
 import '../../support/fake_ai_service.dart';
@@ -194,6 +195,27 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(DailyRoutineScreen), findsOneWidget);
   });
+
+  testWidgets(
+    'completed: the card turns green and shows its badge; not before',
+    (tester) async {
+      Color? cardColor() => tester
+          .widget<AppCard>(
+            find.descendant(of: _card, matching: find.byType(AppCard)),
+          )
+          .color;
+
+      await _pumpWith(tester, await _storage());
+      expect(cardColor(), AppColors.celeste);
+      expect(_inCard(find.byIcon(Icons.auto_awesome)), findsNothing);
+
+      await tester.pumpWidget(const SizedBox());
+      await _pumpWith(tester, await _storage(), change: _done);
+      await tester.pumpAndSettle();
+      expect(cardColor(), AppColors.mint);
+      expect(_inCard(find.byIcon(Icons.auto_awesome)), findsOneWidget);
+    },
+  );
 
   testWidgets('the card itself still opens the full routine', (tester) async {
     await _pumpWith(tester, await _storage());

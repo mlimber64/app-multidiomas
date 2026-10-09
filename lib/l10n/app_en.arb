@@ -78,6 +78,12 @@
   "chatWelcomeSubtitle": "What do you want to talk about today?",
   "chatErrorGeneric": "I can't answer right now. Shall we try again?",
   "correctMe": "Correct me",
+  "quickNotUnderstood": "I didn't get it",
+  "quickNotUnderstoodMessage": "I didn't understand. Can you explain it another way?",
+  "quickSlower": "Say it slower",
+  "quickSlowerMessage": "Slower, please. Can you say it with simpler words?",
+  "quickExample": "Give me an example",
+  "quickExampleMessage": "Can you give me an example?",
   "correctMeHint": "The teacher will correct more carefully",
   "composerHint": "Write in the language you are learning…",
   "send": "Send",
@@ -212,6 +218,35 @@
   "uiSheetTitle": "Which language do you want the app in?",
   "rowAreas": "Areas",
   "profileLocalNote": "Your preferences stay on this device.",
+  "profileSectionLanguages": "Languages",
+  "profileSectionLearning": "How you learn",
+  "profileSectionVoice": "Voice",
+  "achievementsTitle": "Your achievements",
+  "achievementsCount": "{count} of {total}",
+  "@achievementsCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "achievementUnlocked": "Unlocked",
+  "achievementLocked": "To unlock",
+  "achFirstStepsTitle": "First steps",
+  "achFirstStepsGoal": "Practice or chat for the first time.",
+  "achStreak3Title": "Steady",
+  "achStreak3Goal": "Practice 3 days in a row.",
+  "achStreak7Title": "A whole week",
+  "achStreak7Goal": "Practice 7 days in a row.",
+  "achFullDayTitle": "Perfect day",
+  "achFullDayGoal": "Complete every step of a day's practice this week.",
+  "achFirstWordTitle": "First word",
+  "achFirstWordGoal": "Use a new word correctly.",
+  "achWords10Title": "Growing vocabulary",
+  "achWords10Goal": "Meet 10 new words.",
+  "achImproving1Title": "Getting better",
+  "achImproving1Goal": "Improve in an area that was hard for you.",
+  "achImproving3Title": "Unstoppable",
+  "achImproving3Goal": "Improve in 3 areas.",
   "reviewPreparing": "Preparing your review",
   "reviewError": "I couldn't prepare your review. Please try again.",
   "exerciseProgress": "{position} of {total}",
@@ -522,6 +557,18 @@
   "wordsTabToConsolidate": "To consolidate",
   "wordsTabInUse": "In use",
   "wordsTabAll": "All",
+  "wordsFavoriteAdd": "Mark as favorite",
+  "wordsFavoriteRemove": "Remove from favorites",
+  "wordMasteryCaption": "{count}/3 correct uses",
+  "@wordMasteryCaption": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wordsEmptyConsolidateTitle": "All caught up",
+  "wordsEmptyConsolidateBody": "You have no words to consolidate right now. Keep chatting and new words will show up.",
+  "wordsEmptyInUseTitle": "No words in use yet",
+  "wordsEmptyInUseBody": "Use your new words in a conversation and you will see them here once you are using them.",
   "wordsNoMeaning": "No meaning saved yet",
   "wordUsesSemantics": "{count, plural, =0{Not used correctly yet} =1{Used correctly once} other{Used correctly {count} times}}",
   "@wordUsesSemantics": {
@@ -555,5 +602,44 @@
   "statWords": "Words met",
   "statImproving": "Areas improving",
   "statReinforce": "Areas to reinforce",
+  "statStreak": "Day streak",
+  "progressSkillsTitle": "Your areas",
+  "progressSkillsSub": "Where you are strongest and where you can grow.",
+  "progressSkillsMore": "With more practice, more areas will appear.",
+  "skillVocabulary": "Vocabulary",
+  "skillGrammar": "Grammar",
+  "skillConsistency": "Consistency",
+  "skillVocabularyDetail": "{done} of {total} words in use",
+  "@skillVocabularyDetail": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "skillGrammarDetail": "{done} of {total} areas improving",
+  "@skillGrammarDetail": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "skillConsistencyDetail": "{done} of {total} practice days this week",
+  "@skillConsistencyDetail": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "dayNoPractice": "No practice this day.",
+  "dayFuture": "This day has not come yet.",
+  "dayTodayNone": "You have not practiced yet today. It is a good moment!",
+  "progressEmptyPractice": "Do today's practice",
+  "progressDaySemantics": "{day}: {status}",
+  "@progressDaySemantics": {
+    "placeholders": {
+      "day": { "type": "String" },
+      "status": { "type": "String" }
+    }
+  },
   "voiceTest": "Test voice"
 }

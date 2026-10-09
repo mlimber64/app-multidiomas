@@ -465,7 +465,17 @@ void main() {
       expect(find.text("Voce dell'insegnante"), findsOneWidget);
       expect(_selectedVoice(tester), VoiceGender.female);
 
+      // The profile is longer now and its list builds lazily (what is below
+      // is built as it is reached): scroll to it, let the list settle, and
+      // only then bring it fully into view.
+      await tester.scrollUntilVisible(
+        find.text('Maschile'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Maschile'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Maschile'));
       await tester.pumpAndSettle();
       expect(_selectedVoice(tester), VoiceGender.male);
@@ -581,7 +591,17 @@ void main() {
       await tester.pumpAndSettle();
 
       await _openTab(tester, 'Profilo');
+      // The profile is longer now and its list builds lazily (what is below
+      // is built as it is reached): scroll to it, let the list settle, and
+      // only then bring it fully into view.
+      await tester.scrollUntilVisible(
+        find.text('Maschile'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Maschile'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Maschile'));
       await tester.pumpAndSettle();
       await _openTab(tester, 'Parla');
@@ -661,7 +681,17 @@ void main() {
         await tester.pumpAndSettle();
       }
       await _openTab(tester, 'Profilo');
+      // The profile is longer now and its list builds lazily (what is below
+      // is built as it is reached): scroll to it, let the list settle, and
+      // only then bring it fully into view.
+      await tester.scrollUntilVisible(
+        find.text('Maschile'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Maschile'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Maschile'));
       await tester.pumpAndSettle();
       await _openTab(tester, 'Parla');

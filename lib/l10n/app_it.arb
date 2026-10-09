@@ -71,6 +71,12 @@
   "chatWelcomeSubtitle": "Di cosa vuoi parlare oggi?",
   "chatErrorGeneric": "Non riesco a rispondere in questo momento. Riproviamo?",
   "correctMe": "Correggimi",
+  "quickNotUnderstood": "Non ho capito",
+  "quickNotUnderstoodMessage": "Non ho capito. Puoi spiegarlo in un altro modo?",
+  "quickSlower": "Più lentamente",
+  "quickSlowerMessage": "Più piano, per favore. Puoi dirlo con parole più semplici?",
+  "quickExample": "Fammi un esempio",
+  "quickExampleMessage": "Puoi farmi un esempio?",
   "correctMeHint": "Il professore correggerà con più attenzione",
   "composerHint": "Scrivi nella lingua che impari…",
   "send": "Invia",
@@ -148,6 +154,35 @@
   "uiSheetTitle": "In quale lingua vuoi vedere l’app?",
   "rowAreas": "Aree",
   "profileLocalNote": "Le tue preferenze restano su questo dispositivo.",
+  "profileSectionLanguages": "Lingue",
+  "profileSectionLearning": "Come impari",
+  "profileSectionVoice": "Voce",
+  "achievementsTitle": "I tuoi traguardi",
+  "achievementsCount": "{count} di {total}",
+  "@achievementsCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "achievementUnlocked": "Sbloccato",
+  "achievementLocked": "Da sbloccare",
+  "achFirstStepsTitle": "Primi passi",
+  "achFirstStepsGoal": "Pratica o conversa per la prima volta.",
+  "achStreak3Title": "Costante",
+  "achStreak3Goal": "Pratica 3 giorni di fila.",
+  "achStreak7Title": "Una settimana intera",
+  "achStreak7Goal": "Pratica 7 giorni di fila.",
+  "achFullDayTitle": "Giornata perfetta",
+  "achFullDayGoal": "Completa tutti i passi della pratica di un giorno questa settimana.",
+  "achFirstWordTitle": "Prima parola",
+  "achFirstWordGoal": "Usa correttamente una parola nuova.",
+  "achWords10Title": "Vocabolario in crescita",
+  "achWords10Goal": "Incontra 10 parole nuove.",
+  "achImproving1Title": "In miglioramento",
+  "achImproving1Goal": "Migliora in un ambito che ti dava problemi.",
+  "achImproving3Title": "Inarrestabile",
+  "achImproving3Goal": "Migliora in 3 ambiti.",
   "reviewPreparing": "Preparo il ripasso",
   "reviewError": "Non sono riuscito a preparare il ripasso. Riprova.",
   "exerciseProgress": "{position} di {total}",
@@ -327,6 +362,18 @@
   "wordsTabToConsolidate": "Da consolidare",
   "wordsTabInUse": "In uso",
   "wordsTabAll": "Tutte",
+  "wordsFavoriteAdd": "Segna come preferita",
+  "wordsFavoriteRemove": "Togli dai preferiti",
+  "wordMasteryCaption": "{count}/3 usi corretti",
+  "@wordMasteryCaption": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wordsEmptyConsolidateTitle": "Tutto in pari",
+  "wordsEmptyConsolidateBody": "Ora non hai parole da consolidare. Continua a conversare e compariranno parole nuove.",
+  "wordsEmptyInUseTitle": "Ancora nessuna parola in uso",
+  "wordsEmptyInUseBody": "Usa le parole nuove in una conversazione e le vedrai qui quando le starai usando.",
   "wordsNoMeaning": "Ancora nessun significato salvato",
   "wordUsesSemantics": "{count, plural, =0{Ancora nessun uso corretto} =1{Usata correttamente una volta} other{Usata correttamente {count} volte}}",
   "progressRingCaption": "{improving} aree su {total} in miglioramento",
@@ -336,5 +383,44 @@
   "statWords": "Parole incontrate",
   "statImproving": "Aree in miglioramento",
   "statReinforce": "Aree da rinforzare",
+  "statStreak": "Giorni di fila",
+  "progressSkillsTitle": "Le tue aree",
+  "progressSkillsSub": "Dove sei più forte e dove puoi crescere.",
+  "progressSkillsMore": "Con più pratica compariranno altre aree.",
+  "skillVocabulary": "Vocabolario",
+  "skillGrammar": "Grammatica",
+  "skillConsistency": "Costanza",
+  "skillVocabularyDetail": "{done} di {total} parole in uso",
+  "@skillVocabularyDetail": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "skillGrammarDetail": "{done} di {total} aree in miglioramento",
+  "@skillGrammarDetail": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "skillConsistencyDetail": "{done} di {total} giorni di pratica questa settimana",
+  "@skillConsistencyDetail": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "dayNoPractice": "Nessuna pratica questo giorno.",
+  "dayFuture": "Questo giorno non è ancora arrivato.",
+  "dayTodayNone": "Oggi non hai ancora praticato. È un buon momento!",
+  "progressEmptyPractice": "Fai la pratica di oggi",
+  "progressDaySemantics": "{day}: {status}",
+  "@progressDaySemantics": {
+    "placeholders": {
+      "day": { "type": "String" },
+      "status": { "type": "String" }
+    }
+  },
   "voiceTest": "Prova la voce"
 }

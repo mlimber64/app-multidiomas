@@ -8,7 +8,7 @@ import '../../../app/theme/app_tokens.dart';
 import '../../../l10n/l10n.dart';
 import '../../../shared/ui/ui.dart';
 import '../../../shared/widgets/content_width.dart';
-import '../../../shared/widgets/empty_state_card.dart';
+import '../../../shared/widgets/empty_illustration.dart';
 import '../../../shared/widgets/section_header.dart';
 import '../../daily_routine/presentation/practice_activity.dart';
 import '../../learning/domain/learning_overview.dart';
@@ -17,6 +17,9 @@ import '../../learning/presentation/widgets/error_pair_tile.dart';
 import '../../learning/presentation/widgets/topic_detail_sheet.dart';
 import '../../learning/presentation/widgets/topic_tile.dart';
 import '../../learning/presentation/widgets/vocabulary_tile.dart';
+import '../domain/skill_metrics.dart';
+import 'widgets/skills_card.dart';
+import 'widgets/week_card.dart';
 
 /// "Percorso": how the learner's Italian is evolving, in plain words. It shows
 /// only what the learning memory can back up, and nothing when there is
@@ -49,24 +52,22 @@ class ProgressScreen extends StatelessWidget {
       children: [
         ScreenHeader(title: l.navPath, subtitle: l.progressIntro),
         const SizedBox(height: AppSpacing.lg),
-        if (overview.isEmpty)
-          EmptyStateCard(
-            icon: Icons.explore_outlined,
-            title: l.progressEmptyTitle,
-            message: l.progressEmptyBody,
-            action: PrimaryButton(
-              label: l.letsTalk,
-              onPressed: () => context.go(AppRoutes.conversation),
-            ),
-          )
-        else ...[
+        if (overview.isEmpty) ...[
+          const _ProgressEmpty(),
+          // The week is there from the start: a day of practice is something
+          // to see even before the memory has anything to say.
+          const SizedBox(height: 14),
+          const WeekCard(),
+        ] else ...[
           if (overview.hasTopics) ...[
             _RingHero(overview: overview),
             const SizedBox(height: 14),
           ],
-          const _WeekCard(),
+          const WeekCard(),
           const SizedBox(height: 14),
-          _StatRow(overview: overview),
+          _StatGrid(overview: overview),
+          const SizedBox(height: 14),
+          _Skills(overview: overview),
           const SizedBox(height: AppSpacing.lg),
           if (overview.improving.isNotEmpty) ...[
             SectionHeader(title: l.noteImprovingTitle),
@@ -112,6 +113,75 @@ class ProgressScreen extends StatelessWidget {
     TopicTile(view: view, onTap: () => showTopicDetailSheet(context, view)),
     const SizedBox(height: AppSpacing.sm),
   ];
+}
+
+// NUEVO: "Tus áreas": la gráfica de habilidades con lo que la memoria puede
+// respaldar (vocabulario, gramática y constancia).
+class _Skills extends ConsumerWidget {
+  const _Skills({required this.overview});
+
+  final LearningOverview overview;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activity = ref.watch(practiceActivityProvider).value;
+    return SkillsCard(metrics: buildSkillMetrics(overview, activity));
+  }
+}
+
+// NUEVO: estado vacío motivador: una ilustración, un mensaje que invita a
+// empezar y dos caminos: hablar, o hacer la práctica de hoy.
+class _ProgressEmpty extends StatelessWidget {
+  const _ProgressEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(
+        AppSpacing.lg,
+        AppSpacing.xl,
+        AppSpacing.lg,
+        AppSpacing.lg,
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          children: [
+            const EmptyIllustration(
+              icon: Icons.explore_outlined,
+              badge: Icons.trending_up,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              l.progressEmptyTitle,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.sectionTitle,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l.progressEmptyBody,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.body,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            PrimaryButton(
+              label: l.letsTalk,
+              variant: PrimaryButtonVariant.green,
+              trailingIcon: Icons.chat_bubble_outline,
+              onPressed: () => context.go(AppRoutes.conversation),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            PrimaryButton(
+              label: l.progressEmptyPractice,
+              variant: PrimaryButtonVariant.outlinedGreen,
+              onPressed: () => context.push(AppRoutes.dailyRoutine),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // NUEVO: hero con el anillo. No hay un "porcentaje de progreso" en la app: el
@@ -162,135 +232,134 @@ class _RingHero extends StatelessWidget {
   }
 }
 
-// NUEVO: la semana (lunes a domingo) con los días en que hubo práctica,
-// derivados de las rutinas diarias guardadas.
-class _WeekCard extends ConsumerWidget {
-  const _WeekCard();
+// NUEVO: las cifras reales de la memoria de aprendizaje, en tarjetas elevadas
+// con un icono de color. Un logro (áreas mejorando, racha) lleva un filete del
+// color de su acento. La racha solo aparece cuando la hay: nunca un "0 días".
+class _StatGrid extends ConsumerWidget {
+  const _StatGrid({required this.overview});
+
+  final LearningOverview overview;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final activity = ref.watch(practiceActivityProvider).value;
-    if (activity == null) return const SizedBox.shrink();
     final l = context.l10n;
-    final initials = l.weekInitials.split(',');
-    final count = activity.week.where((d) => d).length;
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final streak = ref.watch(practiceActivityProvider).value?.streak ?? 0;
+    final words =
+        overview.vocabularyToConsolidate.length +
+        overview.vocabularyInUse.length;
+    final improving = overview.improving.length;
+    final cards = [
+      _StatCard(
+        value: words,
+        label: l.statWords,
+        icon: Icons.menu_book_outlined,
+        background: AppColors.feedbackBg,
+        accent: AppColors.feedbackAccent,
+      ),
+      _StatCard(
+        value: improving,
+        label: l.statImproving,
+        icon: Icons.trending_up,
+        background: AppColors.mint,
+        accent: AppColors.greenDark,
+        achievement: improving > 0,
+      ),
+      _StatCard(
+        value: overview.toReinforce.length,
+        label: l.statReinforce,
+        icon: Icons.track_changes,
+        background: AppColors.amberBg,
+        accent: AppColors.amberText,
+      ),
+      if (streak > 0)
+        _StatCard(
+          value: streak,
+          label: l.statStreak,
+          icon: Icons.local_fire_department,
+          background: AppColors.terraBg,
+          accent: AppColors.terraText,
+          achievement: true,
+        ),
+    ];
+    // Two per row; an odd one out takes the whole row.
+    Widget row(int start) => IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l.progressWeekTitle, style: AppTextStyles.rowTitle),
-          const SizedBox(height: 12),
-          Semantics(
-            label: l.weekSemantics(count),
-            excludeSemantics: true,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                for (var i = 0; i < 7; i++)
-                  _DayDot(
-                    initial: initials[i],
-                    practiced: activity.week[i],
-                    today: i == activity.todayIndex,
-                  ),
-              ],
-            ),
-          ),
+          Expanded(child: cards[start]),
+          if (start + 1 < cards.length) ...[
+            const SizedBox(width: 12),
+            Expanded(child: cards[start + 1]),
+          ],
         ],
       ),
     );
-  }
-}
-
-class _DayDot extends StatelessWidget {
-  const _DayDot({
-    required this.initial,
-    required this.practiced,
-    required this.today,
-  });
-
-  final String initial;
-  final bool practiced;
-  final bool today;
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 34,
-          height: 34,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: practiced ? AppColors.green : AppColors.divider,
-            shape: BoxShape.circle,
-            border: today ? Border.all(color: AppColors.green, width: 2) : null,
-          ),
-          child: practiced
-              ? const Icon(Icons.check, size: 18, color: Colors.white)
-              : null,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          initial,
-          style: AppTextStyles.small.copyWith(
-            fontWeight: today ? FontWeight.w800 : FontWeight.w600,
-          ),
-        ),
+        for (var i = 0; i < cards.length; i += 2) ...[
+          if (i > 0) const SizedBox(height: 12),
+          row(i),
+        ],
       ],
     );
   }
 }
 
-// NUEVO: tres números reales de la memoria de aprendizaje.
-class _StatRow extends StatelessWidget {
-  const _StatRow({required this.overview});
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.background,
+    required this.accent,
+    this.achievement = false,
+  });
 
-  final LearningOverview overview;
+  final int value;
+  final String label;
+  final IconData icon;
+  final Color background;
+  final Color accent;
+
+  /// A goal reached: the card gets a thin edge in its accent color.
+  final bool achievement;
 
   @override
   Widget build(BuildContext context) {
-    final l = context.l10n;
-    final words =
-        overview.vocabularyToConsolidate.length +
-        overview.vocabularyInUse.length;
-    final stats = [
-      (words, l.statWords),
-      (overview.improving.length, l.statImproving),
-      (overview.toReinforce.length, l.statReinforce),
-    ];
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (var i = 0; i < stats.length; i++) ...[
-            if (i > 0) const SizedBox(width: 10),
+    return Semantics(
+      label: '$label: $value',
+      excludeSemantics: true,
+      child: AppCard(
+        radius: AppRadius.tile,
+        padding: const EdgeInsets.all(14),
+        shadow: AppShadows.word,
+        borderColor: achievement
+            ? accent.withValues(alpha: 0.35)
+            : AppColors.border,
+        child: Row(
+          children: [
+            IconCircle(
+              icon: icon,
+              size: 42,
+              iconSize: 22,
+              background: background,
+              foreground: accent,
+            ),
+            const SizedBox(width: 12),
             Expanded(
-              child: Semantics(
-                label: '${stats[i].$2}: ${stats[i].$1}',
-                excludeSemantics: true,
-                child: AppCard(
-                  radius: AppRadius.tile,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 14,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '$value',
+                    style: AppTextStyles.statNumber.copyWith(color: accent),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('${stats[i].$1}', style: AppTextStyles.statNumber),
-                      const SizedBox(height: 2),
-                      Text(
-                        stats[i].$2,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.small,
-                      ),
-                    ],
-                  ),
-                ),
+                  Text(label, style: AppTextStyles.small),
+                ],
               ),
             ),
           ],
-        ],
+        ),
       ),
     );
   }

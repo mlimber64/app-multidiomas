@@ -12,6 +12,7 @@ class AppCard extends StatelessWidget {
     this.color = AppColors.surface,
     this.borderColor = AppColors.border,
     this.shadow,
+    this.gradient,
     this.onTap,
     this.semanticLabel,
     super.key,
@@ -23,6 +24,9 @@ class AppCard extends StatelessWidget {
   final Color color;
   final Color borderColor;
   final List<BoxShadow>? shadow;
+
+  /// Si se da, se pinta en lugar de [color] (tarjetas destacadas).
+  final Gradient? gradient;
   final VoidCallback? onTap;
 
   /// Para tarjetas que son un solo botón (se anuncian como botón).
@@ -41,7 +45,8 @@ class AppCard extends StatelessWidget {
     }
     Widget card = DecoratedBox(
       decoration: BoxDecoration(
-        color: color,
+        color: gradient == null ? color : null,
+        gradient: gradient,
         borderRadius: borderRadius,
         border: Border.all(color: borderColor),
         boxShadow: shadow,
@@ -72,6 +77,8 @@ class CelesteHeroCard extends StatelessWidget {
     required this.child,
     this.radius = AppRadius.hero,
     this.padding = const EdgeInsets.all(22),
+    this.color = AppColors.celeste,
+    this.shadow = AppShadows.hero,
     this.onTap,
     super.key,
   });
@@ -79,16 +86,26 @@ class CelesteHeroCard extends StatelessWidget {
   final Widget child;
   final double radius;
   final EdgeInsetsGeometry padding;
+
+  /// Celeste por defecto; la práctica completada la pinta de verde suave.
+  final Color color;
+  final List<BoxShadow> shadow;
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => AppCard(
-    radius: radius,
-    padding: padding,
-    color: AppColors.celeste,
-    borderColor: Colors.transparent,
-    shadow: AppShadows.hero,
-    onTap: onTap,
-    child: child,
+  // El cambio de tono (por ejemplo al completar la práctica) se funde en vez
+  // de saltar.
+  Widget build(BuildContext context) => TweenAnimationBuilder<Color?>(
+    tween: ColorTween(end: color),
+    duration: AppMotion.medium,
+    builder: (context, animated, _) => AppCard(
+      radius: radius,
+      padding: padding,
+      color: animated ?? color,
+      borderColor: Colors.transparent,
+      shadow: shadow,
+      onTap: onTap,
+      child: child,
+    ),
   );
 }

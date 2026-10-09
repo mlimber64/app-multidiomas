@@ -6,6 +6,7 @@ import '../../../../l10n/l10n.dart';
 import '../../../../services/speech/speech_service.dart';
 import '../../../../shared/models/correction.dart';
 import '../../../../shared/ui/app_action_chip.dart';
+import '../../../../shared/ui/icon_tile.dart';
 import '../../../voice/domain/speech_text.dart';
 import '../../../voice/presentation/speech_controller.dart';
 import '../../../voice/presentation/widgets/listen_button.dart';
@@ -30,66 +31,108 @@ class MessageBubble extends StatelessWidget {
     final isUser = message.role == MessageRole.user;
     final width = MediaQuery.sizeOf(context).width;
 
+    final column = Column(
+      crossAxisAlignment: isUser
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          label: isUser ? context.l10n.roleYou : context.l10n.roleTeacher,
+          // NUEVO: burbujas asimétricas. Las esquinas son amplias (20) y solo
+          // una es casi recta (6): la que apunta a quien habla, la de arriba
+          // junto al avatar en el profesor y la de abajo a la derecha en el
+          // alumno.
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: isUser ? AppColors.green : AppColors.surface,
+              border: isUser ? null : Border.all(color: AppColors.border),
+              boxShadow: isUser ? null : bubbleShadow,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(isUser ? bubbleRadius : 6),
+                topRight: const Radius.circular(bubbleRadius),
+                bottomLeft: const Radius.circular(bubbleRadius),
+                bottomRight: Radius.circular(isUser ? 6 : bubbleRadius),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: _content(context, isUser),
+            ),
+          ),
+        ),
+        if (!isUser)
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: ListenButton(
+              speechKey: speechKeyOf(message.id),
+              text: message.content,
+              tooltip: context.l10n.listenToMessage,
+              label: context.l10n.listen,
+              chip: AppActionChipVariant.mint,
+            ),
+          ),
+        for (var i = 0; i < message.corrections.length; i++)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: CorrectionCard(
+              correction: message.corrections[i],
+              messageId: message.id,
+              index: i,
+            ),
+          ),
+      ],
+    );
+
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: (width * 0.85).clamp(0, AppSizes.maxContentWidth * 0.85),
         ),
-        child: Column(
-          crossAxisAlignment: isUser
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-            Semantics(
-              label: isUser ? context.l10n.roleYou : context.l10n.roleTeacher,
-              // NUEVO: burbuja del diseño: profesor blanco con borde (esquina
-              // inferior izquierda de 6), alumno verde (inferior derecha de 6).
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: isUser ? AppColors.green : AppColors.surface,
-                  border: isUser ? null : Border.all(color: AppColors.border),
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(AppRadius.panel),
-                    topRight: const Radius.circular(AppRadius.panel),
-                    bottomLeft: Radius.circular(isUser ? AppRadius.panel : 6),
-                    bottomRight: Radius.circular(isUser ? 6 : AppRadius.panel),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  child: _content(context, isUser),
-                ),
+        // NUEVO: el profesor lleva su avatar a la izquierda, así se distingue
+        // de un vistazo de los mensajes del alumno. Las correcciones y el
+        // botón de escuchar quedan alineados con la burbuja, no con el avatar.
+        child: isUser
+            ? column
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const TeacherAvatar(),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(child: column),
+                ],
               ),
-            ),
-            if (!isUser)
-              Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: ListenButton(
-                  speechKey: speechKeyOf(message.id),
-                  text: message.content,
-                  tooltip: context.l10n.listenToMessage,
-                  label: context.l10n.listen,
-                  chip: AppActionChipVariant.mint,
-                ),
-              ),
-            for (var i = 0; i < message.corrections.length; i++)
-              Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.sm),
-                child: CorrectionCard(
-                  correction: message.corrections[i],
-                  messageId: message.id,
-                  index: i,
-                ),
-              ),
-          ],
-        ),
       ),
     );
   }
+}
+
+/// Radius of the chat bubbles' wide corners.
+const bubbleRadius = 20.0;
+
+/// A barely-there shadow that lifts the teacher's white bubble off the cream.
+const bubbleShadow = [
+  BoxShadow(color: AppColors.wordShadow, blurRadius: 8, offset: Offset(0, 2)),
+];
+
+// NUEVO: avatar del profesor de IA: círculo menta con un icono de profesor
+// (decorativo: el rol ya se anuncia en la burbuja).
+class TeacherAvatar extends StatelessWidget {
+  const TeacherAvatar({this.size = 32, super.key});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => ExcludeSemantics(
+    child: IconCircle(
+      icon: Icons.school,
+      size: size,
+      iconSize: size * 0.56,
+      background: AppColors.mint,
+      foreground: AppColors.greenDark,
+      border: AppColors.mintBorder,
+    ),
+  );
 }
 
 extension on MessageBubble {
@@ -203,7 +246,7 @@ class CorrectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.feedbackBg,
         border: Border.all(color: AppColors.feedbackBorder),
-        borderRadius: BorderRadius.circular(AppRadius.panel),
+        borderRadius: BorderRadius.circular(bubbleRadius),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -212,12 +255,19 @@ class CorrectionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(
-                  Icons.edit_note,
-                  size: 20,
-                  color: AppColors.feedbackAccent,
+                // NUEVO: varita mágica en un círculo, para que la corrección
+                // de la IA destaque con jerarquía propia dentro del chat.
+                const ExcludeSemantics(
+                  child: IconCircle(
+                    icon: Icons.auto_fix_high,
+                    size: 30,
+                    iconSize: 18,
+                    background: AppColors.surface,
+                    foreground: AppColors.feedbackAccent,
+                    border: AppColors.feedbackChipBorder,
+                  ),
                 ),
-                const SizedBox(width: AppSpacing.xs),
+                const SizedBox(width: AppSpacing.sm),
                 Flexible(
                   child: Text(
                     _categoryLabel(l, correction.category),

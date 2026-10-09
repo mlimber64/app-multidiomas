@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../app/theme/app_text_styles.dart';
 import '../../app/theme/app_tokens.dart';
@@ -10,6 +11,8 @@ class SegmentedPills<T> extends StatelessWidget {
     required this.items,
     required this.selected,
     required this.onChanged,
+    this.emphasized = false,
+    this.iconOf,
     super.key,
   });
 
@@ -17,6 +20,13 @@ class SegmentedPills<T> extends StatelessWidget {
   final List<(T, String)> items;
   final T selected;
   final ValueChanged<T> onChanged;
+
+  /// NUEVO: el ítem activo se rellena de verde con texto blanco (y vibra al
+  /// cambiar), un cambio de estado mucho más claro que el blanco con sombra.
+  final bool emphasized;
+
+  /// NUEVO: icono opcional delante del texto de cada ítem.
+  final IconData? Function(T value)? iconOf;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +43,15 @@ class SegmentedPills<T> extends StatelessWidget {
               Expanded(
                 child: _Segment(
                   label: label,
+                  icon: iconOf?.call(value),
                   selected: value == selected,
-                  onTap: () => onChanged(value),
+                  emphasized: emphasized,
+                  onTap: () {
+                    if (emphasized && value != selected) {
+                      HapticFeedback.selectionClick();
+                    }
+                    onChanged(value);
+                  },
                 ),
               ),
           ],
@@ -48,11 +65,15 @@ class _Segment extends StatelessWidget {
   const _Segment({
     required this.label,
     required this.selected,
+    required this.emphasized,
     required this.onTap,
+    this.icon,
   });
 
   final String label;
+  final IconData? icon;
   final bool selected;
+  final bool emphasized;
   final VoidCallback onTap;
 
   @override
@@ -60,7 +81,7 @@ class _Segment extends StatelessWidget {
     final style = selected
         ? AppTextStyles.bodyStrong.copyWith(
             fontSize: 14,
-            color: AppColors.greenDark,
+            color: emphasized ? Colors.white : AppColors.greenDark,
           )
         : AppTextStyles.bodyStrong.copyWith(
             fontSize: 14,
@@ -82,11 +103,31 @@ class _Segment extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: selected ? Colors.white : Colors.transparent,
+            color: selected
+                ? (emphasized ? AppColors.green : Colors.white)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
             boxShadow: selected ? AppShadows.segment : null,
           ),
-          child: Text(label, textAlign: TextAlign.center, style: style),
+          child: icon == null
+              ? Text(label, textAlign: TextAlign.center, style: style)
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ExcludeSemantics(
+                      child: Icon(icon, size: 18, color: style.color),
+                    ),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        label,
+                        textAlign: TextAlign.center,
+                        style: style,
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

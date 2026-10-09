@@ -107,6 +107,14 @@ class ConversationScreen extends ConsumerWidget {
                   correctionMode: state.correctionMode,
                   onSend: controller.send,
                   onSendVoice: controller.sendVoice,
+                  // Quick replies make sense once the teacher has said
+                  // something to ask about.
+                  onQuickReply:
+                      state.conversation.messages.any(
+                        (m) => m.role == MessageRole.assistant,
+                      )
+                      ? controller.send
+                      : null,
                   onCorrectionModeChanged: (v) =>
                       controller.setCorrectionMode(enabled: v),
                 ),

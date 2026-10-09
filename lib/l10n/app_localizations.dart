@@ -526,6 +526,42 @@ abstract class AppLocalizations {
   /// **'Correct me'**
   String get correctMe;
 
+  /// No description provided for @quickNotUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t get it'**
+  String get quickNotUnderstood;
+
+  /// No description provided for @quickNotUnderstoodMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t understand. Can you explain it another way?'**
+  String get quickNotUnderstoodMessage;
+
+  /// No description provided for @quickSlower.
+  ///
+  /// In en, this message translates to:
+  /// **'Say it slower'**
+  String get quickSlower;
+
+  /// No description provided for @quickSlowerMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Slower, please. Can you say it with simpler words?'**
+  String get quickSlowerMessage;
+
+  /// No description provided for @quickExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Give me an example'**
+  String get quickExample;
+
+  /// No description provided for @quickExampleMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Can you give me an example?'**
+  String get quickExampleMessage;
+
   /// No description provided for @correctMeHint.
   ///
   /// In en, this message translates to:
@@ -987,6 +1023,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your preferences stay on this device.'**
   String get profileLocalNote;
+
+  /// No description provided for @profileSectionLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get profileSectionLanguages;
+
+  /// No description provided for @profileSectionLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'How you learn'**
+  String get profileSectionLearning;
+
+  /// No description provided for @profileSectionVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get profileSectionVoice;
+
+  /// No description provided for @achievementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your achievements'**
+  String get achievementsTitle;
+
+  /// No description provided for @achievementsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total}'**
+  String achievementsCount(int count, int total);
+
+  /// No description provided for @achievementUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocked'**
+  String get achievementUnlocked;
+
+  /// No description provided for @achievementLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'To unlock'**
+  String get achievementLocked;
+
+  /// No description provided for @achFirstStepsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First steps'**
+  String get achFirstStepsTitle;
+
+  /// No description provided for @achFirstStepsGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice or chat for the first time.'**
+  String get achFirstStepsGoal;
+
+  /// No description provided for @achStreak3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady'**
+  String get achStreak3Title;
+
+  /// No description provided for @achStreak3Goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice 3 days in a row.'**
+  String get achStreak3Goal;
+
+  /// No description provided for @achStreak7Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A whole week'**
+  String get achStreak7Title;
+
+  /// No description provided for @achStreak7Goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice 7 days in a row.'**
+  String get achStreak7Goal;
+
+  /// No description provided for @achFullDayTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect day'**
+  String get achFullDayTitle;
+
+  /// No description provided for @achFullDayGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete every step of a day\'s practice this week.'**
+  String get achFullDayGoal;
+
+  /// No description provided for @achFirstWordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'First word'**
+  String get achFirstWordTitle;
+
+  /// No description provided for @achFirstWordGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a new word correctly.'**
+  String get achFirstWordGoal;
+
+  /// No description provided for @achWords10Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Growing vocabulary'**
+  String get achWords10Title;
+
+  /// No description provided for @achWords10Goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet 10 new words.'**
+  String get achWords10Goal;
+
+  /// No description provided for @achImproving1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting better'**
+  String get achImproving1Title;
+
+  /// No description provided for @achImproving1Goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve in an area that was hard for you.'**
+  String get achImproving1Goal;
+
+  /// No description provided for @achImproving3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Unstoppable'**
+  String get achImproving3Title;
+
+  /// No description provided for @achImproving3Goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Improve in 3 areas.'**
+  String get achImproving3Goal;
 
   /// No description provided for @reviewPreparing.
   ///
@@ -1768,6 +1942,48 @@ abstract class AppLocalizations {
   /// **'All'**
   String get wordsTabAll;
 
+  /// No description provided for @wordsFavoriteAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as favorite'**
+  String get wordsFavoriteAdd;
+
+  /// No description provided for @wordsFavoriteRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorites'**
+  String get wordsFavoriteRemove;
+
+  /// No description provided for @wordMasteryCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/3 correct uses'**
+  String wordMasteryCaption(int count);
+
+  /// No description provided for @wordsEmptyConsolidateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All caught up'**
+  String get wordsEmptyConsolidateTitle;
+
+  /// No description provided for @wordsEmptyConsolidateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no words to consolidate right now. Keep chatting and new words will show up.'**
+  String get wordsEmptyConsolidateBody;
+
+  /// No description provided for @wordsEmptyInUseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No words in use yet'**
+  String get wordsEmptyInUseTitle;
+
+  /// No description provided for @wordsEmptyInUseBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your new words in a conversation and you will see them here once you are using them.'**
+  String get wordsEmptyInUseBody;
+
   /// No description provided for @wordsNoMeaning.
   ///
   /// In en, this message translates to:
@@ -1821,6 +2037,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Areas to reinforce'**
   String get statReinforce;
+
+  /// No description provided for @statStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'Day streak'**
+  String get statStreak;
+
+  /// No description provided for @progressSkillsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your areas'**
+  String get progressSkillsTitle;
+
+  /// No description provided for @progressSkillsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you are strongest and where you can grow.'**
+  String get progressSkillsSub;
+
+  /// No description provided for @progressSkillsMore.
+  ///
+  /// In en, this message translates to:
+  /// **'With more practice, more areas will appear.'**
+  String get progressSkillsMore;
+
+  /// No description provided for @skillVocabulary.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabulary'**
+  String get skillVocabulary;
+
+  /// No description provided for @skillGrammar.
+  ///
+  /// In en, this message translates to:
+  /// **'Grammar'**
+  String get skillGrammar;
+
+  /// No description provided for @skillConsistency.
+  ///
+  /// In en, this message translates to:
+  /// **'Consistency'**
+  String get skillConsistency;
+
+  /// No description provided for @skillVocabularyDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} words in use'**
+  String skillVocabularyDetail(int done, int total);
+
+  /// No description provided for @skillGrammarDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} areas improving'**
+  String skillGrammarDetail(int done, int total);
+
+  /// No description provided for @skillConsistencyDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total} practice days this week'**
+  String skillConsistencyDetail(int done, int total);
+
+  /// No description provided for @dayNoPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'No practice this day.'**
+  String get dayNoPractice;
+
+  /// No description provided for @dayFuture.
+  ///
+  /// In en, this message translates to:
+  /// **'This day has not come yet.'**
+  String get dayFuture;
+
+  /// No description provided for @dayTodayNone.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not practiced yet today. It is a good moment!'**
+  String get dayTodayNone;
+
+  /// No description provided for @progressEmptyPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Do today\'s practice'**
+  String get progressEmptyPractice;
+
+  /// No description provided for @progressDaySemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{day}: {status}'**
+  String progressDaySemantics(String day, String status);
 
   /// No description provided for @voiceTest.
   ///

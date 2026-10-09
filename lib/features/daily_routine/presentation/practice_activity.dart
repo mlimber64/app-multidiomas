@@ -15,6 +15,8 @@ class PracticeActivity {
     required this.streak,
     required this.week,
     required this.todayIndex,
+    this.weekStart,
+    this.weekRoutines = const [null, null, null, null, null, null, null],
   });
 
   /// Sin actividad conocida.
@@ -34,6 +36,23 @@ class PracticeActivity {
   /// Posición de hoy en [week] (0 = lunes).
   final int todayIndex;
 
+  /// NUEVO: el lunes de la semana actual (`null` sin actividad conocida), para
+  /// poner fecha a cada día.
+  final DateTime? weekStart;
+
+  /// NUEVO: la rutina guardada de cada día de la semana, de lunes a domingo
+  /// (`null` si ese día no hay ninguna: no se abrió la app, o aún no llega).
+  /// Es lo que se muestra al tocar un día.
+  final List<DailyRoutine?> weekRoutines;
+
+  /// Fecha del día [index] de la semana (0 = lunes), si se conoce.
+  DateTime? dateOf(int index) {
+    final start = weekStart;
+    return start == null
+        ? null
+        : DateTime(start.year, start.month, start.day + index);
+  }
+
   bool get practicedToday => week[todayIndex];
 }
 
@@ -41,7 +60,11 @@ class PracticeActivity {
 const _lookBackDays = 14;
 
 /// Pura: de los días con práctica y de hoy, la racha y la semana.
-PracticeActivity practiceActivityOf(Set<String> practicedDays, DateTime today) {
+PracticeActivity practiceActivityOf(
+  Set<String> practicedDays,
+  DateTime today, {
+  Map<String, DailyRoutine> routines = const {},
+}) {
   final day = DateTime(today.year, today.month, today.day);
   bool practiced(DateTime d) => practicedDays.contains(DailyRoutine.dateOf(d));
 
@@ -63,6 +86,13 @@ PracticeActivity practiceActivityOf(Set<String> practicedDays, DateTime today) {
     streak: streak,
     week: week,
     todayIndex: day.weekday - 1,
+    weekStart: monday,
+    weekRoutines: [
+      for (var i = 0; i < 7; i++)
+        routines[DailyRoutine.dateOf(
+          DateTime(monday.year, monday.month, monday.day + i),
+        )],
+    ],
   );
 }
 
@@ -78,16 +108,16 @@ final practiceActivityProvider = FutureProvider<PracticeActivity>((ref) async {
   final today = DateTime(now.year, now.month, now.day);
 
   final practiced = <String>{};
+  final routines = <String, DailyRoutine>{};
   for (var back = 0; back < _lookBackDays; back++) {
     final key = DailyRoutine.dateOf(
       DateTime(today.year, today.month, today.day - back),
     );
     final loaded = await repository.load(key, language);
-    if (loaded case Success(
-      value: final routine?,
-    ) when routine.completedCount > 0) {
-      practiced.add(key);
+    if (loaded case Success(value: final routine?)) {
+      routines[key] = routine;
+      if (routine.completedCount > 0) practiced.add(key);
     }
   }
-  return practiceActivityOf(practiced, now);
+  return practiceActivityOf(practiced, now, routines: routines);
 });

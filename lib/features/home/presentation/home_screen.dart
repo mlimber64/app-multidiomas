@@ -88,16 +88,26 @@ class _StreakChip extends ConsumerWidget {
   }
 }
 
-// NUEVO: tarjeta "Hablemos": círculo mint con onda de audio, título,
-// subtítulo y flecha verde. Toda la tarjeta lleva a Hablar.
+// NUEVO: tarjeta "Hablemos", la acción principal de la pantalla: degradado
+// verde con texto blanco para que destaque sobre las tarjetas crema. Toda la
+// tarjeta lleva a Hablar.
 class _TalkCard extends StatelessWidget {
   const _TalkCard();
+
+  static const _gradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [AppColors.greenDark, AppColors.green, Color(0xFF2C7A57)],
+  );
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
     return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+      gradient: _gradient,
+      borderColor: Colors.transparent,
+      shadow: AppShadows.talk,
       onTap: () => context.go(AppRoutes.conversation),
       semanticLabel: '${l.letsTalk}. ${l.heroSubtitle}',
       child: Row(
@@ -113,9 +123,17 @@ class _TalkCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l.letsTalk, style: AppTextStyles.sectionTitle),
+                Text(
+                  l.letsTalk,
+                  style: AppTextStyles.sectionTitle.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(l.heroSubtitle, style: AppTextStyles.body),
+                Text(
+                  l.heroSubtitle,
+                  style: AppTextStyles.body.copyWith(color: AppColors.mint),
+                ),
               ],
             ),
           ),
@@ -124,8 +142,8 @@ class _TalkCard extends StatelessWidget {
             icon: Icons.arrow_forward,
             size: 44,
             iconSize: 22,
-            background: AppColors.green,
-            foreground: Colors.white,
+            background: Colors.white,
+            foreground: AppColors.green,
           ),
         ],
       ),
@@ -217,14 +235,24 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // NUEVO: fondo crema suave, borde de 1 px (el de AppCard) e icono en un
+    // círculo del color de cada área, para reconocerlas de un vistazo.
     return AppCard(
       radius: AppRadius.tile,
       padding: const EdgeInsets.all(14),
+      color: AppColors.surfaceCream,
       onTap: onTap,
       semanticLabel: '$title. $subtitle',
       child: Row(
         children: [
-          IconTile(icon: icon, background: background, foreground: foreground),
+          ExcludeSemantics(
+            child: IconCircle(
+              icon: icon,
+              size: 42,
+              background: background,
+              foreground: foreground,
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -249,8 +277,9 @@ class _Tile extends StatelessWidget {
   }
 }
 
-// NUEVO: franja "Tu recorrido": las preferencias guardadas en chips blancos
-// (idioma, nivel, enfoque), con los datos que Inicio ya mostraba.
+// NUEVO: "Tu recorrido": las preferencias guardadas (idioma, nivel, enfoque)
+// como tarjetitas con un icono propio, en una fila que se desliza cuando no
+// caben en el ancho del teléfono. Son los mismos datos que Inicio ya mostraba.
 class _JourneyStrip extends StatelessWidget {
   const _JourneyStrip({required this.profile});
 
@@ -266,10 +295,30 @@ class _JourneyStrip extends StatelessWidget {
       profile.focusAreas,
       (f) => f.label(l),
     );
-    final chips = [profile.learningLanguage.label, ?level, focus];
+    final items = [
+      (
+        Icons.translate,
+        AppColors.mint,
+        AppColors.greenDark,
+        profile.learningLanguage.label,
+      ),
+      if (level != null)
+        (
+          Icons.signal_cellular_alt,
+          AppColors.amberBg,
+          AppColors.amberText,
+          level,
+        ),
+      (
+        Icons.track_changes,
+        AppColors.feedbackBg,
+        AppColors.feedbackAccent,
+        focus,
+      ),
+    ];
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
         color: AppColors.surfaceSoft,
         borderRadius: BorderRadius.circular(AppRadius.tile),
@@ -277,23 +326,54 @@ class _JourneyStrip extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l.journeyTitle.toUpperCase(), style: AppTextStyles.eyebrow),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [for (final text in chips) _JourneyChip(text)],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              l.journeyTitle.toUpperCase(),
+              style: AppTextStyles.eyebrow,
+            ),
           ),
-          const _LearningNote(),
+          const SizedBox(height: 10),
+          // Horizontal scroll: the cards keep their natural width instead of
+          // squeezing or wrapping on narrow phones.
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                for (final (i, item) in items.indexed) ...[
+                  if (i > 0) const SizedBox(width: 8),
+                  _JourneyItem(
+                    icon: item.$1,
+                    background: item.$2,
+                    foreground: item.$3,
+                    text: item.$4,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: _LearningNote(),
+          ),
         ],
       ),
     );
   }
 }
 
-class _JourneyChip extends StatelessWidget {
-  const _JourneyChip(this.text);
+class _JourneyItem extends StatelessWidget {
+  const _JourneyItem({
+    required this.icon,
+    required this.background,
+    required this.foreground,
+    required this.text,
+  });
 
+  final IconData icon;
+  final Color background;
+  final Color foreground;
   final String text;
 
   @override
@@ -301,12 +381,25 @@ class _JourneyChip extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(AppRadius.pill),
+      border: Border.all(color: AppColors.border),
     ),
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Text(
-        text,
-        style: AppTextStyles.chip.copyWith(color: AppColors.ink),
+      padding: const EdgeInsets.fromLTRB(6, 6, 14, 6),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ExcludeSemantics(
+            child: IconCircle(
+              icon: icon,
+              size: 30,
+              iconSize: 16,
+              background: background,
+              foreground: foreground,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(text, style: AppTextStyles.chip.copyWith(color: AppColors.ink)),
+        ],
       ),
     ),
   );

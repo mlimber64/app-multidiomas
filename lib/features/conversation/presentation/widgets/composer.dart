@@ -24,6 +24,7 @@ class Composer extends ConsumerStatefulWidget {
     required this.onSend,
     required this.onSendVoice,
     required this.onCorrectionModeChanged,
+    this.onQuickReply,
     super.key,
   });
 
@@ -33,6 +34,10 @@ class Composer extends ConsumerStatefulWidget {
   final ValueChanged<String> onSend;
   final ValueChanged<AudioClip> onSendVoice;
   final ValueChanged<bool> onCorrectionModeChanged;
+
+  /// Sends one of the quick replies ("I didn't get it"...). `null` hides them:
+  /// there is nothing to ask the teacher about until the teacher has spoken.
+  final ValueChanged<String>? onQuickReply;
 
   @override
   ConsumerState<Composer> createState() => _ComposerState();
@@ -134,15 +139,41 @@ class _ComposerState extends ConsumerState<Composer> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Tooltip(
-          message: l.correctMeHint,
-          child: AppActionChip(
-            label: l.correctMe,
-            icon: Icons.edit_note,
-            variant: AppActionChipVariant.neutral,
-            selected: widget.correctionMode,
-            onPressed: () =>
-                widget.onCorrectionModeChanged(!widget.correctionMode),
+        // NUEVO: una sola fila que se desliza: el interruptor "Corrígeme" y,
+        // después, las respuestas rápidas para no quedarse en blanco. Ocupa lo
+        // mismo que antes ocupaba solo "Corrígeme", así el teclado no pierde
+        // espacio.
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Tooltip(
+                message: l.correctMeHint,
+                child: AppActionChip(
+                  label: l.correctMe,
+                  icon: Icons.edit_note,
+                  variant: AppActionChipVariant.neutral,
+                  selected: widget.correctionMode,
+                  onPressed: () =>
+                      widget.onCorrectionModeChanged(!widget.correctionMode),
+                ),
+              ),
+              if (widget.onQuickReply case final onQuickReply?)
+                for (final (label, message) in [
+                  (l.quickNotUnderstood, l.quickNotUnderstoodMessage),
+                  (l.quickSlower, l.quickSlowerMessage),
+                  (l.quickExample, l.quickExampleMessage),
+                ]) ...[
+                  const SizedBox(width: AppSpacing.sm),
+                  AppActionChip(
+                    label: label,
+                    variant: AppActionChipVariant.mint,
+                    onPressed: widget.canSend
+                        ? () => onQuickReply(message)
+                        : null,
+                  ),
+                ],
+            ],
           ),
         ),
         const SizedBox(height: 2),
@@ -186,16 +217,9 @@ class _ComposerState extends ConsumerState<Composer> {
                     // Speaking is an alternative to typing, so it is offered
                     // while there is nothing typed.
                     if (!hasText)
-                      IconButton.outlined(
+                      _MicButton(
                         tooltip: l.recordVoice,
                         onPressed: widget.canSend ? _startRecording : null,
-                        style: IconButton.styleFrom(
-                          fixedSize: const Size.square(AppSizes.control),
-                          foregroundColor: AppColors.green,
-                          backgroundColor: AppColors.mintSoft,
-                          side: const BorderSide(color: AppColors.green),
-                        ),
-                        icon: const Icon(Icons.mic_none),
                       ),
                     if (!hasText) const SizedBox(width: AppSpacing.xs),
                     IconButton.filled(
@@ -227,6 +251,41 @@ class _ComposerState extends ConsumerState<Composer> {
       ],
     );
   }
+}
+
+// NUEVO: botón de voz con protagonismo: relleno verde con micrófono blanco y
+// un anillo menta alrededor (más grande que el de enviar), porque hablar es el
+// núcleo de la app. El anillo es estático: sin animaciones infinitas.
+class _MicButton extends StatelessWidget {
+  const _MicButton({required this.tooltip, required this.onPressed});
+
+  final String tooltip;
+  final VoidCallback? onPressed;
+
+  @override
+  // A Container (not a DecoratedBox) so the ring takes its own width instead
+  // of being painted under the button.
+  Widget build(BuildContext context) => Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(
+        color: onPressed == null ? AppColors.border : AppColors.mint,
+        width: 4,
+      ),
+    ),
+    child: IconButton.filled(
+      tooltip: tooltip,
+      onPressed: onPressed,
+      style: IconButton.styleFrom(
+        fixedSize: const Size.square(AppSizes.control),
+        backgroundColor: AppColors.green,
+        foregroundColor: Colors.white,
+        disabledBackgroundColor: AppColors.track,
+        disabledForegroundColor: AppColors.placeholder,
+      ),
+      icon: const Icon(Icons.mic_rounded, size: 26),
+    ),
+  );
 }
 
 /// What replaces the field while recording: cancel, a red dot with the time,
