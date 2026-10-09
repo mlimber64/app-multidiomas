@@ -9,6 +9,10 @@ String speechLocaleTag(AppLanguage language) => switch (language) {
   AppLanguage.portuguese => 'pt-BR',
   AppLanguage.german => 'de-DE',
   AppLanguage.mandarin => 'zh-CN',
+  // No phone ships a Quechua voice. Quechua is written the way it sounds, so
+  // a Latin American Spanish voice is the closest thing (it does not make the
+  // ejective and aspirated consonants, or the uvular q).
+  AppLanguage.quechua => 'es-US',
 };
 
 /// What a speech engine should say for [text], which is written to be read on

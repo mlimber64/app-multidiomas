@@ -133,6 +133,8 @@ void main() {
     test('every supported language: a female and a male voice, of that '
         'language, according to what the engine declares', () {
       for (final language in AppLanguage.values) {
+        // No phone has a Quechua voice: it borrows a Spanish one (below).
+        if (language == AppLanguage.quechua) continue;
         final tag = speechLocaleTag(language);
         final female = resolveVoice(
           voices: _declared,
@@ -152,6 +154,20 @@ void main() {
         expect(male.voice!.locale, tag);
       }
     });
+
+    test(
+      'Quechua is read with a Spanish voice, never one of another language',
+      () {
+        final tag = speechLocaleTag(AppLanguage.quechua);
+        expect(tag, 'es-US');
+        final voice = resolveVoice(
+          voices: _declared,
+          localeTag: tag,
+          gender: VoiceGender.female,
+        ).voice;
+        expect(voice?.locale.startsWith('es-'), isTrue);
+      },
+    );
 
     test('gender is read from whole words only: "female" is not "male"', () {
       expect(_voice('x-female-1', 'it-IT').declaredGender, VoiceGender.female);

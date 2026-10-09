@@ -31,5 +31,7 @@ extension GrammarTopicLabel on GrammarTopic {
     GrammarTopic.structuralParticles => l.topicStructuralParticles,
     GrammarTopic.aspectParticles => l.topicAspectParticles,
     GrammarTopic.negation => l.topicNegation,
+    GrammarTopic.evidentials => l.topicEvidentials,
+    GrammarTopic.caseSuffixes => l.topicCaseSuffixes,
   };
 }

@@ -1180,6 +1180,18 @@ abstract class AppLocalizations {
   /// **'Negation (不 / 没)'**
   String get topicNegation;
 
+  /// No description provided for @topicEvidentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidential suffixes (-mi / -si / -chá)'**
+  String get topicEvidentials;
+
+  /// No description provided for @topicCaseSuffixes.
+  ///
+  /// In en, this message translates to:
+  /// **'Case suffixes (-pi / -man / -ta ...)'**
+  String get topicCaseSuffixes;
+
   /// No description provided for @listen.
   ///
   /// In en, this message translates to:
